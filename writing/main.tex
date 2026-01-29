@@ -1,53 +1,112 @@
-\documentclass[
-% hidelinks, 
-a4paper,
-11pt
-,oneside
-]{report} % Please disable the twocolumn later
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  My documentation report
+%  Objetive: Explain what I did and how, so someone can continue with the investigation
+%
+% Important note:
+% Chapter heading images should have a 2:1 width:height ratio,
+% e.g. 920px width and 460px height.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% \usepackage{font/fin-fyp} %<- Contains all formatting stuff that require by UMS! 
-\usepackage{font/fin-apid}
-% Start graphic package
-\usepackage{graphicx}
-\usepackage{booktabs}
-\newcommand{\plus}{\raisebox{.4\height}{\scalebox{.6}{+}}}
-\graphicspath{ {./images/} }
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
 
+\documentclass[11pt,fleqn]{book} % Default font size and left-justified equations
 
-\hyphenation{applicability}
+\usepackage[top=3cm,bottom=3cm,left=3.2cm,right=3.2cm,headsep=10pt,letterpaper]{geometry} % Page margins
 
+\usepackage{xcolor} % Required for specifying colors by name
+\definecolor{ocre}{RGB}{52,177,201} % Define the orange color used for highlighting throughout the book
 
+% Font Settings
+\usepackage{avant} % Use the Avantgarde font for headings
+%\usepackage{times} % Use the Times font for headings
+\usepackage{mathptmx} % Use the Adobe Times Roman as the default text font together with math symbols from the Sym­bol, Chancery and Com­puter Modern fonts
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage[utf8]{inputenc} % Required for including letters with accents
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{amsthm}
+
+% Bibliography
+\usepackage[style=alphabetic,sorting=nyt,sortcites=true,autopunct=true,babel=hyphen,hyperref=true,abbreviate=false,backref=true,backend=biber]{biblatex}
+\addbibresource{bibliography.bib} % BibTeX bibliography file
+\defbibheading{bibempty}{}
+
+\input{structure} % Insert the commands.tex file which contains the majority of the structure behind the template
+
+%----------------------------------------------------------------------------------------
+%	Definitions of new commands
+%----------------------------------------------------------------------------------------
+
+\def\R{\mathbb{R}}
+\newcommand{\cvx}{convex}
 \begin{document}
-% \include{week0}
-% writing/unit_test
-% \linenumbers % Please disable this for final printing, but for marking and drafting, or dicussion with your supervisor, enable this Please disable this for final printing, but for marking and drafting, or dicussion with your supervisor, enable this
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begingroup
+\thispagestyle{empty}
+\AddToShipoutPicture*{\put(0,0){\includegraphics[scale=1.25]{esahubble}}} % Image background
+\centering
+\vspace*{5cm}
+\par\normalfont\fontsize{35}{35}\sffamily\selectfont
+\textbf{CPSC 542F WINTER 2017}\\
+{\LARGE Convex Analysis and Optimization}\par % Book title
+\vspace*{1cm}
+{\Huge Lecture Notes}\par % Author name
+\endgroup
+
+%----------------------------------------------------------------------------------------
+%	COPYRIGHT PAGE
+%----------------------------------------------------------------------------------------
+
+\newpage
+~\vfill
+\thispagestyle{empty}
+
+%\noindent Copyright \copyright\ 2014 Andrea Hidalgo\\ % Copyright notice
+
+\noindent \textsc{Summer Research Internship, University of Western Ontario}\\
+
+\noindent \textsc{github.com/LaurethTeX/Clustering}\\ % URL
+
+\noindent This research was done under the supervision of Dr. Pauline Barmby with the financial support of the MITACS Globalink Research Internship Award within a total of 12 weeks, from June 16th to September 5th of 2014.\\ % License information
+
+\noindent \textit{First release, August 2014} % Printing/edition date
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\chapterimage{head1.png} % Table of contents heading image
+
+\pagestyle{empty} % No headers
+
+\tableofcontents % Print the table of contents itself
+
+%\cleardoublepage % Forces the first chapter to start on an odd page so it's on the right
+
+\pagestyle{fancy} % Print headers again
 
 
-% \include{week1}
-\include{topic2/week2}
-% \include{week3}
-% \include{week4}
-% \include{week5}
-% \include{week6}
-% \include{week7}
-% \include{week8}
-% \include{week9}
-% \include{week10}
-% \include{week11}
-% \include{week12}
-% \include{week13}
-% \include{week14}
 
-% % \bibliographyAPA
-
-
-% \appendix  %  <-- IMPORTANT:  Switch to appendix mode!
-% % \include{APPENDICES}
-% \appendixchapter{Supplementary Materials}  %  <-- Use \appendixchapter
-
-% This is the first appendix.
-
-% \appendixsection{Detailed Data}  % <-- Use \appendixsection for sections
-
+\include{week0}
+\include{week1}
+\include{week2}
+\include{week3}
+\include{week4}
+\include{week5}
+\include{week6}
+\include{week7}
+\include{week8}
+\include{week9}
+\include{week10}
+\include{week11}
+\include{week12}
+\include{week13}
+\include{week14}
 \end{document}

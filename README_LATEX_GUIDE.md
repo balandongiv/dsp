@@ -20,7 +20,7 @@ This template uses custom fonts (Tahoma), so you **must** use the `xelatex` comp
 **Command Line:**
 ```bash
 cd writing
-xelatex main.tex
+xelatex mainX.tex
 ```
 
 **VS Code (LaTeX Workshop):**
