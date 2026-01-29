@@ -1,38 +1,45 @@
-\chapter{Sampling Theorem and Anti‑Aliasing Filters}
+\chapter{Sampling Theorem and Anti-Aliasing Filters}
+% Usefull resource
+% https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Signal_Processing_and_Modeling/Signals_and_Systems_(Baraniuk_et_al.)/10%3A_Sampling_and_Reconstruction/10.02%3A_Sampling_Theorem
+% https://www.geeksforgeeks.org/electronics-engineering/nyquist-sampling-theorem/
+%  https://www.ni.com/en/shop/data-acquisition/measurement-fundamentals/analog-fundamentals/acquiring-an-analog-signal--bandwidth--nyquist-sampling-theorem-.html
+% https://www.mathworks.com/discovery/nyquist-theorem.html
+% https://www.allaboutcircuits.com/technical-articles/nyquist-shannon-theorem-understanding-sampled-systems/
+%  https://www.geeksforgeeks.org/electrical-engineering/sampling-in-digital-communication/
 
 \section{Learning objectives}
 
 This chapter aims to equip you with the ability to:
 \begin{itemize}
-  \item State and apply the Nyquist–Shannon sampling theorem to avoid aliasing when digitising analogue signals.
+  \item State and apply the Nyquist-Shannon sampling theorem to avoid aliasing when digitising analogue signals.
   \item Explain how and why aliasing occurs and recognise its symptoms in the frequency spectrum.
-  \item Design simple anti‑alias filters and resampling schemes to down‑sample signals safely.
+  \item Design simple anti-alias filters and resampling schemes to down-sample signals safely.
   \item Quantify aliasing via signal-to-noise ratio or spectral leakage metrics.
 \end{itemize}
 
 \section{Industrial context}
 
-In practice we often need to reduce the sampling rate of a signal to lower data storage or computational cost.  For example, high‑frequency acoustic emissions may be recorded at 100 kHz, but condition monitoring algorithms operate on features derived at 10 kHz.  Anti‑alias filtering ensures that high‑frequency noise does not masquerade as low‑frequency features after down‑sampling.  Without it, aliasing can obscure faults or generate spurious events.
+In practice we often need to reduce the sampling rate of a signal to lower data storage or computational cost.  For example, high-frequency acoustic emissions may be recorded at 100\,kHz, but condition monitoring algorithms operate on features derived at 10\,kHz.  Anti-alias filtering ensures that high-frequency noise does not masquerade as low-frequency features after down-sampling.  Without it, aliasing can obscure faults or generate spurious events.
 
 \section{Core concepts}
 
 \subsection{Aliasing explained}
 
-Aliasing arises when a continuous‑time signal with frequency components above half the sampling rate is sampled.  These components fold back into lower frequencies, creating distortions that cannot be removed after sampling.  According to the sampling theorem, the sampling frequency $f_s$ must exceed twice the highest frequency present (the signal bandwidth) to allow perfect reconstruction 【874713969011553†L160-L166】.  Otherwise aliasing occurs.
+Aliasing arises when a continuous-time signal with frequency components above half the sampling rate is sampled.  These components fold back into lower frequencies, creating distortions that cannot be removed after sampling.  According to the sampling theorem, the sampling frequency $f_s$ must exceed twice the highest frequency present (the signal bandwidth) to allow perfect reconstruction 【874713969011553†L160-L166】.  Otherwise aliasing occurs.
 
-\subsection{Anti‑alias filters}
+\subsection{Anti-alias filters}
 
-An anti‑alias filter is a low‑pass filter applied before down‑sampling.  It attenuates frequency components above the new Nyquist frequency.  In discrete time, decimation by a factor $M$ combines low‑pass filtering with sub‑sampling: $y[n] = v[Mn]$, where $v[n]$ is the filtered signal.  The passband cut‑off should be below $\tfrac{1}{M}$ of the original Nyquist frequency, allowing some guard band for filter roll‑off.
+An anti-alias filter is a low-pass filter applied before down-sampling.  It attenuates frequency components above the new Nyquist frequency.  In discrete time, decimation by a factor $M$ combines low-pass filtering with sub-sampling: $y[n] = v[Mn]$, where $v[n]$ is the filtered signal.  The passband cut-off should be below $\tfrac{1}{M}$ of the original Nyquist frequency, allowing some guard band for filter roll-off.
 
 \subsection{Resampling}
 
-Resampling involves changing the sampling rate by rational factors.  Upsampling inserts zeros between samples, low‑pass filtering reconstructs the intermediate values, and down‑sampling reduces the rate.  Modern implementations use polyphase filters to reduce computational cost.
+Resampling involves changing the sampling rate by rational factors.  Upsampling inserts zeros between samples, low-pass filtering reconstructs the intermediate values, and down-sampling reduces the rate.  Modern implementations use polyphase filters to reduce computational cost.
 
 \section{Operational formulas}
 
-\paragraph{Discrete‑time sampling.}  Sampling a continuous signal $x(t)$ with period $T_s=1/f_s$ produces $x[n]=x(nT_s)$.  If $X(f)$ is the Fourier transform of $x(t)$, the discrete‑time Fourier transform replicates $X(f)$ at integer multiples of $f_s$.  Aliasing occurs when replicas overlap.
+\paragraph{Discrete-time sampling.}  Sampling a continuous signal $x(t)$ with period $T_s=1/f_s$ produces $x[n]=x(nT_s)$.  If $X(f)$ is the Fourier transform of $x(t)$, the discrete-time Fourier transform replicates $X(f)$ at integer multiples of $f_s$.  Aliasing occurs when replicas overlap.
 
-\paragraph{Designing an anti‑alias filter.}  For decimation by $M$, choose a low‑pass FIR filter with passband edge at $\omega_p = 0.8\pi/M$ and stopband at $\omega_s = \pi/M$.  The required order $N$ depends on the desired stopband attenuation $A$ and transition width $\Delta\omega=\omega_s-\omega_p$; the window method yields $N \approx \frac{A}{22}\frac{\pi}{\Delta\omega}$ 【351596994309255†L169-L186】 when using a Hann window.
+\paragraph{Designing an anti-alias filter.}  For decimation by $M$, choose a low-pass FIR filter with passband edge at $\omega_p = 0.8\pi/M$ and stopband at $\omega_s = \pi/M$.  The required order $N$ depends on the desired stopband attenuation $A$ and transition width $\Delta\omega=\omega_s-\omega_p$; the window method yields $N \approx \frac{A}{22}\frac{\pi}{\Delta\omega}$ 【351596994309255†L169-L186】 when using a Hann window.
 
 \section{Parameter tuning playbook}
 
@@ -42,38 +49,38 @@ Resampling involves changing the sampling rate by rational factors.  Upsampling 
     \toprule
     \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
     \midrule
-    Down‑sampling factor $M$ & 2 & Aliasing visible in spectrum & Reduce $M$ or increase filter order \\
+    Down-sampling factor $M$ & 2 & Aliasing visible in spectrum & Reduce $M$ or increase filter order \\
     Filter order $N$ & See formula & Poor attenuation of stopband & Increase $N$ following rule of thumb 【351596994309255†L169-L186】 \\
-    Passband edge & $0.8\pi/M$ & Ripple in passband & Reduce cut‑off or use better window \\
+    Passband edge & $0.8\pi/M$ & Ripple in passband & Reduce cut-off or use better window \\
     Window type & Hann & Transition too wide & Use Blackman or Kaiser window \\
     \bottomrule
   \end{tabular}
-  \caption{Parameter tuning guidelines for anti‑alias filtering and decimation.}
+  \caption{Parameter tuning guidelines for anti-alias filtering and decimation.}
 \end{table}
 
 \section{Pitfalls, failure modes and diagnostics}
 
 \begin{itemize}
-  \item \textbf{Ignoring guard bands.}  A filter with a narrow transition band may require a high order.  If the passband edge is too close to the stopband, aliasing leakage may remain.  Inspect the down‑sampled spectrum for unexpected peaks near the alias frequency.
-  \item \textbf{Dropping decimation filtering.}  Simply picking every $M$‑th sample without filtering will alias high‑frequency components.  Always apply a low‑pass filter before down‑sampling.
-  \item \textbf{Underestimating filter order.}  Low‑order filters produce insufficient stopband attenuation.  Use the window method formula to estimate order and check SNR improvements.
+  \item \textbf{Ignoring guard bands.}  A filter with a narrow transition band may require a high order.  If the passband edge is too close to the stopband, aliasing leakage may remain.  Inspect the down-sampled spectrum for unexpected peaks near the alias frequency.
+  \item \textbf{Dropping decimation filtering.}  Simply picking every $M$-th sample without filtering will alias high-frequency components.  Always apply a low-pass filter before down-sampling.
+  \item \textbf{Underestimating filter order.}  Low-order filters produce insufficient stopband attenuation.  Use the window method formula to estimate order and check SNR improvements.
 \end{itemize}
 
 \section{Code walkthrough}
 
-The Week\,2 demonstration script samples a synthetic vibration signal at high and low sampling rates, applies a simple anti‑alias filter when down‑sampling and computes the SNR and aliasing level.  Key steps include:
+The Week\,2 demonstration script samples a synthetic vibration signal at high and low sampling rates, applies a simple anti-alias filter when down-sampling and computes the SNR and aliasing level.  Key steps include:
 \begin{enumerate}
   \item Generate a clean reference signal at a high sampling rate using \texttt{generate\_week\_data()}.
-  \item Down‑sample without filtering to highlight aliasing; compute SNR and observe the spectral folding.
-  \item Down‑sample with a low‑pass filter designed by \texttt{resample()} from SciPy; compare SNRs and aliasing levels.
+  \item Down-sample without filtering to highlight aliasing; compute SNR and observe the spectral folding.
+  \item Down-sample with a low-pass filter designed by \texttt{resample()} from SciPy; compare SNRs and aliasing levels.
 \end{enumerate}
 
 \section{Exercises}
 
 \begin{enumerate}
-  \item Design a three‑stage decimation scheme to reduce a 96 kHz signal to 8 kHz.  Specify the intermediate rates and filter requirements.
-  \item Using the rule of thumb for FIR filter order 【351596994309255†L169-L186】, estimate the required order to achieve at least 60 dB stopband attenuation with a transition width of $0.05\pi$ rad/sample.  Validate your estimate using Python.
-  \item Modify the demonstration to explore aliasing when down‑sampling a chirp signal.  Visualise the aliased spectra and propose mitigation strategies.
+  \item Design a three-stage decimation scheme to reduce a 96\,kHz signal to 8\,kHz.  Specify the intermediate rates and filter requirements.
+  \item Using the rule of thumb for FIR filter order 【351596994309255†L169-L186】, estimate the required order to achieve at least 60\,dB stopband attenuation with a transition width of $0.05\pi$ rad/sample.  Validate your estimate using Python.
+  \item Modify the demonstration to explore aliasing when down-sampling a chirp signal.  Visualise the aliased spectra and propose mitigation strategies.
 \end{enumerate}
 
 \section{References}
