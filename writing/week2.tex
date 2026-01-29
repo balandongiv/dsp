@@ -7,6 +7,58 @@
 % https://www.allaboutcircuits.com/technical-articles/nyquist-shannon-theorem-understanding-sampled-systems/
 %  https://www.geeksforgeeks.org/electrical-engineering/sampling-in-digital-communication/
 
+\chapter{Sampling Theorem and Anti-Aliasing Filters}
+
+% Recommended (in your preamble):
+% \usepackage{hyperref}   % provides \href
+% \usepackage{booktabs}   % already used in your table
+
+\section{Chapter map and black-box contract}
+
+\paragraph{What this chapter is (and is not).}
+This chapter is a practitioner guide to \emph{choosing sampling rates and designing anti-aliasing for industrial measurements}.
+We avoid proofs and reconstruction derivations; instead we focus on:
+(i) assumptions you must verify,
+(ii) tunable parameters you must choose,
+(iii) how you validate that your choice worked,
+(iv) what can go wrong and how to detect it early.
+
+\paragraph{Signal-chain framing (industrial instrumentation).}
+Think in this exact order:
+\begin{center}
+\texttt{Sensor $\rightarrow$ analog front-end $\rightarrow$ analog anti-alias LPF $\rightarrow$ ADC $\rightarrow$ digital anti-alias/resampling $\rightarrow$ features}
+\end{center}
+
+\paragraph{Black-box contract.}
+\textbf{Inputs you must have (or estimate):}
+(i) raw samples $x[n]$ and original sample rate $f_s$,
+(ii) the \emph{feature band} you care about (e.g., 0--5 kHz envelope band),
+(iii) likely interference (EMI tones, switching noise, ultrasonic content),
+(iv) constraints: CPU, storage, latency, and whether processing is offline or real-time.
+
+\textbf{Outputs you must produce:}
+(i) chosen target sample rate $f_s'$,
+(ii) anti-alias filter specification (passband/stopband edges, attenuation, ripple, latency),
+(iii) a validation artifact set: (a) before/after PSD, (b) filter response, (c) at least one metric.
+
+\paragraph{Minimum evidence checklist (what you show a reviewer).}
+\begin{itemize}
+  \item A PSD (or spectrum) of the raw signal with your estimated usable bandwidth.
+  \item The anti-alias filter magnitude response with passband/stopband clearly marked.
+  \item A PSD of the resampled signal showing no unexpected new low-frequency content.
+  \item A metric such as alias-energy ratio or in-band SNR improvement.
+\end{itemize}
+
+\paragraph{What can go wrong (and how to detect it).}
+\begin{itemize}
+  \item \textbf{Front-end bandwidth confusion:} your ADC sample rate is high, but the analog path bandwidth is too low, causing amplitude/phase distortion.
+  Detect by injecting a known sine near your expected max frequency and measuring amplitude error (or comparing to a calibrated reference channel).
+  \item \textbf{Pre-ADC aliasing:} out-of-band analog energy folds into baseband during sampling.
+  Detect by changing $f_s$ and seeing if suspicious peaks move (true physics peaks stay, alias peaks shift).
+  \item \textbf{Nonstationary signals:} a single PSD hides transient bandwidth.
+  Detect with a spectrogram or short-window PSDs.
+\end{itemize}
+
 \section{Learning objectives}
 
 This chapter aims to equip you with the ability to:
@@ -17,12 +69,408 @@ This chapter aims to equip you with the ability to:
   \item Quantify aliasing via signal-to-noise ratio or spectral leakage metrics.
 \end{itemize}
 
+\paragraph{Success criteria (you can do it if...).}
+\begin{itemize}
+  \item Given a PSD/FFT, you can name a conservative effective bandwidth and pick $f_s$ and a guard band.
+  \item Given a target downsample factor $M$ (or ratio $p/q$), you can state passband and stopband edges in Hz and explain why.
+  \item Given spectra before/after resampling, you can decide whether aliasing is present and identify likely alias sources.
+  \item Given constraints (latency vs attenuation), you can justify FIR vs IIR and zero-phase vs causal filtering choices.
+\end{itemize}
+
 \section{Industrial context}
 
 In practice we often need to reduce the sampling rate of a signal to lower data storage or computational cost.  For example, high-frequency acoustic emissions may be recorded at 100\,kHz, but condition monitoring algorithms operate on features derived at 10\,kHz.  Anti-alias filtering ensures that high-frequency noise does not masquerade as low-frequency features after down-sampling.  Without it, aliasing can obscure faults or generate spurious events.
 
+
+
+\subsection{Mini vignette: vibration (accelerometer)}
+Example: $f_s=48$\,kHz on a motor; features needed up to 5\,kHz (bearing envelope bands).
+Goal: downsample to 12\,kHz (factor $M=4$) to reduce compute and storage while preserving 0--5\,kHz.
+
+\paragraph{What can go wrong (and how to detect it).}
+If there is strong energy at 8--20\,kHz (gear mesh harmonics, EMI pickup, sensor resonance),
+and you decimate without anti-alias filtering, it can fold into 0--6\,kHz and look like a new fault signature.
+Detect by comparing spectra before/after downsampling and by changing $f_s'$ (aliases move).
+
+\subsection{Mini vignette: acoustic emission / ultrasonic}
+Example: $f_s=200$\,kHz for AE sensor; you store only 0--20\,kHz trends.
+Risk: broadband ultrasonic noise folds into audible/low-frequency bands when downsampled.
+Detect by measuring the high-frequency noise floor before downsampling and verifying stopband attenuation of the anti-alias filter.
+
+\subsection{Mini vignette: current sensing in power electronics}
+Example: $f_s=20$\,kHz current waveform; you care about 0--2\,kHz control-band harmonics.
+Risk: switching ripple at 12--200\,kHz couples into analog front-end and aliases into the control band.
+Detect by looking for narrow peaks that shift when $f_s$ changes and by measuring with/without additional analog filtering.
+
+\subsection{Mini vignette: optical sensing}
+Example: photodiode reading a rotating encoder; sampling too low can produce a false lower speed (aliasing looks like speed drop).
+Detect by comparing with a tachometer reference and checking if spectral peaks mirror around Nyquist.
+
+
 \section{Core concepts}
 
+\subsection{What ``bandwidth'' means in practice (and why it is not always obvious)}
+
+\paragraph{Two different bandwidths matter.}
+\textbf{Signal bandwidth} is where the signal has meaningful energy for your task.
+\textbf{Front-end bandwidth} is what your analog chain passes to the ADC with acceptable amplitude/phase distortion.
+Do not confuse them: you can sample fast but still lose information if the analog front-end bandwidth is insufficient.
+
+\subsubsection{Practical bandwidth estimation from data (PSD/FFT-based)}
+A practical workflow:
+\begin{enumerate}
+  \item Compute a PSD estimate (Welch) of $x[n]$.
+  \item Identify: (i) desired physics-driven bands, (ii) interference/EMI lines, (iii) noise-floor ``knee''.
+  \item Define an \textbf{effective bandwidth} $B_\mathrm{eff}$ using one of these operational rules:
+  \begin{itemize}
+    \item \textbf{Cumulative-power rule:} choose $B_\mathrm{eff}$ where 99\% of total power below Nyquist is accumulated.
+    \item \textbf{Threshold rule:} choose $B_\mathrm{eff}$ where PSD falls (say) 20--40\,dB below the dominant band, then add a guard band.
+    \item \textbf{Feature-driven rule:} choose $B_\mathrm{eff}$ as the max frequency needed for your feature extractor plus margin.
+  \end{itemize}
+\end{enumerate}
+
+\paragraph{Why bandwidth may be hard to see.}
+Impulsive faults and transients are broadband; a single long-window PSD can smear them.
+EMI can add narrow lines well above your ``expected'' bandwidth.
+Sensor clipping creates harmonics that look like extra bandwidth.
+
+\paragraph{What can go wrong (and how to detect it).}
+\begin{itemize}
+  \item \textbf{Nonstationary bandwidth:} a single PSD hides bursts. Detect with short-time PSDs or a spectrogram.
+  \item \textbf{Leakage misread as bandwidth:} poor windowing makes strong tones bleed. Detect by changing window length and window type and seeing if ``bandwidth'' changes.
+  \item \textbf{Drift and trend dominate low frequencies:} slow thermal drift can mask low-frequency content. Detect by detrending and re-checking PSD.
+\end{itemize}
+
+\subsection{Aliasing explained (with alias mapping you can apply)}
+
+\paragraph{Operational sampling theorem statement (no proof).}
+A continuous-time signal can be perfectly reconstructed from its samples if you sample faster than twice the highest frequency component you intend to preserve:
+\[
+F_s > 2 f_{\max}.
+\]
+In real instruments you also need margin because filters are not ideal and unexpected pickup exists.
+
+\subsubsection{Predicting where aliases land (alias mapping rule)}
+Use this \textbf{rule to apply}:
+
+Given sampling frequency $f_s$ and a sinusoid at frequency $f$, the observed aliased frequency in the sampled data is
+\[
+f_a = \left| \; \mathrm{round}\!\left(\frac{f}{f_s}\right) f_s - f \; \right|,
+\]
+and $f_a$ will fall in $[0, f_s/2]$.
+
+\textbf{Decimation case:} if you downsample by $M$, your new sampling rate is $f_s' = f_s/M$.
+Any energy above $f_s'/2$ in the pre-decimation signal can fold into $[0, f_s'/2]$ unless you filter it out first.
+
+\subsubsection{Recognizing alias symptoms (spectrum diagnostics)}
+Common symptoms:
+\begin{itemize}
+  \item Peaks that appear ``mirrored'' around Nyquist ($f_s/2$).
+  \item New low-frequency peaks appearing after downsampling (especially if they move when you change $f_s'$).
+  \item Time-domain intuition mismatch: waveform looks too slow/fast compared to known machine speed.
+\end{itemize}
+
+\paragraph{What can go wrong (and how to detect it).}
+\begin{itemize}
+  \item \textbf{Aliasing confused with harmonics:} harmonics scale with the fundamental; aliases move with $f_s$. Detect by changing $f_s$.
+  \item \textbf{EMI folding:} narrow high-frequency interference aliases into baseband. Detect by looking for stable peaks that shift with sampling settings, and by temporarily improving shielding/grounding.
+  \item \textbf{Clocking issues:} jitter can smear peaks. Detect by peak broadening and elevated noise floor; compare across instruments if possible.
+\end{itemize}
+
+\subsection{Anti-alias filters (what must happen before the ADC vs after)}
+
+\subsubsection{Analog anti-aliasing (must happen before the ADC)}
+Digital processing cannot undo aliasing that already occurred during sampling:
+out-of-band \emph{analog} energy folds into the sampled band and becomes indistinguishable from true in-band content.
+Therefore, band-limiting with an \textbf{analog low-pass filter} before the sampler/ADC is the primary defense.
+
+\subsubsection{Digital anti-aliasing (must happen before decimation)}
+Even after digitization, if you change sample rate (decimate), you can create \emph{additional} aliasing during the rate change.
+A digital low-pass filter before downsampling prevents folding relative to the \emph{new} Nyquist frequency.
+
+\subsubsection{Filter specification in plain language}
+When you specify an anti-alias filter, you must state (in Hz):
+\begin{itemize}
+  \item \textbf{Passband edge} $f_p$: frequencies you want to preserve with small error.
+  \item \textbf{Stopband edge} $f_s$: frequencies you want strongly attenuated (ideally starting at or before the new Nyquist limit).
+  \item \textbf{Transition band} $\Delta f = f_s - f_p$: the ``room'' where the filter rolls off.
+  \item \textbf{Passband ripple}: allowable gain variation in passband (e.g., $\pm 0.1$\,dB).
+  \item \textbf{Stopband attenuation}: required suppression (e.g., 60--100\,dB depending on dynamic range).
+  \item \textbf{Group delay / latency}: how much time delay the filter introduces (critical for real-time monitoring).
+\end{itemize}
+
+\paragraph{What can go wrong (and how to detect it).}
+\begin{itemize}
+  \item \textbf{Too little transition band:} you demand a sharp cutoff near Nyquist; filter becomes long/high-order.
+  Detect by excessive ringing in time domain, high CPU load, or failure to meet attenuation in the stopband.
+  \item \textbf{Phase distortion (IIR):} can distort timing features (e.g., peaks, impacts). Detect by comparing peak timing before/after filtering.
+  \item \textbf{Latency too high (FIR):} unacceptable for control loops. Detect by measuring end-to-end delay and verifying it meets system budget.
+\end{itemize}
+
+\subsection{Resampling}
+
+\paragraph{Decimation vs rational resampling.}
+\textbf{Decimation} reduces sample rate by an integer factor $M$.
+\textbf{Rational resampling} changes rate by $p/q$ (e.g., 48\,kHz $\rightarrow$ 44.1\,kHz).
+
+\paragraph{Operational guidance for SciPy choices.}
+\begin{itemize}
+  \item Use \texttt{resample\_poly} for high-quality resampling (good default, polyphase FIR).
+  \item Use \texttt{decimate} for integer downsampling with built-in anti-alias filtering (IIR or FIR options).
+  \item Avoid FFT-based \texttt{resample} for non-periodic industrial signals unless you manage edge effects; it assumes periodicity.
+\end{itemize}
+
+\paragraph{What can go wrong (and how to detect it).}
+\begin{itemize}
+  \item \textbf{Edge artifacts:} padding assumptions inject transients. Detect by plotting the first/last 1--2 seconds and comparing to mid-record.
+  \item \textbf{Missing data:} resampling across dropouts creates nonsense. Detect by searching for NaNs/gaps before resampling; interpolate or segment first.
+  \item \textbf{Amplitude scaling errors:} poorly specified filters change gain. Detect by a calibration tone or by comparing RMS in the preserved band.
+\end{itemize}
+
+\section{Operational formulas}
+
+\paragraph{Tool A: Nyquist rule with guard band (industrial version).}
+The theorem says $f_s > 2 f_{\max}$.
+In practice, you also need room for a non-ideal anti-alias filter transition band and unexpected pickup.
+A conservative early-design rule is: choose $f_s$ comfortably above $2 f_{\max}$ and verify with spectra and filter response.
+
+\paragraph{Tool B: Alias location calculator.}
+Given sampling frequency $f_s$ and a tone at $f$:
+\[
+f_a = \left| \; \mathrm{round}\!\left(\frac{f}{f_s}\right) f_s - f \; \right|.
+\]
+Use this to predict where out-of-band interference will fold.
+
+\paragraph{Tool C: Choosing decimation edges.}
+If you decimate by $M$, then $f_s' = f_s/M$ and the new Nyquist frequency is $f_N' = f_s'/2$.
+Choose:
+\[
+f_p \le (1 - g)\,f_N', \quad f_s \approx f_N',
+\]
+where $g$ is a guard-band fraction (e.g., 0.1 to 0.2) that reflects how steep a filter you can afford.
+
+\paragraph{Tool D: FIR length knob (Kaiser-style intuition).}
+A narrower transition width requires a longer FIR filter.
+A practical relationship (Kaiser) links attenuation, number of taps, and transition width; use it to understand why ``tight specs'' cost CPU and latency.
+(If your design fails stopband attenuation, the main knob is increasing taps or widening the transition band.)
+
+\section{Parameter tuning playbook}
+
+\subsection*{Quick Recipe: safe decimation in industry (step-by-step)}
+\begin{quote}
+\small
+\textbf{Quick Recipe: Downsample safely from $f_s$ to $f_s' = f_s/M$}
+\begin{enumerate}
+  \item \textbf{Estimate effective bandwidth} from a Welch PSD; decide your feature band max $f_{\mathrm{feat}}$.
+  \item \textbf{Choose $M$} so that $f_s' \ge 2.2$--$3\times f_{\mathrm{feat}}$ (gives guard band).
+  \item \textbf{Specify anti-alias filter} in Hz: passband edge $f_p \approx f_{\mathrm{feat}}$ and stopband edge $f_s \approx f_s'/2$.
+  \item \textbf{Implement digital AA + decimation} (SciPy \texttt{resample\_poly} or \texttt{decimate}).
+  \item \textbf{Validate} with (i) filter response, (ii) before/after PSD, and (iii) alias metric (alias energy ratio).
+  \item \textbf{If it fails:} widen transition band (lower $f_p$) or increase filter length/order; consider multi-stage.
+\end{enumerate}
+\end{quote}
+
+\subsection*{Decision tree: what filtering must happen where?}
+\begin{quote}
+\small
+\textbf{Decision tree (fast triage)}
+\begin{itemize}
+  \item Are you \textbf{before the ADC}? $\rightarrow$ You \emph{must} use \textbf{analog} anti-alias filtering (digital cannot fix pre-ADC aliasing).
+  \item Are you \textbf{changing sample rate digitally}? $\rightarrow$ You \emph{must} do \textbf{digital} anti-aliasing before decimation.
+  \item Is the signal \textbf{real-time/low latency}? $\rightarrow$ Prefer causal filters; avoid zero-phase offline filtering.
+  \item Is the downsample factor large (e.g., $M>10$)? $\rightarrow$ Prefer multi-stage decimation.
+\end{itemize}
+\end{quote}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}p{0.18\linewidth}p{0.20\linewidth}p{0.28\linewidth}p{0.28\linewidth}@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Target rate $f_s'$ & feature-driven & Aliases or lost features & Increase $f_s'$ (smaller $M$) or tighten AA filter \\
+    Guard band fraction $g$ & 0.1--0.2 & Filter too long / too slow & Increase $g$ (wider transition) or use multistage \\
+    Filter type & FIR for offline; IIR for low CPU & Timing distortion or latency issues & FIR (linear/zero phase) for timing; IIR for lower order but manage phase \\
+    FIR taps / IIR order & start small then sweep & Stopband leakage & Increase taps/order; widen transition band \\
+    Edge handling (padding) & constant/line & Edge ringing & Use better padtype; trim edges; process in blocks with overlap \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for anti-alias filtering and decimation (industrial framing).}
+\end{table}
+
+\subsection*{Diagnostics checklist (minimum plots + one metric)}
+\begin{itemize}
+  \item PSD before filtering/downsampling (Welch).
+  \item Filter magnitude response with $f_p$ and $f_s$ marked.
+  \item PSD after downsampling; check for new peaks in feature band.
+  \item Metric: alias energy ratio in feature band (or SNR improvement if you have a reference).
+\end{itemize}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\paragraph{Triage workflow (do this in order).}
+\begin{enumerate}
+  \item Plot PSD of raw signal; estimate effective bandwidth and identify interferers.
+  \item Check for clipping/saturation in time domain (flat tops, rail hits).
+  \item Plot your anti-alias filter response; confirm attenuation at/above new Nyquist.
+  \item Downsample; compare PSD before/after in the preserved band.
+  \item Compute a metric (alias energy ratio) and verify it meets your acceptance threshold.
+\end{enumerate}
+
+\paragraph{Common failure modes (industrial).}
+\begin{itemize}
+  \item \textbf{Ignoring transition band:} practical AA filters are not brick-wall; insufficient guard band causes leakage.
+  \item \textbf{Dropping filtering:} naive ``keep every $M$th sample'' folds high-frequency content into baseband.
+  \item \textbf{Sensor saturation/clipping:} creates harmonics that look like unexpected bandwidth.
+  \item \textbf{EMI spikes:} narrow high-frequency tones fold into low-frequency fault bands.
+  \item \textbf{Missing data:} resampling across gaps corrupts spectra and features.
+  \item \textbf{Latency surprises:} FIR length adds delay; zero-phase filtering is non-causal (offline only).
+\end{itemize}
+
+\paragraph{Diagnostics checklist.}
+\begin{itemize}
+  \item Does a suspicious peak \emph{move} if you change $f_s$ or $f_s'$? If yes, suspect aliasing.
+  \item Do you see peaks mirrored around Nyquist? If yes, suspect aliasing/folding.
+  \item Do downsampled features contradict mechanical constraints (e.g., speed/gear ratios)? If yes, suspect aliasing.
+  \item Is there clipping? If yes, treat front-end range and gain staging first.
+\end{itemize}
+
+\section{Mini case study (with numbers and a decision metric)}
+
+\paragraph{Problem.}
+You measure a machine vibration signal:
+\begin{itemize}
+  \item Original sampling: $f_s = 48$\,kHz.
+  \item You need features up to $f_{\mathrm{feat}} = 5$\,kHz.
+  \item Target: reduce data rate by at least 4$\times$ for storage/compute.
+\end{itemize}
+
+\paragraph{Design choice.}
+Choose $M=4 \Rightarrow f_s' = 12$\,kHz, so new Nyquist is $f_N' = 6$\,kHz.
+Set a guard band: passband edge $f_p = 4.8$\,kHz, stopband edge $f_s = 6.0$\,kHz.
+
+\paragraph{Filter and workflow choice.}
+Use a linear/zero-phase FIR (offline monitoring) via polyphase resampling:
+\texttt{resample\_poly(x, up=1, down=4, window=(\ldots))}.
+Validate with:
+(i) filter response magnitude,
+(ii) before/after PSD,
+(iii) decision metric below.
+
+\paragraph{Decision metric: alias energy ratio (AER).}
+Define the \textbf{alias energy ratio} after downsampling as
+\[
+\mathrm{AER} = \frac{\int_{0}^{f_{\mathrm{feat}}} S_{yy}(f)\,df - \int_{0}^{f_{\mathrm{feat}}} S_{y_\mathrm{ref}y_\mathrm{ref}}(f)\,df}{\int_{0}^{f_{\mathrm{feat}}} S_{y_\mathrm{ref}y_\mathrm{ref}}(f)\,df},
+\]
+where $y_\mathrm{ref}$ is a trusted reference (e.g., properly filtered or higher-rate ground truth).
+In practice, approximate integrals by summing PSD bins over the band.
+
+\paragraph{Acceptance rule (example).}
+Accept if $\mathrm{AER} < 1\%$ and no new discrete peaks appear in 0--5\,kHz.
+
+\paragraph{What can go wrong (and how to detect it).}
+\begin{itemize}
+  \item If $f_p$ is too close to 6\,kHz, you need a very long filter. Detect by failing stopband attenuation and CPU/latency blow-up.
+  \item If EMI exists above 6\,kHz and analog AA was weak, aliasing may already be present in the 48\,kHz data. Detect by repeating capture at a different $f_s$ and checking whether peaks move.
+\end{itemize}
+
+\section{Code walkthrough}
+
+\paragraph{Goal.}
+Demonstrate: (i) wrong downsampling that aliases, (ii) correct downsampling with anti-alias filtering,
+(iii) parameter sweep and selection based on a metric.
+
+\paragraph{SciPy workflow summary.}
+\begin{itemize}
+  \item Use Welch PSD for bandwidth estimation.
+  \item Use \texttt{resample\_poly} or \texttt{decimate} for downsampling with anti-alias filtering.
+  \item Use \texttt{resample} (FFT method) only if periodicity assumptions are acceptable and edge artifacts are managed.
+\end{itemize}
+
+\paragraph{Walkthrough plan (pseudocode).}
+\begin{verbatim}
+1) Load x, fs
+2) Estimate PSD: f, Pxx = welch(x, fs=fs, nperseg=..., noverlap=...)
+3) Choose target fs' and M (or rational p/q)
+4) Downsample WRONG: y_bad = x[::M]
+5) Downsample RIGHT:
+   - Option A: y = resample_poly(x, up=1, down=M, window=('kaiser', beta))
+   - Option B: y = decimate(x, q=M, ftype='fir' or 'iir', zero_phase=True)
+6) Validate:
+   - PSD before/after
+   - Filter response (freqz)
+   - Metric: alias energy ratio (or SNR vs reference)
+7) Parameter sweep:
+   - sweep cutoff or taps/beta, compute metric, pick smallest-cost design meeting threshold
+\end{verbatim}
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Three-stage decimation design (industrial constraints).}
+  Reduce $f_s=96$\,kHz to 8\,kHz. Propose a staged plan (e.g., $\times 2$, $\times 3$, $\times 2$, $\times 2$),
+  and for each stage specify passband/stopband edges and a guard band.
+  Submit: stage table + filter response plots + before/after PSDs.
+
+  \item \textbf{Alias mapping practice (predict where the problem lands).}
+  A vibration signal sampled at 12\,kHz contains interference at 8.5\,kHz.
+  Compute the expected alias frequency in the sampled data and explain what feature band it contaminates.
+
+  \item \textbf{Bandwidth is not obvious (PSD-based estimation).}
+  Given a time series with bursts (simulate a bearing impact train plus noise),
+  estimate effective bandwidth using (i) a long-window Welch PSD and (ii) short-window PSDs.
+  Explain why the two estimates differ and choose a safe $f_s'$.
+
+  \item \textbf{SciPy reproducible resampling validation.}
+  Implement downsampling by $M=10$ using \texttt{decimate} (IIR) in one step and in multiple stages.
+  Compare: computation time, phase behavior, and alias metric. Explain which you would deploy and why.
+
+  \item \textbf{Real-time constraint exercise.}
+  You must downsample from 48\,kHz to 12\,kHz with less than 5\,ms added latency.
+  Propose a causal filter strategy and explain the trade in attenuation vs latency.
+\end{enumerate}
+
+\section{References}
+
+\begin{thebibliography}{99}
+
+\bibitem{LibreTextsSampling}
+R. Baraniuk et al., \href{https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Signal_Processing_and_Modeling/Signals_and_Systems_(Baraniuk_et_al.)/10%3A_Sampling_and_Reconstruction/10.02%3A_Sampling_Theorem}{\emph{Sampling Theorem (Engineering LibreTexts)}}, accessed 2026-01-29.
+
+\bibitem{NI_AcquireAnalog}
+National Instruments, \href{https://www.ni.com/en/shop/data-acquisition/measurement-fundamentals/analog-fundamentals/acquiring-an-analog-signal--bandwidth--nyquist-sampling-theorem-.html}{\emph{Acquiring an Analog Signal: Bandwidth, Nyquist Sampling Theorem, and Aliasing}}, updated Jan 27, 2026, accessed 2026-01-29.
+
+\bibitem{NI_AA}
+National Instruments, \href{https://www.ni.com/en/shop/data-acquisition/measurement-fundamentals/analog-fundamentals/anti-aliasing-filters-and-their-usage-explained.html}{\emph{Anti-Aliasing Filters and Their Usage Explained}}, accessed 2026-01-29.
+
+\bibitem{MathWorksNyquist}
+MathWorks, \href{https://www.mathworks.com/discovery/nyquist-theorem.html}{\emph{What Is the Nyquist Theorem?}}, accessed 2026-01-29.
+
+\bibitem{SciPyDecimate}
+SciPy, \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.decimate.html}{\emph{scipy.signal.decimate documentation}}, accessed 2026-01-29.
+
+\bibitem{SciPyResamplePoly}
+SciPy, \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.resample_poly.html}{\emph{scipy.signal.resample\_poly documentation}}, accessed 2026-01-29.
+
+\bibitem{SciPyResampleFFT}
+SciPy, \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.resample.html}{\emph{scipy.signal.resample documentation}}, accessed 2026-01-29.
+
+\bibitem{SciPyWelch}
+SciPy, \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.welch.html}{\emph{scipy.signal.welch documentation}}, accessed 2026-01-29.
+
+\bibitem{MathWorksMultistage}
+MathWorks, \href{https://www.mathworks.com/help/dsp/ug/overview-of-multistage-filters.html}{\emph{Overview of Multistage Filters}}, accessed 2026-01-29.
+
+\bibitem{AllAboutCircuitsNyquist}
+All About Circuits, \href{https://www.allaboutcircuits.com/technical-articles/nyquist-shannon-theorem-understanding-sampled-systems/}{\emph{Nyquist--Shannon theorem (sampled systems)}}, accessed 2026-01-29.
+
+\bibitem{GfGNyquist}
+GeeksforGeeks, \href{https://www.geeksforgeeks.org/electronics-engineering/nyquist-sampling-theorem/}{\emph{Nyquist Sampling Theorem}}, accessed 2026-01-29.
+
+\bibitem{GfGSamplingComm}
+GeeksforGeeks, \href{https://www.geeksforgeeks.org/electrical-engineering/sampling-in-digital-communication/}{\emph{Sampling in Digital Communication}}, accessed 2026-01-29.
+
+\end{thebibliography}
 \subsection{Aliasing explained}
 
 Aliasing arises when a continuous-time signal with frequency components above half the sampling rate is sampled.  These components fold back into lower frequencies, creating distortions that cannot be removed after sampling.  According to the sampling theorem, the sampling frequency $f_s$ must exceed twice the highest frequency present (the signal bandwidth) to allow perfect reconstruction 【874713969011553†L160-L166】.  Otherwise aliasing occurs.

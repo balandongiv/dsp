@@ -84,3 +84,138 @@ The Week\,3 demonstration generates a two‑tone signal and computes the FFT usi
 \begin{itemize}
   \item DFT and inverse DFT formulas 【745517071471635†L44-L49】.
 \end{itemize}
+
+
+
+%%%%%%%%%% PROMP
+
+
+% You are co-authoring a textbook chapter for an undergraduate course: “Digital Signal Processing for Industrial Physics.”
+
+% Writing rules (non-negotiable):
+% - Black-box philosophy: focus on (1) required inputs/assumptions, (2) parameter choices and tuning, (3) how to interpret outputs, (4) failure modes and diagnostics, (5) industrial relevance.
+% - Avoid proofs/derivations. Keep math minimal and operational (short formulas are OK if used as “rules to apply”).
+% - Always connect FFT results to real instrumentation realities: sensor noise, finite records, nonstationarity, speed drift, quantization, saturation, EMI, and timing jitter.
+
+% Task:
+% Expand and restructure the LaTeX chapter “Discrete Fourier Transform, Windowing and Spectral Leakage” to be more informative.
+% Keep the existing sections (Learning objectives, Industrial context, Core concepts, Operational formulas, Parameter tuning playbook, Pitfalls, Code walkthrough, Exercises), but add practical subsections that practitioners need:
+
+% Required additions:
+% 1) A “frequency-axis sanity” section: how to compute the frequency bin spacing, Nyquist, one-sided vs two-sided spectra, and correct amplitude scaling (peak vs RMS; window coherent gain).
+% 2) Windowing as a tool: when to use rectangular vs Hann/Hamming/Blackman/Kaiser; interpret main-lobe width vs side-lobe level.
+% 3) Leakage mechanics explained operationally: integer cycles, non-integer cycles, and what leakage looks like; define a leakage metric clearly.
+% 4) Resolution vs record length: Rayleigh resolution (as a rule), and why zero-padding doesn’t create new resolution.
+% 5) FFT as a measurement instrument: how to choose N, overlap, and averaging (Welch) for noisy industrial signals.
+% 6) Peak finding and frequency estimation: bin interpolation (quadratic) and how zero-padding helps peak localization.
+% 7) A short case study (with numbers) for rotating machinery or power electronics: what settings you pick, what goes wrong, and how you fix it.
+% 8) A “diagnostics checklist” that a technician can follow when the spectrum looks suspicious.
+
+% Output format:
+% - First provide an improved chapter outline (sections/subsections).
+% - Then provide expanded LaTeX content for each section (not just bullets). Include at least:
+%   - one “Quick Recipe” box (step-by-step),
+%   - one “Decision tree” or checklist,
+%   - a “Parameter tuning playbook” table (you can reuse and expand the existing table),
+%   - clear definitions of metrics (leakage ratio, scalloping loss, noise floor estimate).
+% - Include a Python walkthrough plan (NumPy/SciPy) that compares windows and shows quantitative metrics, plus a parameter sweep over N and overlap.
+% - Finish with industrially grounded exercises that test operational understanding (no proofs).
+% ```
+
+% ---
+
+% ## 2) Suggested expanded chapter structure (more informative, still black-box)
+
+% This structure keeps your original sections but adds the missing “how to use FFT in the field” pieces.
+
+% ### 0. Chapter map and “FFT as an instrument” (new, short)
+
+% * What FFT can tell you reliably vs what it can’t.
+% * The minimum plots/checks you should always do.
+
+% ### 1. Learning objectives (keep, add success criteria)
+
+% Add “you can do it if…” lines:
+
+% * “Given (f_s) and (N), you can label the frequency axis correctly.”
+% * “Given a tone between bins, you can predict scalloping loss and choose a window.”
+
+% ### 2. Industrial context (expand into mini vignettes)
+
+% * Rotating machinery: harmonics, sidebands, speed drift.
+% * Power electronics: switching ripple, EMI spikes, harmonics.
+% * Audio/acoustics: weak tones near strong components, leakage masking.
+
+% ### 3. Core concepts (expand into practical building blocks)
+
+% #### 3.1 DFT/FFT outputs and how to read them (new emphasis)
+
+% * Two-sided vs one-sided spectra (real signals).
+% * Frequency bins: spacing (\Delta f = f_s/N), Nyquist, bin index → Hz.
+% * Magnitude/phase interpretation (what phase is meaningful for).
+
+% #### 3.2 Amplitude scaling and window coherent gain (new)
+
+% * Why “FFT magnitude” is not automatically amplitude.
+% * Coherent gain correction for windows (operational: “divide by CG”).
+% * Peak vs RMS conventions; dB scaling.
+
+% #### 3.3 Windowing and leakage (keep, expand)
+
+% * Leakage as “finite record mismatch.”
+% * Integer cycles vs non-integer cycles.
+% * Main-lobe width vs side-lobes as a trade.
+% * Define leakage ratio precisely and show how to measure it.
+
+% #### 3.4 Resolution vs variance: record length, overlap, averaging (new)
+
+% * Rule: longer (N) → finer (\Delta f), but slower time tracking.
+% * Welch averaging reduces variance, not leakage.
+% * Overlap as a knob for smoother PSD estimates.
+
+% #### 3.5 Zero-padding and peak localization (keep, expand)
+
+% * Zero-padding interpolates the spectrum (helps peak picking).
+% * Bin interpolation (quadratic) for frequency estimates.
+
+% ### 4. Operational formulas (keep but turn into “rules you apply”)
+
+% * Frequency axis rule: (f[k]=k f_s/N).
+% * One-sided scaling rule for real signals.
+% * Rayleigh “resolution” rule: (\approx 1/T) (operational).
+% * Leakage ratio definition and scalloping loss reminder.
+
+% ### 5. Parameter tuning playbook (expand your table + add validation steps)
+
+% Add knobs like:
+
+% * detrending / mean removal,
+% * window normalization,
+% * averaging method (Welch),
+% * dynamic range tricks (log scale, PSD vs magnitude).
+
+% ### 6. Pitfalls, failure modes and diagnostics (expand into a workflow)
+
+% * Leakage, scalloping, aliasing (keep).
+% * Added: wrong frequency axis, wrong scaling, speed drift smearing, nonstationarity, saturation harmonics, DC offsets.
+% * A step-by-step “suspicious spectrum” checklist.
+
+% ### 7. Mini case study (new)
+
+% Example: 1× and 2× shaft frequency + a weak bearing tone near a strong harmonic.
+
+% * Show wrong setup (rectangular, short record) → leakage hides weak tone.
+% * Fix (Hann/Blackman + longer record + Welch) → weak tone emerges.
+% * Include numbers: (f_s), (N), overlap, window, leakage metric.
+
+% ### 8. Code walkthrough (keep, make it reproducible narrative)
+
+% * Build signal + noise + speed drift variant.
+% * Compare windows quantitatively (leakage ratio, scalloping loss).
+% * Sweep (N), overlap → show variance vs resolution trade.
+
+% ### 9. Exercises (revise to be operational, not derivational)
+
+% Replace “derive relationship” with “verify/measure relationship” using plots + metrics.
+
+
