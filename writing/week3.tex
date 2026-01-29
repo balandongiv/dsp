@@ -1,4 +1,8 @@
 \chapter{Discrete Fourier Transform, Windowing and Spectral Leakage}
+% https://www.geeksforgeeks.org/software-engineering/discrete-fourier-transform-and-its-inverse-using-matlab/
+%  https://www.tutorialspoint.com/discrete-fourier-transform-and-its-inverse-using-matlab
+% https://warwick.ac.uk/fac/sci/moac/people/students/2005/jing_kang/dsp/seminar6_dft_matlab.pdf
+
 
 \section{Learning objectives}
 
@@ -11,12 +15,15 @@ After completing this chapter you will be able to:
 \end{itemize}
 
 \section{Industrial context}
+The Discrete Fourier Transform (DFT) and its Inverse (IDFT) are core techniques in digital signal processing. They convert signals between the time or spatial domain and the frequency domain, revealing frequency components in data.
 
 Frequency analysis is fundamental in machinery diagnostics, audio processing and communications.  Engineers use the FFT to identify harmonics, modulations and fault signatures.  However, the finite observation window introduces artefacts: leakage spreads energy into adjacent bins and can mask weak components.  Understanding and mitigating leakage is essential when monitoring rotating machinery or analysing speech signals.
 
 \section{Core concepts}
 
 \subsection{Discrete Fourier transform}
+
+The standard equations which define how the Discrete Fourier Transform and the Inverse convert a signal from the time domain to the frequency domain and vice versa are as follows: 
 
 For a sequence $x[n]$ of length $N$, the DFT and its inverse are defined by
 \[
