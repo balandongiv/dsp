@@ -1,62 +1,45 @@
-# For Students
+# Digital Signal Processing for Industrial Physics
 
-This repository provides a **lightweight starter template** for coding and LaTeX exercises, along with **quick-reference guides** for common developer workflows.
+This repository accompanies the **Digital Signal Processing for Industrial Physics** elective.  It provides a codes‑pace–ready set of Python demonstrations, datasets and completion checks for every week of the course.  The emphasis is on **black‑box operational understanding**—each notebook or script shows what goes into the DSP block, which knobs are tuned, what comes out, and how it can fail under industrial constraints.
 
-For **APID**, using this repository is **not compulsory**, but it is **strongly recommended** to help you get set up quickly and work more efficiently.
+The course covers sampling, filtering, spectral estimation, time–frequency methods, multichannel analysis, feature extraction and data‑driven approaches to pattern recognition and anomaly detection.  Each lesson folder contains a minimal demonstration (`demo.py`), a README explaining the objective, and a completion check script (`checks.py`) to validate that the learner has tuned parameters and measured metrics as required by the syllabus.
 
----
+## Structure
 
-## 🚀 Getting Started with Codespaces
+- `dsp_utils/` – Shared helper functions for generating synthetic datasets, computing metrics and plotting.  Utilities in this package are used by the lesson demos to ensure consistent behaviour across weeks.
+- `lessons/lesson_XX/` – Each weekly module has a corresponding lesson folder (e.g. `lesson_01`, `lesson_02`, … `lesson_14`).  Inside each folder you will find:
+    - `README.md` – A brief summary of the week’s DSP topic and instructions for running the demonstration.
+    - `demo.py` – A runnable script that synthesises data, applies the relevant DSP methods and prints or visualises the results.  These scripts are designed to work in a Codespaces environment with no internet access; all data is generated or cached locally.
+    - `checks.py` – A small test module that verifies the learner’s work against the completion criteria defined in the syllabus.  Running `python checks.py` should return without assertion failures when the demo is complete.
+- `slides_spec/` – A collection of JSON specifications that describe every slide in the course.  These specs are consumed by a separate slide‑rendering agent and are not actual presentations.  Each file follows the schema defined in the syllabus.
+- `curriculum_manifest.json` – A manifest linking each week to its slide specification, lesson folder, dataset sources and completion checks.  This file is used by the QA agent to verify alignment between slides, code and datasets.
+- `qa_report.json` – A summary of quality‑assurance checks across the entire curriculum.  It indicates whether each week’s slide spec, code and alignment tests passed the acceptance criteria.
 
-When you open this repository in **GitHub Codespaces**, a complete development environment will be set up automatically.
+## Getting Started
 
-* All required tools and dependencies are installed for you.
-* **First-time setup:** ~10 minutes
-* **Subsequent openings:** much faster (usually a few seconds)
+1. Install the required dependencies:
 
-No local installation is required.
+   ```bash
+   pip install -r requirements.txt
+   ```
 
----
+2. Navigate to a lesson folder and run the demonstration.  For example, for Week 1:
 
-## 💬 How to Add a Model in the Chat
+   ```bash
+   cd lessons/lesson_01
+   python demo.py
+   ```
 
-1. Open the chat interface in your development environment.
-2. Select or configure the model you want to use (depending on the tool or extension provided).
-3. Start interacting with the model directly in the chat window.
+   This will generate synthetic sensor signals, apply sampling and quantisation experiments and display summary metrics.  You can modify the tuning parameters at the top of each script to experiment with different settings.
 
-> If a specific model configuration file or command is required, refer to the project instructions or comments in the repository.
+3. Run the completion check to verify that your work meets the criteria:
 
----
+   ```bash
+   python checks.py
+   ```
 
-## 📄 How to Compile the PDF (LaTeX)
+   If the script exits without errors, you have satisfied the week’s minimum completion requirements.
 
-To compile the LaTeX source into a PDF:
+## License
 
-1. Open the project in Codespaces.
-
-2. Navigate to the LaTeX file (e.g. `main.tex`).
-
-3. Use one of the following methods:
-
-    * **Command line:**
-
-      ```bash
-      pdflatex main.tex
-      ```
-    * **Editor build command:**
-      Use the “Build LaTeX / Compile PDF” option provided by the editor or LaTeX extension.
-
-4. The generated PDF will appear in the same directory as the `.tex` file.
-
----
-
-## ✅ Summary
-
-* ✔ Recommended (but optional) for APID
-* ✔ Ready-to-use Codespaces environment
-* ✔ Supports coding and LaTeX workflows
-* ✔ Minimal setup, fast iteration
-
-If you run into issues, check the repository notes or ask for help early.
-
----
+This teaching material is released for educational purposes.  Please consult your instructor or the course syllabus for details on permitted use.

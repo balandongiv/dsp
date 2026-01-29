@@ -1,0 +1,80 @@
+\chapter{Supervised Learning for Signal Classification}
+
+\section{Learning objectives}
+
+After this chapter you will be able to:
+\begin{itemize}
+  \item Construct feature vectors from time‑domain and frequency‑domain measurements suitable for supervised learning.
+  \item Train and evaluate classifiers such as logistic regression and random forests on labelled sensor data.
+  \item Compute performance metrics including accuracy, false‑alarm rate and confusion matrices.
+  \item Design experiments to avoid over‑fitting and handle class imbalance.
+\end{itemize}
+
+\section{Industrial context}
+
+Data‑driven methods are increasingly used to classify machine health states and fault types.  Supervised models require labelled data, which may come from simulations, expert annotations or controlled experiments.  The choice of features and classifier complexity balances performance, interpretability and computational cost.
+
+\section{Core concepts}
+
+\subsection{Feature construction}
+
+Combine time‑domain features (RMS, crest factor, kurtosis) and spectral features (bandpower at fault frequencies, envelope peaks) to form a feature vector.  Normalize features to have zero mean and unit variance to improve classifier training.
+
+\subsection{Logistic regression}
+
+Logistic regression is a linear classifier that models the probability of class membership as a logistic function of the features.  It is simple, interpretable and works well when classes are linearly separable.  Regularization (controlled by the parameter $C$) prevents over‑fitting.
+
+\subsection{Random forests}
+
+A random forest is an ensemble of decision trees trained on bootstrapped subsets of the data with random feature selection.  It can model nonlinear decision boundaries and interactions between features.  Key hyperparameters include the number of trees, maximum tree depth and minimum samples per leaf.
+
+\section{Operational formulas}
+
+\paragraph{Logistic regression.}  Given features $\mathbf{x}$ and labels $y\in\{0,1\}$, logistic regression predicts $p = 1/(1+e^{-\mathbf{w}^T\mathbf{x}-b})$.  The model parameters $(\mathbf{w},b)$ are obtained by maximizing the log‑likelihood with regularization.
+
+\paragraph{Random forest voting.}  Each tree outputs a class prediction.  The random forest predicts the class receiving the majority of votes.
+
+\paragraph{Performance metrics.}  Accuracy is the proportion of correct predictions.  The false‑alarm rate for the positive class is the fraction of normal samples misclassified as faults.  Confusion matrices summarise true positives, false positives, false negatives and true negatives.
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Regularization $C$ (logistic) & 1.0 & Over‑fitting & Decrease $C$ to increase regularization \\
+    Number of trees (RF) & 100 & High variance & Increase number of trees or limit depth \\
+    Feature normalization & Z‑score & Slow convergence & Ensure features are scaled and centred \\
+    Class weights & Uniform & Bias towards majority class & Use inverse frequency weighting for imbalanced data \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for logistic regression and random forests.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Over‑fitting.}  Models may memorise training data.  Use cross‑validation, regularization and limit tree depth.
+  \item \textbf{Class imbalance.}  When faults are rare, accuracy may be misleading.  Monitor precision, recall and false‑alarm rate.
+  \item \textbf{Poor feature selection.}  Irrelevant or redundant features degrade performance.  Use correlation analysis or domain knowledge to select features.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,12 demonstration constructs a labelled dataset from synthetic vibration signals, extracts statistical and spectral features, trains a logistic regression classifier and a random forest classifier and evaluates accuracy and false‑alarm rate.  It repeats training with fixed random seeds for reproducibility.  The failure test randomly shuffles labels to illustrate degraded performance when label–feature correspondence is lost.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Collect or synthesise a dataset with multiple fault types (e.g., imbalance, misalignment, bearing defects).  Train a random forest and compute the confusion matrix.  Interpret which faults are hardest to distinguish.
+  \item Use cross‑validation to estimate the generalisation performance of logistic regression with different regularization strengths.  Plot accuracy and false‑alarm rate versus $C$.
+  \item Investigate other classifiers such as support vector machines or k‑nearest neighbours.  Compare their performance and computational cost on the same feature set.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Standard supervised learning texts provide details on logistic regression and random forests.
+\end{itemize}

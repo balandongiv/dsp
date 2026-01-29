@@ -1,0 +1,228 @@
+{
+  "week_id": "week_01",
+  "title": "Introduction to Digital Signal Processing",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W01-S01",
+      "type": "title",
+      "title": "Introduction to DSP as Information Management",
+      "objective": "Orient students to the course and highlight the role of DSP in industrial instrumentation.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "DSP for Industrial Physics"},
+          {"label": "bullets", "content": ["Black-box view: what goes in, what knobs you tune, what comes out", "Real-world sensors: vibration, current, acoustic, optical"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Illustration of sensor → analog front‑end → ADC conversion", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Always start by defining the information budget"},
+          {"label": "sanity_check", "content": "If your data rate doubles, ask what extra information you gain"}
+        ]
+      },
+      "talking_points": [
+        "Welcome students to the course and explain the black‑box philosophy.",
+        "Introduce key sensor modalities used in industrial physics.",
+        "Set expectations: operational understanding matters more than derivations."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_01/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["SNR values for different sampling rates"]
+      }
+    },
+    {
+      "slide_id": "W01-S02",
+      "type": "context",
+      "title": "Industrial Motivation and Information Budget",
+      "objective": "Connect sampling and quantisation choices to industrial decision making.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why sampling matters"},
+          {"label": "bullets", "content": ["Motor current signatures: narrowband fault tones", "Vibration monitoring: transient bursts at fault frequencies", "Choosing fs and bit depth affects what faults you can see"]}
+        ],
+        "visuals": [
+          {"visual_type": "pipeline", "description": "Acquire → Preprocess → Analyze → Decide → Validate for a DAQ system", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "fs should be at least twice the highest frequency of interest"},
+          {"label": "sanity_check", "content": "Does your bit depth allow you to resolve the smallest fault amplitude?"}
+        ]
+      },
+      "talking_points": [
+        "Discuss the industrial justification for careful sampling choices.",
+        "Explain the concept of an information budget and why we can’t capture everything.",
+        "Preview the pipeline structure used throughout the course."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_01/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Plot of signal and its sampled version"]
+      }
+    },
+    {
+      "slide_id": "W01-S03",
+      "type": "method",
+      "title": "Sampling: Inputs, Knobs and Outputs",
+      "objective": "Present the black‑box view of analog‑to‑digital conversion.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Analog → Digital conversion"},
+          {"label": "bullets", "content": ["Inputs: sensor signal, analog front‑end settings", "Knobs: sampling frequency fs, bit depth, full‑scale range", "Outputs: discrete samples, quantised amplitudes", "Failure: aliasing, quantisation noise, clipping"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Block diagram of ADC showing inputs, knobs and outputs", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "fs > 2 f_{max}", "how_to_use": "Select fs to exceed twice the highest frequency of interest", "symbol_defs_inline": ["f_{max}=\text{maximum signal frequency}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Choose bit depth so quantisation noise floor is below fault amplitude"},
+          {"label": "sanity_check", "content": "Check full‑scale range to avoid saturation"}
+        ]
+      },
+      "talking_points": [
+        "Explain each component of the ADC black box: what signals it expects and what knobs we control.",
+        "Relate the Nyquist criterion to sampling frequency selection.",
+        "Discuss how quantisation and clipping manifest in digital data."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_01/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Table of SNR vs sampling rate"]
+      }
+    },
+    {
+      "slide_id": "W01-S04",
+      "type": "demo",
+      "title": "Demo: Sampling Rate Sweep",
+      "objective": "Demonstrate how changing fs affects the SNR of a digitised signal.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Experiment: vary fs"},
+          {"label": "bullets", "content": ["Generate a motor‑current‑like signal with a transient", "Simulate sampling at low and high fs", "Compute SNR for each case"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Time‑domain signals sampled at different rates", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Higher fs should not improve amplitude resolution"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the parameter sweep in the code.",
+        "Interpret the resulting SNR values and connect them to information budget.",
+        "Encourage students to try additional fs values or vary bit depth." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_01/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Console printout of SNR values"]
+      }
+    },
+    {
+      "slide_id": "W01-S05",
+      "type": "failure",
+      "title": "Failure Modes: Aliasing, Quantisation and Clipping",
+      "objective": "Highlight common pitfalls when sampling signals and suggest remedies.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "What can go wrong"},
+          {"label": "bullets", "content": ["Aliasing: under‑sampling folds high‑frequency content", "Quantisation noise: limited bit depth masks small signals", "Clipping: saturation distorts waveform irreversibly"]}
+        ],
+        "visuals": [
+          {"visual_type": "before_after", "description": "Example of a clipped waveform and its distorted spectrum", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Pre‑filter with an anti‑aliasing filter before sampling"},
+          {"label": "sanity_check", "content": "Check your ADC’s full‑scale range against expected amplitudes"}
+        ]
+      },
+      "talking_points": [
+        "Show visual examples of aliasing, quantisation steps and clipping.",
+        "Explain why these errors cannot be fixed after digitisation.",
+        "Discuss quick fixes: increase anti‑alias filter order, adjust bit depth or range." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_01/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify fs and inspect the waveform",
+        "expected_output": ["Plot showing aliasing or clipping"]
+      }
+    },
+    {
+      "slide_id": "W01-S06",
+      "type": "exercise",
+      "title": "Exercise: Plan Your DAQ",
+      "objective": "Encourage learners to apply sampling choices to three sensor scenarios.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "What would you choose?"},
+          {"label": "bullets", "content": ["Scenario A – motor current monitoring: choose fs, bits, range", "Scenario B – vibration event detection: choose fs and anti‑alias cutoff", "Scenario C – ultrasonic detection: justify information to retain"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Table for learners to fill in fs, bit depth, range and justification", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Sweeps: vary fs and bit depth to see trade‑offs"},
+          {"label": "sanity_check", "content": "Remember storage and compute constraints"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise instructions and expected deliverables.",
+        "Remind students to report SNR or RMSE for each scenario.",
+        "Encourage brief written justification linking choices to retained information." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_01/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify FS_VALUES and rerun run_demo()",
+        "expected_output": ["Updated SNR table", "Written justification in the notebook"]
+      }
+    },
+    {
+      "slide_id": "W01-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce key points and check understanding with a short quiz.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 1 in review"},
+          {"label": "bullets", "content": ["DSP as an information‑management pipeline", "Sampling choices: fs, bit depth, full‑scale range", "Common failure modes: aliasing, quantisation, clipping"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of the black‑box ADC block highlighting inputs/knobs/outputs", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. What happens if fs < 2 fmax?\n2. How does increasing bit depth affect quantisation noise?\n3. Why can’t clipping be undone?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the week’s learning outcomes.",
+        "Pose the quiz questions and allow students to discuss.",
+        "Preview the next week on sampling theory and anti‑aliasing."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_01/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Reflect on results and answer quiz questions",
+        "expected_output": ["Responses to quiz questions"]
+      }
+    }
+  ]
+}

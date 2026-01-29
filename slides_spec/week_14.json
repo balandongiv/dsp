@@ -1,0 +1,233 @@
+{
+  "week_id": "week_14",
+  "title": "Deep Learning for Time Frequency Signal Representations",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W14-S01",
+      "type": "title",
+      "title": "Capstone: Neural Models on Time–Frequency Features",
+      "objective": "Set the stage for the capstone week by introducing a black‑box workflow that combines time–frequency representations with lightweight neural classifiers.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Integrate STFT and neural networks for automated fault detection"},
+          {"label": "bullets", "content": ["STFT or CWT as feature extractors", "MLPClassifier as constrained neural model", "Deployment considerations: latency, quantization, drift"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "End‑to‑end pipeline: raw sensor → STFT spectrogram → pooling → neural classifier → decision", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use log‑scaled spectrograms and pooling to reduce dynamic range and dimensionality"},
+          {"label": "sanity_check", "content": "Always measure inference latency along with classification metrics"}
+        ]
+      },
+      "talking_points": [
+        "Explain that this final module synthesises previous topics: sampling, filtering, PSD and feature extraction into a time–frequency representation fed into a neural model.",
+        "Emphasise the black‑box mindset: what you feed into the model (spectrograms), which knobs you control (window length, overlap, pooling, hidden units, regularisation) and what outputs you expect (fault class probabilities and false alarm rates).",
+        "Highlight that we focus on practical implementation using scikit‑learn's MLPClassifier rather than deep CNNs, adhering to compute constraints."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_14/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["false_alarm_rate", "latency_ms", "classification accuracy"]
+      }
+    },
+    {
+      "slide_id": "W14-S02",
+      "type": "context",
+      "title": "Industrial Motivation: Pump and Compressor Monitoring",
+      "objective": "Provide an industrial scenario where time–frequency representations and neural classifiers enable automated fault detection.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why go beyond traditional features?"},
+          {"label": "bullets", "content": ["Pump or compressor casings emit complex vibration and acoustic signals", "Fault signatures appear as sidebands and transient bursts in the time–frequency plane", "Neural models can learn patterns that are hard to hand‑engineer"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Log‑magnitude spectrogram of healthy vs faulty pump signals showing sidebands and transient bursts", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use sensor modalities (accelerometer, microphone) appropriate to the fault type; combine if helpful"},
+          {"label": "sanity_check", "content": "Ensure the representation captures both tonal and transient content"}
+        ]
+      },
+      "talking_points": [
+        "Describe the use‑case of monitoring pumps and compressors for faults like cavitation, bearing wear and misalignment.",
+        "Explain that simple time‑ or frequency‑domain features may miss subtle sidebands or transient events, motivating time–frequency representations.",
+        "Show an example spectrogram where healthy and faulty signals diverge, emphasising how patterns are localised in time and frequency."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_14/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "plot_spectrograms()",
+        "expected_output": ["time_plot", "spectrogram"]
+      }
+    },
+    {
+      "slide_id": "W14-S03",
+      "type": "method",
+      "title": "Black‑Box Capstone Workflow: Inputs, Knobs, Outputs, Failures",
+      "objective": "Define the inputs, tunable parameters, outputs and potential failure modes of the capstone time–frequency neural pipeline.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Raw segments → STFT → pooling → neural model"},
+          {"label": "bullets", "content": ["Inputs: raw sensor windows (accelerometer or microphone) and optional secondary channel (e.g., current)", "Knobs: stft_window_length, stft_overlap, log_scaling/normalisation, pooling_strategy (time vs frequency bands), MLP hidden_layer_sizes and alpha", "Outputs: classification probabilities, false_alarm_rate, latency_ms", "Failure: representation leakage, regime confound (speed/load), quantization/saturation, compute budget exceeded"]}
+        ],
+        "visuals": [
+          {"visual_type": "pipeline", "description": "Flowchart showing segment → STFT → log scaling → pooling → scaling → neural classifier → decision", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "X[m, k] = \sum_{n=0}^{N-1} x[n] w[n-m] e^{-j 2\pi k n/N}", "how_to_use": "Compute STFT by sliding window w[n] of length N over signal x[n]; m is time index and k is frequency bin", "symbol_defs_inline": ["X[m,k]=STFT coefficient", "N=window length", "w[n]=window function"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Choose STFT window length to balance time and frequency resolution; typical 256–512 samples at 16 kHz"},
+          {"label": "sanity_check", "content": "Check that pooled features are dimension‑reduced enough for real‑time inference (< 100 features)"}
+        ]
+      },
+      "talking_points": [
+        "Describe the sequence of operations: segment the raw signal, compute STFT using a chosen window and overlap, apply log scaling to compress dynamic range, pool across time or frequency bands to reduce dimensionality, normalise features and feed into an MLP classifier.",
+        "Identify the tunable knobs: STFT window length and overlap (affecting resolution and latency), pooling strategy (time averaging vs band aggregation), neural network architecture (number of hidden layers and units) and regularisation parameter alpha.",
+        "List outputs: predicted fault class probabilities, evaluation metrics such as false_alarm_rate and latency_ms, and highlight the need to measure compute time on the target hardware.",
+        "Discuss failure modes: representation leakage due to overlapping windows across train/test, models learning operating regime rather than fault, quantization/clipping effects in the spectrogram, and exceeding compute limits leading to unacceptable latency." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_14/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Pooling configuration", "MLP hyperparameters", "metrics"]
+      }
+    },
+    {
+      "slide_id": "W14-S04",
+      "type": "demo",
+      "title": "Demonstration: Build and Evaluate the Capstone Pipeline",
+      "objective": "Walk through a Python demonstration that constructs the time–frequency representation, trains an MLP classifier and evaluates performance and latency.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "From spectrograms to predictions"},
+          {"label": "bullets", "content": ["Generate synthetic signals with healthy and faulty classes including regime changes", "Compute log‑spectrogram using scipy.signal.stft", "Pool features (e.g., average over frequency bands) and normalise", "Train MLPClassifier with a small hyperparameter sweep", "Report false_alarm_rate, latency_ms and RMSE"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrum", "description": "Example spectrogram segment for the synthetic data", "data_source": "synthetic demo"},
+          {"visual_type": "table", "description": "Table summarising parameter settings (window length, hidden units, alpha) vs metrics (accuracy, false_alarm_rate, latency_ms)", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Perform cross‑validation using non‑overlapping runs to avoid leakage"},
+          {"label": "sanity_check", "content": "Verify that latency per window remains below the target (e.g., < 30 ms)"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the demonstration script: generate synthetic data reflecting healthy and faulty conditions with different operating regimes.",
+        "Show how to compute the STFT using SciPy, apply log scaling and pool the spectrogram into a feature vector.",
+        "Demonstrate training an MLP classifier with a small hyperparameter sweep for hidden sizes and regularisation; present a table of resulting metrics including accuracy, false_alarm_rate and inference latency.",
+        "Highlight how parameter choices affect performance: larger windows improve frequency resolution but increase latency, more hidden units improve classification but may overfit or exceed compute limits."  
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_14/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["spectrogram", "classification metrics table", "latency measurement"]
+      }
+    },
+    {
+      "slide_id": "W14-S05",
+      "type": "failure",
+      "title": "Failure Modes and Mitigations",
+      "objective": "Identify and address common problems when deploying neural time–frequency models in industrial environments.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "When does the capstone pipeline break?"},
+          {"label": "bullets", "content": ["Representation leakage: training and test windows overlapping in time or frequency; leads to overoptimistic performance", "Regime confound: model learns speed/load changes instead of faults", "Quantization and saturation: clipped signals alter spectrogram patterns", "Compute constraints: fine STFT settings or large networks exceed latency budget"]}
+        ],
+        "visuals": [
+          {"visual_type": "before_after", "description": "Comparison of misclassified spectrogram due to leakage vs corrected using run‑based splitting", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Enforce run‑ or asset‑based splits to avoid leakage"},
+          {"label": "sanity_check", "content": "Monitor false_alarm_rate separately for each operating regime"}
+        ]
+      },
+      "talking_points": [
+        "Explain that overlap between training and testing windows can leak near‑duplicate spectrograms; mitigate by splitting data by runs or by time.",
+        "Describe how models may inadvertently learn operating regime rather than fault signatures; emphasise including regime diversity or adding regime features and calibrating per regime.",
+        "Discuss how quantization and saturation distort spectrograms; recommend proper scaling, dynamic range management and using log scaling to reduce sensitivity.",
+        "Warn that overly fine STFT settings or large neural networks increase compute demands; propose coarser STFT or feature pooling as mitigations."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_14/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo_failure()",
+        "expected_output": ["misclassified spectrogram", "corrected performance after mitigation"]
+      }
+    },
+    {
+      "slide_id": "W14-S06",
+      "type": "exercise",
+      "title": "Exercise: Tune and Deploy Your Own Capstone Model",
+      "objective": "Encourage learners to experiment with STFT and MLP parameters to meet industrial constraints and document their deployment plan.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Your turn: design a pipeline under constraints"},
+          {"label": "bullets", "content": ["Select two STFT window lengths and overlaps", "Choose at least two hidden_layer_sizes and alpha values", "Measure accuracy, false_alarm_rate and latency_ms", "Propose threshold and regime handling strategies", "Document deployment decisions (monitoring, retraining cadence)"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Blank table for learners to record parameter combinations and resulting metrics", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Include at least one small and one large window to observe resolution vs latency trade‑offs"},
+          {"label": "sanity_check", "content": "Ensure false_alarm_rate meets the budget (e.g., < 5%) while latency stays within limits"}
+        ]
+      },
+      "talking_points": [
+        "Instruct students to use the provided demo code or adapt it to test different STFT window lengths (e.g., 256 vs 512 samples) and overlaps.",
+        "Encourage them to tune the MLP hidden layer sizes and regularisation (alpha) parameters; record metrics in the table.",
+        "Ask learners to choose a decision threshold that meets a false‑alarm budget and to think about how to handle multiple operating regimes (e.g., using regime‑specific thresholds).",
+        "Have them outline a deployment plan including monitoring for drift and specifying when to retrain the model."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_14/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "experiment()",
+        "expected_output": ["parameter_metrics_table", "deployment_plan"]
+      }
+    },
+    {
+      "slide_id": "W14-S07",
+      "type": "summary",
+      "title": "Summary and Quick Quiz",
+      "objective": "Summarise the capstone concepts and test understanding through a short quiz.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Key takeaways"},
+          {"label": "bullets", "content": ["Time–frequency representations reveal both tonal and transient structures", "Pooling and log scaling help manage dimensionality and dynamic range", "Neural models (MLP) can classify faults when tuned and validated carefully", "Consider regime, quantization, and compute constraints during deployment"]}
+        ],
+        "visuals": [],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Always evaluate models on unseen runs to avoid leakage"},
+          {"label": "sanity_check", "content": "Use interpretability checks: examine misclassified spectrograms to understand failure modes"}
+        ]
+      },
+      "talking_points": [
+        "Summarise how the capstone week integrates STFT, pooling and neural models into an end‑to‑end pipeline.",
+        "Reiterate the importance of balancing resolution, dimensionality and compute constraints when designing time–frequency analyses.",
+        "Encourage students to reflect on the industrial implications: high false‑alarm costs, regime diversity and need for reliable deployment."  
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_14/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "quiz()",
+        "expected_output": ["quiz_responses"]
+      }
+    }
+  ]
+}

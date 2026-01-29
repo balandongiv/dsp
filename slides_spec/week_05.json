@@ -1,0 +1,229 @@
+{
+  "week_id": "week_05",
+  "title": "IIR Filter Design and Stability",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W05-S01",
+      "type": "title",
+      "title": "IIR Filter Design and Stability",
+      "objective": "Introduce infinite impulse response filters and discuss stability and phase effects.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "IIR filters: efficient but delicate"},
+          {"label": "bullets", "content": ["Butterworth and Chebyshev designs", "Feedback and recursion", "Phase non‑linearity"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Magnitude response of Butterworth vs Chebyshev low‑pass filters", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use IIR filters for sharp transitions with low order"},
+          {"label": "sanity_check", "content": "Check pole locations: they must lie inside the unit circle for stability"}
+        ]
+      },
+      "talking_points": [
+        "Explain why IIR filters achieve steep transitions with fewer coefficients than FIR filters.",
+        "Introduce Butterworth (maximally flat) and Chebyshev (with ripple) designs.",
+        "Highlight the trade‑off: efficient computation vs potential instability and phase distortion."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_05/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["SNR improvement, bandpower metrics and pole plots"]
+      }
+    },
+    {
+      "slide_id": "W05-S02",
+      "type": "context",
+      "title": "Filtering Thermocouple and Current Signals",
+      "objective": "Motivate IIR filters with low‑frequency temperature and current sensing scenarios.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Sharp filters for constrained hardware"},
+          {"label": "bullets", "content": ["Thermocouple signals: reject 60 Hz mains interference", "Motor current: isolate narrowband fault oscillations", "IIR filters offer low compute overhead"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Thermocouple signal before and after Chebyshev band‑pass filtering", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Choose passband ripple <1 dB for measurement signals"},
+          {"label": "sanity_check", "content": "Beware of phase distortion in timing‑critical applications"}
+        ]
+      },
+      "talking_points": [
+        "Describe why embedded sensors often rely on IIR filters due to limited processing power.",
+        "Explain that IIR filters can isolate narrow bands (e.g., 5 Hz oscillation) efficiently.",
+        "Highlight the need to monitor stability and phase when using feedback."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_05/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Band‑pass filter response plots"]
+      }
+    },
+    {
+      "slide_id": "W05-S03",
+      "type": "method",
+      "title": "Black‑Box IIR Design: Inputs, Knobs, Outputs, Failures",
+      "objective": "Clarify the design parameters and potential issues of IIR filters.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: discrete signal x[n], desired passband/stopband", "Knobs: filter_order, cutoff_frequencies, ripple or attenuation, filter_type (Butterworth, Chebyshev)", "Outputs: filtered signal y[n] with desired band characteristics", "Failure: unstable poles (|p|>1), excessive phase distortion"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Design pipeline: specification → butter/cheby1 → lfilter", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "|p| < 1", "how_to_use": "Ensure all poles lie inside the unit circle for stability", "symbol_defs_inline": ["p=\text{pole location in the z‑plane}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Lower order IIR filters achieve sharper transitions than FIR filters of the same order"},
+          {"label": "sanity_check", "content": "Plot pole‑zero diagram to verify stability"}
+        ]
+      },
+      "talking_points": [
+        "Describe the filter design specifications: desired passband ripple and stopband attenuation.",
+        "Explain how the order and ripple parameters act as knobs in Butterworth and Chebyshev designs.",
+        "Present the stability condition that all poles must reside inside the unit circle.",
+        "Discuss phase distortion: IIR filters are typically non‑linear phase, which can distort waveform timing." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_05/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Pole plots and filter responses"]
+      }
+    },
+    {
+      "slide_id": "W05-S04",
+      "type": "demo",
+      "title": "Demo: Chebyshev Band‑Pass Filter",
+      "objective": "Demonstrate designing and applying a Chebyshev IIR filter to isolate a 5 Hz oscillation.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Filter a thermocouple signal"},
+          {"label": "bullets", "content": ["Generate a thermocouple‑like signal with drift and EMI", "Design a 4th‑order Chebyshev band‑pass filter using cheby1", "Apply the filter and compute SNR and bandpower"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Time domain and frequency responses of the IIR band‑pass filter", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Inspect pole‑zero plot to ensure stability"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the filter design: specifying passband and ripple, computing coefficients.",
+        "Show the magnitude response and highlight the passband ripple and stopband attenuation.",
+        "Discuss the resulting filtered signal: SNR improvement and preserved low‑frequency drift."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_05/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Plots of filter response, SNR and bandpower"]
+      }
+    },
+    {
+      "slide_id": "W05-S05",
+      "type": "failure",
+      "title": "Failure Modes: Instability and Phase Distortion",
+      "objective": "Identify pitfalls when designing IIR filters and how to avoid them.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Beware of feedback"},
+          {"label": "bullets", "content": ["High order can cause numerical instability", "Chebyshev ripple may distort passband amplitude", "Non‑linear phase can distort time‑domain waveform"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Pole‑zero plots highlighting unstable poles and excessive ripple", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Limit IIR filter orders (e.g., below 8) to avoid numerical issues"},
+          {"label": "sanity_check", "content": "Use second‑order sections (sosfilt) for better stability"}
+        ]
+      },
+      "talking_points": [
+        "Show examples of unstable filters with poles outside the unit circle.",
+        "Explain how ripple specifications influence amplitude distortion in Chebyshev designs.",
+        "Discuss the impact of non‑linear phase on waveform shape, especially for transient signals."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_05/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify filter order and ripple settings",
+        "expected_output": ["Plots demonstrating instability and distortion"]
+      }
+    },
+    {
+      "slide_id": "W05-S06",
+      "type": "exercise",
+      "title": "Exercise: Design Your IIR Filter",
+      "objective": "Allow learners to design Butterworth and Chebyshev filters and evaluate stability and phase.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on IIR design"},
+          {"label": "bullets", "content": ["Create a noisy signal with drift and an oscillatory component", "Design a Butterworth low‑pass and a Chebyshev band‑pass filter", "Compute and compare SNR, bandpower and phase responses", "Plot pole‑zero diagrams to verify stability"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template for recording filter type, order, ripple, SNR and stability verdict", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use Butterworth for maximally flat response; Chebyshev for steeper transitions"},
+          {"label": "sanity_check", "content": "Verify all poles are within the unit circle"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise tasks and encourage trying different orders and ripple values.",
+        "Suggest using second‑order sections for improved numerical stability.",
+        "Discuss results across filter types and highlight trade‑offs."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_05/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Design your own filters in demo",
+        "expected_output": ["Completed table and plots"]
+      }
+    },
+    {
+      "slide_id": "W05-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Summarise IIR filter design considerations and test knowledge.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 5 wrap‑up"},
+          {"label": "bullets", "content": ["IIR filters achieve sharp transitions with low order", "Stability requires all poles inside the unit circle", "Phase distortion must be assessed for waveform integrity"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of IIR design pipeline", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. What distinguishes Butterworth from Chebyshev filters?\n2. How do you check an IIR filter is stable?\n3. Why might you choose an FIR filter over an IIR filter despite higher order?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the key points on IIR design, stability and phase.",
+        "Ask quiz questions and discuss answers with the class.",
+        "Preview upcoming topics on power spectral density and Welch’s method."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_05/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

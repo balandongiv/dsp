@@ -1,0 +1,75 @@
+\chapter{Time‑Domain Statistical Features for Condition Monitoring}
+
+\section{Learning objectives}
+
+On completing this chapter you will be able to:
+\begin{itemize}
+  \item Define common statistical features computed from time‑domain signals: root‑mean‑square (RMS), peak value, crest factor, kurtosis and skewness.
+  \item Compute these features in Python and interpret their physical meaning in the context of vibration monitoring.
+  \item Design feature extraction pipelines that capture impulsiveness and asymmetry for fault diagnosis.
+  \item Recognise how these features behave under noise and signal distortion.
+\end{itemize}
+
+\section{Industrial context}
+
+In machine condition monitoring, simple time‑domain features often provide early warnings of faults.  RMS energy indicates overall vibration severity, while crest factor and kurtosis quantify impulsiveness typical of bearing defects.  Understanding these features allows you to design effective thresholds and interpret anomalies.
+
+\section{Core concepts}
+
+\subsection{Definitions}
+
+For a signal $x[n]$ of length $N$:
+\begin{itemize}
+  \item \textbf{Root‑mean‑square (RMS).}  $\mathrm{RMS} = \sqrt{\tfrac{1}{N}\sum_{n=0}^{N-1} x[n]^2}$.  Measures signal energy.
+  \item \textbf{Peak value.}  $\max_n |x[n]|$.  Represents the largest excursion.
+  \item \textbf{Crest factor.}  Ratio of peak to RMS: $\mathrm{CF} = \max |x[n]| / \mathrm{RMS}$.  High values indicate spikes.
+  \item \textbf{Kurtosis.}  Normalised fourth central moment: $\kappa = \frac{\tfrac{1}{N}\sum (x[n]-\mu)^4}{\sigma^4}$, where $\mu$ and $\sigma$ are the mean and standard deviation.  Gaussian noise has kurtosis 3; higher values indicate heavy tails and impulsiveness.
+  \item \textbf{Skewness.}  Normalised third central moment: $\mathrm{skew} = \frac{\tfrac{1}{N}\sum (x[n]-\mu)^3}{\sigma^3}$.  Measures asymmetry of the distribution.
+\end{itemize}
+
+\section{Operational formulas}
+
+These features can be computed in real time using sliding windows.  For fault detection, the feature values are compared against baseline values from healthy data to detect deviations.
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Window length & 1 s & Feature values fluctuate & Increase window to average more samples \\
+    Threshold factor & 3 \times baseline & Too many false alarms & Adjust factor based on ROC analysis \\
+    Pre‑filtering & None & Feature dominated by noise & Apply band‑pass filtering before computing features \\
+    Normalisation & Raw values & Sensitivity to amplitude & Normalise features by baseline RMS \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for time‑domain feature extraction.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Noise sensitivity.}  RMS and kurtosis are sensitive to additive noise.  Pre‑filter or average over longer windows to mitigate.
+  \item \textbf{Amplitude scaling.}  Variations in overall signal level can obscure changes in crest factor or kurtosis.  Use normalised or relative features.
+  \item \textbf{Non‑stationarity.}  When the operating regime changes, baseline feature statistics may change.  Incorporate regime‑aware models or adaptive thresholds.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,10 demonstration computes RMS, peak value, crest factor, kurtosis and skewness for a synthetic vibration signal with impulsive events.  It prints the feature values for both the full signal and the isolated impulse region.  A failure case uses a pure sine wave to show that the crest factor decreases and kurtosis approaches the Gaussian value of 3.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Compute the statistical features for a dataset containing periodic impacts (e.g., bearing faults) and random noise.  Observe how the features respond as the fault severity increases.
+  \item Design a simple threshold‑based detector that flags impulses when the crest factor exceeds a baseline by a factor of two.  Evaluate the false alarm rate.
+  \item Explore other higher‑order statistics, such as the root mean cube or hyperskewness, and discuss their utility in fault detection.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Standard definitions of RMS, skewness and kurtosis can be found in any statistics reference.
+\end{itemize}

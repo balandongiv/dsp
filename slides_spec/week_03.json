@@ -1,0 +1,230 @@
+{
+  "week_id": "week_03",
+  "title": "FFT, Windowing and Spectral Leakage",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W03-S01",
+      "type": "title",
+      "title": "FFT, Windowing and Leakage",
+      "objective": "Introduce the Fast Fourier Transform and the role of windowing in reducing spectral leakage.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Frequency analysis at your fingertips"},
+          {"label": "bullets", "content": ["Discrete Fourier Transform vs FFT", "Why window functions matter"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Illustration of a multi‑tone signal and its FFT magnitude spectrum", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use the shortest window that captures an integer number of periods to minimise leakage"},
+          {"label": "sanity_check", "content": "Check if your dominant frequency aligns with an FFT bin"}
+        ]
+      },
+      "talking_points": [
+        "Explain why the FFT is used to compute spectra efficiently.",
+        "Introduce the concept of finite observation windows and leakage.",
+        "Preview how window functions taper the edges of the time segment."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_03/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["SNR and leakage ratio for different window types"]
+      }
+    },
+    {
+      "slide_id": "W03-S02",
+      "type": "context",
+      "title": "Industrial Vibration Spectra",
+      "objective": "Motivate frequency analysis using real instrumentation examples.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why compute spectra?"},
+          {"label": "bullets",
+            "content": ["Machine imbalance shows up as narrow spectral peaks", "Misalignment creates harmonics in vibration spectra", "Window choice affects spectral leakage"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Example vibration spectrum with imbalance and misalignment tones highlighted", "data_source": "public dataset"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Inspect magnitude spectra before phase – most faults are seen in magnitude"},
+          {"label": "sanity_check", "content": "Does your sampling rate provide enough resolution to separate nearby peaks?"}
+        ]
+      },
+      "talking_points": [
+        "Describe how frequency analysis is used in condition monitoring.",
+        "Point out that misalignment, imbalance and bearing defects appear at characteristic frequencies.",
+        "Highlight how windowing affects the clarity of these peaks."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_03/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Plots comparing rectangular vs Hanning windows"]
+      }
+    },
+    {
+      "slide_id": "W03-S03",
+      "type": "method",
+      "title": "Black‑Box FFT and Window Selection",
+      "objective": "Explain inputs, knobs, outputs and failure modes of FFT‑based spectral analysis.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: discrete time segment x[n] and sampling rate fs", "Knobs: window_type (rectangular, Hanning, etc.), window_length N", "Outputs: magnitude and phase spectra at frequency bins", "Failure: spectral leakage if window does not taper edges or N too short"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Block diagram: windowing → FFT → magnitude spectrum", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "f_{res} = \frac{fs}{N}", "how_to_use": "Frequency bin spacing equals sampling rate divided by number of points", "symbol_defs_inline": ["fs=\text{sampling rate}", "N=\text{number of samples}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use a Hanning window to reduce leakage on non‑integer periods"},
+          {"label": "sanity_check", "content": "Ensure N is long enough to achieve desired resolution"}
+        ]
+      },
+      "talking_points": [
+        "Define what goes into the FFT: a sampled time segment and fs.",
+        "Explain how window type and length act as knobs: they control leakage and resolution.",
+        "Describe outputs: magnitude spectrum reveals dominant frequencies; phase is often ignored for diagnostics.",
+        "Discuss failure modes: using rectangular windows on non‑integer periods causes leakage; too short N leads to poor resolution."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_03/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Leakage ratio values for different windows"]
+      }
+    },
+    {
+      "slide_id": "W03-S04",
+      "type": "demo",
+      "title": "Demo: Windowed FFT Comparison",
+      "objective": "Observe how window choice influences spectral leakage and resolution.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Experiment with windows"},
+          {"label": "bullets", "content": ["Generate a two‑tone synthetic signal", "Apply rectangular and Hanning windows", "Compute FFT and leakage ratio"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "FFT magnitude spectra for rectangular vs Hanning windows", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Notice how the Hanning window reduces spectral spread"}
+        ]
+      },
+      "talking_points": [
+        "Describe how the demo constructs a multi‑tone signal and applies window functions.",
+        "Interpret the difference in leakage ratio metrics across windows.",
+        "Encourage learners to vary N and observe changes in resolution and leakage."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_03/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Printed leakage_ratio and plots"]
+      }
+    },
+    {
+      "slide_id": "W03-S05",
+      "type": "failure",
+      "title": "Failure Modes: Leakage and Misinterpretation",
+      "objective": "Warn against common mistakes when using FFT and windows.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "What can go wrong?"},
+          {"label": "bullets", "content": ["Using a rectangular window on non‑integer periods → leakage", "Choosing N too short → poor frequency resolution", "Ignoring phase information when system identification is required"]}
+        ],
+        "visuals": [
+          {"visual_type": "before_after", "description": "Spectra showing leakage before and after applying a Hanning window", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Pick window length such that the signal contains an integer number of cycles when possible"},
+          {"label": "sanity_check", "content": "Check the leakage_ratio metric to quantify leakage"}
+        ]
+      },
+      "talking_points": [
+        "Demonstrate an example where a rectangular window causes significant spectral spreading.",
+        "Explain why short segments smear frequency information.",
+        "Remind that phase information might be important for system identification, even if not for diagnostics."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_03/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Adjust window types and lengths",
+        "expected_output": ["Spectra illustrating leakage"]
+      }
+    },
+    {
+      "slide_id": "W03-S06",
+      "type": "exercise",
+      "title": "Exercise: Tune Your FFT Window",
+      "objective": "Have learners explore window types and lengths to minimise leakage and optimise resolution.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on with windows"},
+          {"label": "bullets", "content": ["Generate a synthetic signal with two close frequencies", "Try rectangular, Hanning and Hamming windows", "Vary N and compute frequency resolution and leakage ratio"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template for recording window_type, N, leakage_ratio and f_res", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Longer windows improve resolution but may blur non‑stationary events"},
+          {"label": "sanity_check", "content": "Ensure you normalise window energy when comparing spectra"}
+        ]
+      },
+      "talking_points": [
+        "Guide learners through the exercise instructions.",
+        "Encourage them to fill out the parameter table and discuss results.",
+        "Remind them to interpret both numerical metrics and visual spectra."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_03/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify window_type and length parameters",
+        "expected_output": ["Completed table and annotated plots"]
+      }
+    },
+    {
+      "slide_id": "W03-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce the takeaways from FFT and windowing and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 3 wrap‑up"},
+          {"label": "bullets", "content": ["FFT provides efficient spectral analysis", "Window functions reduce leakage but affect resolution", "Choose N and window to balance leakage and resolution"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Summary of window selection workflow", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. What is the frequency resolution for fs=5000 Hz and N=1024?\n2. How does a Hanning window mitigate leakage?\n3. When might phase information be important?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the operational view of FFT, windowing and leakage.",
+        "Pose quiz questions and discuss answers with the class.",
+        "Preview next week on FIR filter design."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_03/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz questions",
+        "expected_output": ["Quiz responses"]
+      }
+    }
+  ]
+}

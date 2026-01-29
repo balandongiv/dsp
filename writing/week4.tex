@@ -1,0 +1,91 @@
+\chapter{FIR Filter Design and Linear Phase Response}
+
+\section{Learning objectives}
+
+By the end of this chapter you will be able to:
+\begin{itemize}
+  \item Explain the advantages of finite impulse response (FIR) filters, including inherent stability and linear phase.
+  \item Design simple low‑pass FIR filters using the window method and estimate the required order from design specifications.
+  \item Implement FIR filters in Python and evaluate performance in terms of SNR improvement and group delay.
+  \item Diagnose common failure modes such as insufficient stopband attenuation and phase distortion.
+\end{itemize}
+
+\section{Industrial context}
+
+FIR filters are widely used to remove high‑frequency noise while preserving waveform shape.  In instrumentation they are preferred when phase linearity is critical—for instance, in digital crossovers for audio, or in demodulating sensor signals where time alignment matters.  Because FIR filters are always stable and their phase response can be exactly linear, they are safe for embedded controllers.
+
+\section{Core concepts}
+
+\subsection{Impulse response and convolution}
+
+An FIR filter of order $N$ has an impulse response $h[n]$ of length $N+1$.  Filtering a signal $x[n]$ by an FIR filter is a convolution:
+\[
+y[n] = \sum_{k=0}^{N} h[k]\,x[n-k].
+\]
+The frequency response is the discrete‑time Fourier transform of $h[n]$.
+
+\subsection{Window method}
+
+In the window method, the ideal impulse response of a desired filter (e.g., sinc for a low‑pass filter) is truncated and multiplied by a window function to control ripple.  The filter length $N$ determines the transition width $\Delta f$ and stopband attenuation $A$.  A rule of thumb for the required order when using a Hann window is
+\[
+N \approx \frac{f_s}{\Delta f}\times\frac{A}{22}
+\]
+【351596994309255†L169-L186】, where $f_s$ is the sampling rate and $\Delta f$ is the transition bandwidth in hertz.
+
+\subsection{Linear phase}
+
+If the impulse response is symmetrical ($h[n]=h[N-n]$) or anti‑symmetrical, the phase response is linear: the filter delays all frequency components by the same amount.  The group delay is $N/2$ samples.  This property preserves the waveform shape, a key advantage of FIR filters.
+
+\section{Operational formulas}
+
+\paragraph{Design steps.}
+\begin{enumerate}
+  \item Choose passband edge $f_p$ and stopband edge $f_s$ for your application.
+  \item Compute transition width $\Delta f = f_s - f_p$ and stopband attenuation $A$ (e.g., 60 dB).
+  \item Estimate the order $N$ using the rule of thumb above.
+  \item Generate an ideal impulse response (e.g., sinc for low‑pass) and apply a window (Hann, Blackman, etc.).
+  \item Normalize the gain so that the filter passes DC with unity gain.
+\end{enumerate}
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Filter order $N$ & Estimated by rule & Stopband attenuation too low & Increase $N$ or choose a window with better side‑lobe suppression \\
+    Window type & Hann & Ripple in passband & Use Blackman or Kaiser window \\
+    Cut‑off frequency $f_c$ & Application‑specific & Too much signal attenuation & Adjust cut‑off closer to band of interest \\
+    Group delay & $N/2$ samples & Misalignment of events & Compensate delay in downstream processing \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for FIR filter design.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Insufficient filter order.}  A short filter cannot achieve sharp transition bands or high stopband attenuation.  Check the attenuation by inspecting the magnitude response; if unsatisfactory, increase $N$.
+  \item \textbf{Passband ripple.}  Certain windows (e.g., rectangular) introduce ripple.  Use smoother windows or equiripple design methods when needed.
+  \item \textbf{Delay compensation.}  The group delay of an FIR filter shifts the signal in time.  Align signals by delaying the reference signal by $N/2$ samples before computing metrics such as SNR.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,4 demonstration designs a low‑pass FIR filter using the window method.  It filters a noisy photodiode‑like signal and computes the SNR improvement.  The script also filters the clean reference signal to align group delays when computing improvement.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Design a band‑stop FIR filter to remove a 50 Hz interference from a 1 kHz sampled signal.  Estimate the filter order for 40 dB stopband attenuation and implement the filter in Python.
+  \item Verify that the phase response of your filter is linear by computing the group delay.  Plot the original and filtered waveforms to observe the constant delay.
+  \item Compare the SNR improvement achieved by a Hann‑window filter and a Kaiser‑window filter with $\beta=5$.  Discuss the trade‑offs in filter length and attenuation.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Rule of thumb for FIR filter order 【351596994309255†L169-L186】.
+\end{itemize}

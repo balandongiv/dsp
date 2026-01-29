@@ -1,0 +1,230 @@
+{
+  "week_id": "week_07",
+  "title": "Time–Frequency Analysis with STFT",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W07-S01",
+      "type": "title",
+      "title": "Short‑Time Fourier Transform (STFT)",
+      "objective": "Introduce the STFT as a tool for analysing non‑stationary signals and viewing spectrograms.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "From spectra to spectrograms"},
+          {"label": "bullets", "content": ["Why time–frequency analysis?", "STFT and spectrogram", "Trade‑off between time and frequency resolution"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrogram", "description": "Spectrogram of a chirp signal", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Short windows yield good time resolution; long windows give good frequency resolution"},
+          {"label": "sanity_check", "content": "Ensure overlap to capture transients"}
+        ]
+      },
+      "talking_points": [
+        "Explain why static spectra are insufficient for non‑stationary signals like chirps or run‑ups.",
+        "Introduce the STFT and its representation as a sequence of FFTs on windowed segments.",
+        "Preview how window length and overlap affect time and frequency resolution."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_07/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Spectrogram plots and resolution metrics"]
+      }
+    },
+    {
+      "slide_id": "W07-S02",
+      "type": "context",
+      "title": "Monitoring Transient Events",
+      "objective": "Motivate STFT with real industrial examples such as machine start‑up and acoustic leaks.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why time‑frequency?"},
+          {"label": "bullets", "content": ["Detect frequency sweeps during motor run‑up", "Identify short bursts in acoustic emissions", "Distinguish time‑varying fault signatures"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrogram", "description": "Spectrogram of a machine accelerating from low to high speed", "data_source": "public dataset"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use STFT for signals whose spectral content changes over time"},
+          {"label": "sanity_check", "content": "Choose window length appropriate for the fastest event you want to detect"}
+        ]
+      },
+      "talking_points": [
+        "Describe situations where vibrations or acoustics are non‑stationary: e.g., run‑ups, impacts, leaks.",
+        "Explain why a spectrogram reveals these events better than a single spectrum.",
+        "Highlight how STFT helps locate events in both time and frequency."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_07/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Spectrograms of synthetic chirps and burst signals"]
+      }
+    },
+    {
+      "slide_id": "W07-S03",
+      "type": "method",
+      "title": "Black‑Box STFT: Inputs, Knobs, Outputs, Failure",
+      "objective": "Define how to perform STFT and tune its parameters.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: discrete signal x[n], sampling rate fs", "Knobs: window_length, overlap, window_type", "Outputs: STFT matrix or spectrogram, time and frequency resolution estimates", "Failure: poor time resolution (long window) or poor frequency resolution (short window)"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Pipeline: segmenting, windowing, FFT → STFT magnitude", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "\Delta t = \frac{\text{window_length}}{fs},\; \Delta f = \frac{fs}{\text{window_length}}", "how_to_use": "Time and frequency resolution depend on window length", "symbol_defs_inline": ["fs=\text{sampling rate}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use ~4–8 cycles of the lowest frequency of interest per window"},
+          {"label": "sanity_check", "content": "Ensure overlap > 50% to avoid missing transient energy"}
+        ]
+      },
+      "talking_points": [
+        "Explain how to choose window length based on desired time/frequency resolution.",
+        "Discuss the effect of overlap on smoothing the spectrogram and capturing transients.",
+        "Describe outputs: the STFT matrix, which can be visualised as a spectrogram.",
+        "Identify failure modes: using a window that is too long or too short for the signal characteristics."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_07/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Time_resolution and frequency_resolution metrics"]
+      }
+    },
+    {
+      "slide_id": "W07-S04",
+      "type": "demo",
+      "title": "Demo: STFT on Chirp and Burst Signals",
+      "objective": "Show how adjusting window length and overlap reveals transient events and frequency sweeps.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Tune STFT parameters"},
+          {"label": "bullets", "content": ["Generate a linear chirp from 100 Hz to 1000 Hz", "Compute STFT with window_length=128, 256 and 512 samples", "Compute and display spectrograms and resolution metrics"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrogram", "description": "Spectrograms of the chirp with different window lengths", "data_source": "synthetic demo"},
+          {"visual_type": "time_plot", "description": "Time-domain signal highlighting burst events", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Observe trade‑off: longer windows sharpen frequency but blur time"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the demo generating a chirp and computing STFT with various settings.",
+        "Explain how resolution metrics change with window length.",
+        "Encourage learners to add short bursts to the signal and observe how window settings affect detection."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_07/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Spectrogram plots and resolution metrics"]
+      }
+    },
+    {
+      "slide_id": "W07-S05",
+      "type": "failure",
+      "title": "Failure Modes: Choosing Window Lengths",
+      "objective": "Discuss pitfalls such as using inappropriate window lengths and misinterpreting spectrograms.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Common STFT mistakes"},
+          {"label": "bullets", "content": ["Too long window → transients blurred", "Too short window → poor frequency resolution and smeared peaks", "Misinterpreting color scale: amplitude vs power"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrogram", "description": "Comparison of spectrograms with poor and good window choices", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use multiple window lengths to explore different scales"},
+          {"label": "sanity_check", "content": "Normalize spectrogram amplitude to interpret energy correctly"}
+        ]
+      },
+      "talking_points": [
+        "Show examples where long windows hide short bursts.",
+        "Explain how short windows smear frequency information, making it difficult to separate close tones.",
+        "Stress the importance of interpreting spectrogram scales correctly: amplitude vs power, linear vs log."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_07/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Adjust window_length and overlap",
+        "expected_output": ["Spectrograms demonstrating failures"]
+      }
+    },
+    {
+      "slide_id": "W07-S06",
+      "type": "exercise",
+      "title": "Exercise: Tune STFT Parameters",
+      "objective": "Have learners experiment with window length and overlap to detect transient events in non‑stationary signals.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on STFT tuning"},
+          {"label": "bullets", "content": ["Construct a signal with a chirp and intermittent bursts", "Compute spectrograms with different window lengths (e.g., 64, 128, 256 samples)", "Vary overlap (0%, 50%) and observe effects on time and frequency resolution", "Record time_resolution and frequency_resolution metrics for each configuration"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template to record window_length, overlap, time_resolution and frequency_resolution", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Choose window_length ≈ several cycles of the lowest frequency of interest"},
+          {"label": "sanity_check", "content": "Ensure enough overlap (>50%) for smooth spectrograms"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise procedure and encourage parameter exploration.",
+        "Guide learners to fill in the parameter table and discuss the trade‑offs they observe.",
+        "Remind learners to interpret both numerical metrics and visual spectrogram patterns." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_07/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify STFT parameters in demo",
+        "expected_output": ["Completed table and annotated spectrograms"]
+      }
+    },
+    {
+      "slide_id": "W07-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce STFT concepts and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 7 wrap‑up"},
+          {"label": "bullets", "content": ["STFT reveals how frequency content changes over time", "Window length and overlap control time–frequency resolution", "Choosing parameters requires balancing detection of transients and spectral resolution"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of STFT parameter trade‑off", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. How does window length affect time and frequency resolution?\n2. Why use overlap when computing the STFT?\n3. When might a spectrogram be more informative than a PSD?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the operational view of STFT and spectrograms.",
+        "Pose quiz questions and discuss answers with learners.",
+        "Preview the next topic: wavelet transforms and multi‑resolution analysis."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_07/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

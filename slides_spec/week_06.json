@@ -1,0 +1,230 @@
+{
+  "week_id": "week_06",
+  "title": "Power Spectral Density and Welch’s Method",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W06-S01",
+      "type": "title",
+      "title": "PSD Estimation and Welch’s Method",
+      "objective": "Introduce the concept of power spectral density and robust estimation using Welch’s method.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "From periodogram to Welch"},
+          {"label": "bullets", "content": ["What is PSD?", "Why average periodograms?", "Balancing variance and resolution"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Comparison of periodogram and Welch PSD estimates", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Longer segments give higher resolution; more averaging reduces variance"},
+          {"label": "sanity_check", "content": "Ensure appropriate window and overlap for Welch"}
+        ]
+      },
+      "talking_points": [
+        "Define power spectral density and why it is useful for quantifying signal power across frequencies.",
+        "Explain the drawbacks of a single periodogram estimate: high variance.",
+        "Introduce Welch’s method as an averaging procedure to reduce variance at the cost of resolution."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_06/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["PSD plots and variance metrics"]
+      }
+    },
+    {
+      "slide_id": "W06-S02",
+      "type": "context",
+      "title": "Spectral Monitoring in Gearboxes",
+      "objective": "Motivate PSD estimation with industrial gearbox monitoring applications.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why estimate PSD?"},
+          {"label": "bullets", "content": ["Detect fault frequencies in noisy vibration data", "Average PSD estimates to see weak components", "Use bandpower to monitor energy in fault bands"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrum", "description": "PSD of gearbox vibration highlighting defect frequencies", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Choose segment length so that multiple defect periods fit inside"},
+          {"label": "sanity_check", "content": "Check that overlap avoids missing transient energy"}
+        ]
+      },
+      "talking_points": [
+        "Describe how PSD is used to monitor gearboxes and bearings.",
+        "Emphasise that averaging reduces noise to reveal weak spectral components.",
+        "Discuss how bandpower in specific frequency ranges can serve as a health indicator."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_06/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Bandpower values for fault bands"]
+      }
+    },
+    {
+      "slide_id": "W06-S03",
+      "type": "method",
+      "title": "Black‑Box PSD Estimation",
+      "objective": "Describe inputs, knobs, outputs and failure modes for periodogram and Welch PSD.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: discrete signal x[n], sampling rate fs", "Knobs: segment_length, overlap, window_type", "Outputs: PSD estimate S(f) and bandpower", "Failure: high variance with single segment; low resolution with short segments"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Pipeline: segment → window → FFT → magnitude squared → averaging", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "\Delta f = \frac{fs}{L}", "how_to_use": "Frequency resolution depends on segment length L", "symbol_defs_inline": ["L=\text{segment length in samples}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use 50% overlap and Hanning window for Welch by default"},
+          {"label": "sanity_check", "content": "Ensure window is normalised when computing PSD"}
+        ]
+      },
+      "talking_points": [
+        "Explain how segment length determines resolution and variance.",
+        "Discuss the role of overlap: more overlap increases averaging while capturing transients.",
+        "Describe the output: PSD as power vs frequency and derived bandpower by integration.",
+        "Identify failure modes: low variance but poor resolution if segments are too long or too few; high variance if segments are too short or not averaged."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_06/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Variance of PSD estimates and bandpower results"]
+      }
+    },
+    {
+      "slide_id": "W06-S04",
+      "type": "demo",
+      "title": "Demo: Welch PSD and Bandpower",
+      "objective": "Demonstrate how changing segment length and overlap affects PSD variance and resolution.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Tune Welch parameters"},
+          {"label": "bullets", "content": ["Generate a synthetic gearbox vibration signal", "Compute periodogram and Welch PSD for various segment lengths", "Estimate bandpower in a specified fault band"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrum", "description": "PSD estimates for different segment lengths and overlaps", "data_source": "synthetic demo"},
+          {"visual_type": "bandpower", "description": "Bar chart of bandpower vs parameter choices", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Observe how averaging smooths the spectrum"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the demo: constructing the signal and computing periodogram and Welch PSD.",
+        "Show how PSD variance decreases with longer segments and more averaging.",
+        "Highlight bandpower differences across parameter settings and discuss what ‘good’ looks like for fault detection."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_06/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["PSD plots and bandpower values"]
+      }
+    },
+    {
+      "slide_id": "W06-S05",
+      "type": "failure",
+      "title": "Failure Modes: Variance vs Resolution Trade‑offs",
+      "objective": "Discuss common mistakes in PSD estimation and how to avoid them.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Pitfalls in PSD estimation"},
+          {"label": "bullets", "content": ["Using too few segments → high variance", "Using very long segments → blurs narrow peaks", "Not normalising PSD units (power vs amplitude)"]}
+        ],
+        "visuals": [
+          {"visual_type": "before_after", "description": "PSD estimates showing high variance vs smoothed estimates", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Balance segment length and overlap to suit signal stationarity"},
+          {"label": "sanity_check", "content": "Check units: PSD should have units of power/frequency"}
+        ]
+      },
+      "talking_points": [
+        "Show examples of high‑variance periodograms and discuss why they are unreliable.",
+        "Explain how using too long a segment can smear important features.",
+        "Emphasise correct normalisation and unit interpretation of PSD estimates."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_06/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Vary segment_length and overlap",
+        "expected_output": ["PSD examples showing pitfalls"]
+      }
+    },
+    {
+      "slide_id": "W06-S06",
+      "type": "exercise",
+      "title": "Exercise: Tune Welch Parameters",
+      "objective": "Allow learners to explore PSD estimation parameters and calculate bandpower for fault detection.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on PSD tuning"},
+          {"label": "bullets", "content": ["Generate a noisy multi‑tone signal", "Experiment with segment_length (e.g., 128, 256, 512 samples) and overlap (0, 50%)", "Compute variance_of_psd and bandpower for each configuration"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template to record parameters, PSD variance and bandpower", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use at least 8 segments for stable PSD estimates"},
+          {"label": "sanity_check", "content": "Make sure window overlaps are consistent across trials"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise tasks and encourage parameter experimentation.",
+        "Guide learners to compute PSD variance and bandpower and fill in the table.",
+        "Discuss which parameter combinations provide the best balance of variance and resolution." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_06/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify Welch parameters in demo",
+        "expected_output": ["Completed table and plots"]
+      }
+    },
+    {
+      "slide_id": "W06-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce PSD concepts and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 6 wrap‑up"},
+          {"label": "bullets", "content": ["PSD quantifies power distribution across frequency", "Welch’s method reduces variance by averaging", "Segment length and overlap control resolution and variance"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of PSD estimation workflow", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. What is the trade‑off between segment length and PSD variance?\n2. How do you compute bandpower from a PSD?\n3. Why might you choose a Hanning window for Welch’s method?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the key takeaways on PSD and Welch.",
+        "Pose quiz questions and discuss answers with learners.",
+        "Preview the next week on time–frequency analysis with STFT."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_06/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

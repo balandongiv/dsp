@@ -1,0 +1,84 @@
+\chapter{Power Spectral Density Estimation and Welch’s Method}
+
+\section{Learning objectives}
+
+By the end of this chapter you will be able to:
+\begin{itemize}
+  \item Define the power spectral density (PSD) of a stationary random process and explain why it is useful for vibration analysis and noise characterisation.
+  \item Compute the PSD using the periodogram and Welch’s method, and choose segment length and overlap to balance resolution and variance.
+  \item Estimate bandpower by integrating the PSD over specified frequency bands.
+  \item Diagnose pitfalls such as spectral leakage and variance and apply remedies (windowing, averaging).
+\end{itemize}
+
+\section{Industrial context}
+
+Spectral estimation is crucial in gearbox monitoring, structural health diagnostics and audio engineering.  Engineers inspect PSDs to identify characteristic frequencies of faults (e.g., gear mesh frequencies) and to compute bandpower for condition indicators.  Welch’s method provides a robust PSD estimate by averaging periodograms of overlapped segments, reducing variance at the cost of frequency resolution.
+
+\section{Core concepts}
+
+\subsection{Power spectral density}
+
+For a discrete, zero‑mean stationary process $x[n]$, the PSD $S_{xx}(f)$ describes the distribution of power across frequencies and is the Fourier transform of the autocorrelation function.  In practice we estimate the PSD from finite data.
+
+\subsection{Periodogram}
+
+The periodogram is the squared magnitude of the FFT of a finite segment:
+\[
+P_{xx}(f_k) = \frac{1}{N f_s}\bigl|X[k]\bigr|^2,
+\]
+where $X[k]$ is the FFT of the segment of length $N$ sampled at $f_s$.  Periodograms are noisy (high variance); smoothing or averaging is required for a reliable estimate.
+
+\subsection{Welch’s method}
+
+Welch’s method divides the signal into overlapping segments of length $L$, applies a window to each segment, computes the periodogram for each and averages the results.  Increasing segment length improves frequency resolution but decreases the number of averages and therefore increases variance.  Conversely, shorter segments increase variance reduction but blur frequency components.
+
+\section{Operational formulas}
+
+\paragraph{PSD estimate.}  For each segment $x_m[n]$, compute its windowed DFT $X_m[k]$, then
+\[
+S_{xx}(f_k) = \frac{1}{M}\sum_{m=1}^{M} \frac{1}{L f_s}\bigl|X_m[k]\bigr|^2,
+\]
+where $M$ is the number of segments.  Integrating $S_{xx}(f)$ over a frequency band $[f_1, f_2]$ yields the bandpower $P_{[f_1,f_2]} = \int_{f_1}^{f_2} S_{xx}(f)\,\mathrm{d}f$.
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Segment length $L$ & $256$ samples & Resolution too coarse & Increase $L$ to improve frequency resolution \\
+    Overlap & 50\% & Variance too high & Increase overlap to get more averages \\
+    Window type & Hann & Spectral leakage visible & Use Blackman window or increase $L$ \\
+    Number of averages $M$ & Determined by data length & Estimate fluctuates between runs & Increase overlap or acquire longer data \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for Welch PSD estimation.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Variance vs resolution trade‑off.}  Short segments yield more averages and lower variance but broaden spectral peaks.  Choose $L$ such that the frequency resolution matches the bandwidth of interest.
+  \item \textbf{Window leakage.}  Use tapered windows to reduce leakage.  A Hann or Blackman window reduces side lobes but widens the main lobe.
+  \item \textbf{Bandpower estimation with few bins.}  When the band spans only one or two FFT bins, the trapezoidal integration may underestimate power.  Multiply the PSD value by the bin width to approximate bandpower.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,6 demonstration computes the PSD of a synthetic gearbox vibration signal using Welch’s method.  It tunes the segment length and overlap, computes bandpower in specified bands and prints PSD variance.  The code includes a fallback for narrow bands to approximate bandpower by multiplying PSD values by the frequency resolution.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Implement the periodogram and Welch’s method manually in Python.  Compare the PSD estimates for segment lengths of 256, 512 and 1024 samples on a noisy sine wave.
+  \item Compute the bandpower in frequency bands corresponding to bearing defect frequencies.  Investigate how changing the overlap affects bandpower variance.
+  \item Modify the demonstration to use different window functions.  Observe how the choice of window influences PSD leakage and variance.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Definition of magnitude‑squared coherence (for comparison in Week\,9) 【296435890113586†L67-L72】.
+\end{itemize}

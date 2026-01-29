@@ -1,0 +1,79 @@
+\chapter{Discrete Fourier Transform, Windowing and Spectral Leakage}
+
+\section{Learning objectives}
+
+After completing this chapter you will be able to:
+\begin{itemize}
+  \item Compute the discrete Fourier transform (DFT) and interpret its magnitude and phase spectra.
+  \item Explain the effects of windowing on spectral leakage and choose appropriate window functions for different tasks.
+  \item Apply the Fast Fourier Transform (FFT) as a black box and tune parameters such as segment length and zero‑padding.
+  \item Quantify leakage using metrics such as the leakage ratio and design experiments to demonstrate leakage.
+\end{itemize}
+
+\section{Industrial context}
+
+Frequency analysis is fundamental in machinery diagnostics, audio processing and communications.  Engineers use the FFT to identify harmonics, modulations and fault signatures.  However, the finite observation window introduces artefacts: leakage spreads energy into adjacent bins and can mask weak components.  Understanding and mitigating leakage is essential when monitoring rotating machinery or analysing speech signals.
+
+\section{Core concepts}
+
+\subsection{Discrete Fourier transform}
+
+For a sequence $x[n]$ of length $N$, the DFT and its inverse are defined by
+\[
+X[k] = \sum_{n=0}^{N-1} x[n] e^{-j 2\pi nk/N},\qquad
+x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k] e^{j2\pi nk/N}
+\].
+The FFT is an efficient algorithm that computes the DFT in $O(N\log N)$ time.
+
+\subsection{Windowing and leakage}
+
+When we observe a signal through a finite window, we multiply it by a window function $w[n]$.  Multiplication in time corresponds to convolution in frequency, smearing the spectrum.  Rectangular windows have narrow main lobes but high side lobes, leading to leakage.  Tapered windows (Hann, Hamming, Blackman) suppress side lobes at the cost of a wider main lobe.  The leakage ratio in the demonstration is defined as the ratio of the largest spectral component outside the main lobe to the peak inside the main lobe.
+
+\section{Operational formulas}
+
+\paragraph{Zero‑padding.}  Appending zeros to a time‑domain signal before computing the FFT increases the apparent frequency resolution (interpolates the spectrum) but does not improve the ability to separate closely spaced frequencies.
+
+\paragraph{Window choice.}  The 3 dB bandwidth of a Hann window is approximately $2/N$ (in normalised frequency).  To resolve two tones separated by $\Delta f$, choose a window length $N$ such that $f_s/N < \Delta f$.
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Window type & Hann & Leakage obscures weak tones & Use Blackman for lower side lobes \\
+    Segment length $N$ & 1024 & Frequency bins too coarse & Increase $N$ (longer time record) \\
+    Zero‑padding factor & 1 & Peak locations between bins & Increase zero‑padding to refine peak estimate \\
+    Overlap & 50\% & Excessive variance between spectra & Increase overlap or average multiple segments \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for FFT analysis and windowing.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Spectral leakage.}  Leakage spreads energy into side lobes.  Mitigate by using tapered windows and ensuring the signal contains an integer number of cycles within the window.
+  \item \textbf{Scalloping loss.}  When a tone falls between FFT bins, the measured magnitude decreases.  Windowing reduces scalloping loss at the expense of resolution.
+  \item \textbf{Aliasing.}  If the sampled signal contains components above the Nyquist frequency, the FFT shows aliased peaks.  Use anti‑alias filtering (see Chapter 2).
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,3 demonstration generates a two‑tone signal and computes the FFT using different windows.  It calculates the leakage ratio as the ratio of power outside the main lobe to the power inside.  The script highlights how a Hann window reduces leakage compared with a rectangular window.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Derive the relationship between the window length and the Rayleigh frequency $1/T$ (where $T$ is the window duration).  For a given sampling rate and desired frequency resolution, choose an appropriate window length.
+  \item Compare the leakage ratios for Hann, Hamming and Blackman windows on a two‑tone signal.  Explain the trade‑off between main‑lobe width and side‑lobe level.
+  \item Modify the demonstration to include zero‑padding and observe how it improves the apparent frequency resolution without changing the ability to separate two tones.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item DFT and inverse DFT formulas 【745517071471635†L44-L49】.
+\end{itemize}

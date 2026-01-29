@@ -1,0 +1,231 @@
+{
+  "week_id": "week_08",
+  "title": "Wavelet Transform and Multiresolution Analysis",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W08-S01",
+      "type": "title",
+      "title": "Wavelet Transform and Multiresolution",
+      "objective": "Introduce wavelets as a tool for detecting transient events and analysing signals at multiple scales.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Wavelets: zooming in on impulses"},
+          {"label": "bullets", "content": ["Wavelet basics and mother wavelet", "Scalograms vs spectrograms", "Multi‑resolution analysis"]}
+        ],
+        "visuals": [
+          {"visual_type": "scalogram", "description": "Scalogram of an impulse train using Morlet and Ricker wavelets", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Choose a wavelet shape similar to the event you want to detect"},
+          {"label": "sanity_check", "content": "Interpret scale as an inverse proxy for frequency"}
+        ]
+      },
+      "talking_points": [
+        "Explain what wavelets are: short, oscillatory functions with zero mean.",
+        "Contrast wavelets with sinusoids used in the Fourier transform.",
+        "Highlight that wavelets provide better localisation for transient events than STFT."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_08/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Scalogram plots for different wavelets"]
+      }
+    },
+    {
+      "slide_id": "W08-S02",
+      "type": "context",
+      "title": "Detecting Impulsive Faults with Wavelets",
+      "objective": "Motivate wavelet analysis with industrial applications such as bearing impact detection and electrical arcing.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why wavelets?"},
+          {"label": "bullets", "content": ["Bearing defects cause short impulses in vibration signals", "Electrical arcs produce broadband spikes in current or voltage", "Wavelets can isolate these events with good time localisation"]}
+        ],
+        "visuals": [
+          {"visual_type": "time_plot", "description": "Time-domain signal with impulsive events", "data_source": "synthetic demo"},
+          {"visual_type": "scalogram", "description": "Scalogram highlighting the impulses at appropriate scales", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use smaller scales to detect short, high‑frequency events"},
+          {"label": "sanity_check", "content": "Ensure noise does not overwhelm the scalogram"}
+        ]
+      },
+      "talking_points": [
+        "Describe industrial scenarios where impulse detection is critical.",
+        "Explain why Fourier or STFT may smear these impulses across frequencies.",
+        "Show how wavelets localise impulses in both time and scale (pseudo‑frequency)."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_08/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Impulses highlighted on scalogram"]
+      }
+    },
+    {
+      "slide_id": "W08-S03",
+      "type": "method",
+      "title": "Black‑Box Wavelet Analysis",
+      "objective": "Define inputs, knobs, outputs and failure modes when using continuous wavelet transforms (CWT).",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: discrete signal x[n], wavelet_type (Morlet, Ricker, etc.)", "Knobs: scale_range, number_of_scales, wavelet_shape parameters", "Outputs: wavelet coefficients vs time and scale (scalogram)", "Failure: scales misinterpreted as exact frequencies; too many scales smoothing out events"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Pipeline: signal → CWT → scalogram", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "\psi_{a,b}(t) = \frac{1}{\sqrt{a}}\psi\left(\frac{t-b}{a}\right)", "how_to_use": "Wavelet dilation (a) and translation (b)", "symbol_defs_inline": ["a=\text{scale}", "b=\text{translation}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Select scales to cover the frequency range of interest"},
+          {"label": "sanity_check", "content": "Interpret high scales (large a) as low frequencies and vice versa"}
+        ]
+      },
+      "talking_points": [
+        "Explain how a mother wavelet is scaled and translated to analyse different parts of the signal.",
+        "Discuss how scale range and the number of scales act as knobs controlling resolution.",
+        "Describe outputs: wavelet coefficients that form the scalogram showing energy at different scales.",
+        "Identify failure modes: misinterpreting scale as precise frequency; using too many scales that blur the picture."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_08/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Scalograms for Morlet and Ricker wavelets"]
+      }
+    },
+    {
+      "slide_id": "W08-S04",
+      "type": "demo",
+      "title": "Demo: CWT on Impulse Signals",
+      "objective": "Show how to use the CWT with different wavelets to detect impulsive events.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Try different wavelets"},
+          {"label": "bullets", "content": ["Generate a signal with random impulses and baseline drift", "Compute CWT using Ricker and Morlet wavelets over a range of scales", "Visualise scalograms and compute impulse_detection_rate"]}
+        ],
+        "visuals": [
+          {"visual_type": "scalogram", "description": "Scalograms for Ricker and Morlet wavelets showing impulse localisation", "data_source": "synthetic demo"},
+          {"visual_type": "time_plot", "description": "Time‑domain signal annotated with impulse locations", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Observe which wavelet yields fewer false alarms"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the demo: constructing an impulse signal and computing CWT with two wavelet types.",
+        "Explain how impulse_detection_rate and false_alarm_rate are computed from scalograms.",
+        "Encourage learners to vary scale ranges and see how detection performance changes." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_08/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Scalograms and detection metrics"]
+      }
+    },
+    {
+      "slide_id": "W08-S05",
+      "type": "failure",
+      "title": "Failure Modes: Misinterpreting Scale and Noise Sensitivity",
+      "objective": "Discuss pitfalls such as confusing scale with frequency and ignoring noise sensitivity of wavelets.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Wavelet pitfalls"},
+          {"label": "bullets", "content": ["Treating scale as exact frequency → misinterpretation", "Using too many scales → smoothed or noisy scalograms", "High sensitivity to noise and EMI without pre‑filtering"]}
+        ],
+        "visuals": [
+          {"visual_type": "scalogram", "description": "Comparison of scalograms with appropriate vs excessive scale ranges", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Map scales to approximate frequencies using f ≈ fs/(scale)"},
+          {"label": "sanity_check", "content": "Pre‑filter signals to reduce noise before CWT"}
+        ]
+      },
+      "talking_points": [
+        "Illustrate how misinterpreting scale as frequency can lead to incorrect diagnosis.",
+        "Discuss the effect of selecting too fine or too coarse a set of scales.",
+        "Emphasise the need to pre‑filter noise and EMI to avoid false alarms in wavelet analysis."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_08/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Adjust scale ranges and wavelet types",
+        "expected_output": ["Scalograms illustrating pitfalls"]
+      }
+    },
+    {
+      "slide_id": "W08-S06",
+      "type": "exercise",
+      "title": "Exercise: Wavelet Impulse Detection",
+      "objective": "Let learners experiment with wavelet types and scales to detect impulses and compare detection rates.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on wavelet tuning"},
+          {"label": "bullets", "content": ["Create a signal with impulses and baseline noise", "Apply CWT using Ricker and Morlet wavelets over various scale ranges", "Calculate impulse_detection_rate and false_alarm_rate", "Fill in a table comparing performance across scales and wavelets"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template recording wavelet_type, scale_range, detection_rate and false_alarm_rate", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Select wavelet shapes similar to expected impulses"},
+          {"label": "sanity_check", "content": "Ensure scale range covers both the impulse duration and baseline oscillations"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise tasks and encourage exploration of different scales and wavelets.",
+        "Guide learners in computing detection metrics and filling the table.",
+        "Discuss which wavelet and scale combinations work best for a given signal characteristic." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_08/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify wavelet_scale and wavelet_type in demo",
+        "expected_output": ["Completed table and scalogram visuals"]
+      }
+    },
+    {
+      "slide_id": "W08-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce wavelet concepts and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 8 wrap‑up"},
+          {"label": "bullets", "content": ["Wavelet transforms provide time‑frequency localisation with multi‑resolution", "Scalograms visualise energy at different scales", "Selecting appropriate scales and wavelet types is key to impulse detection"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of wavelet analysis pipeline and scale–frequency mapping", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. How does a wavelet differ from a sinusoid?\n2. What happens at large scales in a scalogram?\n3. Why might you prefer wavelets over STFT for impulse detection?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise key takeaways on wavelet transforms and multi‑resolution analysis.",
+        "Pose quiz questions and encourage discussion.",
+        "Preview next week on multichannel analysis: cross‑correlation and coherence."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_08/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

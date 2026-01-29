@@ -1,0 +1,87 @@
+\chapter{Cross‑Correlation and Magnitude‑Squared Coherence}
+
+\section{Learning objectives}
+
+After studying this chapter you will be able to:
+\begin{itemize}
+  \item Define and compute the cross‑correlation between two signals and use it to estimate time delay.
+  \item Understand the concept of coherence and compute the magnitude‑squared coherence (MSC) to quantify frequency‑dependent correlation between signals.
+  \item Tune segment length and averaging parameters for reliable coherence estimates.
+  \item Diagnose coupling and synchronisation between sensor channels using these tools.
+\end{itemize}
+
+\section{Industrial context}
+
+When analysing multi‑sensor systems, such as vibration and current signals from a motor, cross‑correlation reveals time delays between channels, while coherence reveals how strongly two signals are linearly related at each frequency.  These metrics are widely used in modal analysis, structural health monitoring and communications.
+
+\section{Core concepts}
+
+\subsection{Cross‑correlation}
+
+The cross‑correlation of two continuous functions $f(t)$ and $g(t)$ is defined by
+\[
+(f \star g)(\tau) = \int_{-\infty}^{\infty} \overline{f(t)}\, g(t+\tau)\,\mathrm{d}t,
+\]
+which measures the similarity between $f$ and a time‑shifted version of $g$【202129906864961†L272-L287】.  For discrete signals, the cross‑correlation is defined as
+\[
+(f \star g)[n] = \sum_{m=-\infty}^{\infty} \overline{f[m]}\, g[m+n],
+\]
+over appropriate limits【202129906864961†L298-L304】.  The lag at which the cross‑correlation attains its maximum indicates the time delay between the signals.
+
+\subsection{Magnitude‑squared coherence}
+
+Coherence measures the linear correlation between two signals in the frequency domain.  The magnitude‑squared coherence between discrete signals $x$ and $y$ is given by
+\[
+C_{xy}(f) = \frac{|P_{xy}(f)|^2}{P_{xx}(f) P_{yy}(f)},
+\]
+where $P_{xx}$ and $P_{yy}$ are the power spectral densities of $x$ and $y$ and $P_{xy}$ is the cross power spectral density【296435890113586†L67-L72】.  Coherence values range between 0 (no linear relationship) and 1 (perfect linear relationship).
+
+\section{Operational formulas}
+
+\paragraph{Time delay estimation.}  Compute the cross‑correlation sequence and locate the lag $\hat{n}$ where it peaks.  The estimated time delay is $\hat{\tau} = \hat{n}/f_s$ seconds.
+
+\paragraph{Coherence estimation.}  Use Welch’s method on each channel to estimate $P_{xx}$, $P_{yy}$ and $P_{xy}$.  Then compute $C_{xy}(f)$.  Apply smoothing or averaging to reduce variance.
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Segment length & 1024 & Coherence estimate too noisy & Increase segment length and overlap \\
+    Overlap & 50\% & Cross‑correlation variance high & Increase overlap to average more segments \\
+    Window type & Hann & Side‑lobe leakage & Use multi‑taper or longer windows \\
+    Detrend & Remove mean & Spurious low‑frequency coherence & Detrend and remove DC components \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for cross‑correlation and coherence.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Spurious correlation.}  Common inputs or shared noise can produce high coherence even without direct coupling.  Compare coherence with and without the suspected input or apply partial coherence analysis.
+  \item \textbf{Bias due to finite data.}  Cross‑correlation estimates can be biased when signals are of finite length.  Use zero‑padding or large records to reduce bias.
+  \item \textbf{Frequency leakage.}  Poor windowing can smear coherence peaks.  Use appropriate windows or multi‑taper methods.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,9 demonstration computes the cross‑correlation between two channels of synthetic data to estimate time delay.  It also computes the magnitude‑squared coherence using Welch’s method.  The checks verify that the peak cross‑correlation occurs at zero lag (for the synchronised test signals) and that the coherence is near one at the dominant frequency.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Generate two signals with a known time delay and additive noise.  Estimate the delay using cross‑correlation and quantify the estimation error as a function of SNR.
+  \item Compute the coherence between a reference signal and its delayed, noise‑corrupted version.  Plot coherence versus frequency and identify the bands with high coherence.
+  \item Modify the demonstration to analyse the coupling between vibration and current signals in a motor.  Interpret the coherence peaks in terms of physical processes.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Continuous and discrete cross‑correlation definitions 【202129906864961†L272-L287】【202129906864961†L298-L304】.
+  \item Magnitude‑squared coherence formula 【296435890113586†L67-L72】.
+\end{itemize}

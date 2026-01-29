@@ -1,0 +1,2051 @@
+{
+    "acceptance_tests": {
+        "course_level_tests": [
+            {
+                "description": "Exactly 14 modules, week_01…week_14",
+                "result": "pass",
+                "test_id": "T-C1"
+            },
+            {
+                "description": "Lecture-only structure maintained (no separate lab weeks)",
+                "result": "pass",
+                "test_id": "T-C2"
+            },
+            {
+                "description": "Weeks 12–14 are advanced integration/case-study heavy; Week 14 is capstone",
+                "result": "pass",
+                "test_id": "T-C3"
+            },
+            {
+                "description": "No Python-intro content appears anywhere",
+                "result": "pass",
+                "test_id": "T-C4"
+            },
+            {
+                "description": "Toolchain compliance (NumPy/SciPy required; optional scikit-learn only in advanced weeks)",
+                "result": "pass",
+                "test_id": "T-C5"
+            },
+            {
+                "description": "Coverage requirements satisfied (sampling, aliasing, anti-aliasing; FFT, windowing, filtering; PSD; STFT; wavelets; multichannel; feature extraction; real-time; case studies)",
+                "result": "pass",
+                "test_id": "T-C6"
+            }
+        ],
+        "quality_threshold_tests": [
+            {
+                "description": "No generic statements; industrial justifications are specific",
+                "result": "pass",
+                "test_id": "T-Q1"
+            },
+            {
+                "description": "No repeated week themes without clear escalation",
+                "result": "pass",
+                "test_id": "T-Q2"
+            },
+            {
+                "description": "Demo is non-trivial with metrics or parameter sweep",
+                "result": "pass",
+                "test_id": "T-Q3"
+            },
+            {
+                "description": "Prerequisites chain is consistent",
+                "result": "pass",
+                "test_id": "T-Q4"
+            }
+        ],
+        "week_level_tests": [
+            {
+                "description": "Each week has 3–5 learning outcomes with observable success criteria",
+                "result": "pass",
+                "test_id": "T-W1"
+            },
+            {
+                "description": "Industrial justification is specific (instrument name + scenario + value)",
+                "result": "pass",
+                "test_id": "T-W2"
+            },
+            {
+                "description": "Python demo includes synthetic data spec (fs, duration, noise, constraints)",
+                "result": "pass",
+                "test_id": "T-W3"
+            },
+            {
+                "description": "Demo includes parameters_to_tune and 'what good looks like'",
+                "result": "pass",
+                "test_id": "T-W4"
+            },
+            {
+                "description": "Explicit pitfalls/limits relevant to the method are included",
+                "result": "pass",
+                "test_id": "T-W5"
+            },
+            {
+                "description": "Math ceiling enforced (no derivations; out_of_scope lists deep theory)",
+                "result": "pass",
+                "test_id": "T-W6"
+            },
+            {
+                "description": "At least one industrial constraint is included",
+                "result": "pass",
+                "test_id": "T-W7"
+            },
+            {
+                "description": "Session timing totals 180 minutes with exactly 4 sessions",
+                "result": "pass",
+                "test_id": "T-W8"
+            }
+        ]
+    },
+    "course_overview": {
+        "assessment_strategy": "Learners are assessed through weekly formative assignments (coding demonstrations and mini‑quizzes), a mid‑semester diagnostic check, and a capstone case‑study project. Assignments focus on implementing weekly DSP tools and interpreting results. The capstone requires designing an end‑to‑end condition‑monitoring pipeline with industrial constraints.",
+        "course_description": "This 14‑week elective introduces digital signal processing (DSP) as a black‑box toolkit for analysing sensor data in industrial physics settings. Students learn how to sample, transform, filter, and extract information from vibration, temperature, optical, acoustic and current/voltage measurements without getting lost in derivations. Each week links DSP methods to real instrumentation, industrial constraints (e.g., drift, quantization, EMI, latency) and decision‑making.",
+        "course_philosophy": "The course follows a black‑box philosophy: understand what each DSP method expects as input, how to choose and tune parameters, how to interpret the outputs, and when the method may fail. Proofs and derivations are deliberately avoided; instead the emphasis is on operational understanding and industrial relevance.",
+        "course_title": "Digital Signal Processing for Industrial Physics",
+        "global_learning_outcomes": [
+            "Explain the Nyquist–Shannon sampling theorem and design anti‑aliasing strategies for industrial sensors.",
+            "Use FFTs with appropriate windows to analyse frequency content and diagnose spectral leakage.",
+            "Design and apply FIR and IIR filters, interpret phase and stability trade‑offs, and justify filter choices for instrumentation.",
+            "Estimate power spectra using periodogram and Welch’s method, balancing variance and resolution.",
+            "Apply time‑frequency and wavelet transforms to non‑stationary signals and interpret spectrograms and wavelet scalograms.",
+            "Analyse multichannel measurements using cross‑correlation and coherence and infer phase relationships.",
+            "Extract statistical and spectral features (RMS, kurtosis, bandpower, envelopes) for condition monitoring.",
+            "Identify and mitigate industrial constraints such as quantization error, drift, electromagnetic interference and real‑time processing limits.",
+            "Build end‑to‑end pipelines for condition‑monitoring case studies, including parameter tuning, feature extraction, and decision rules, and evaluate performance using appropriate metrics."
+        ],
+        "grading_weights": {
+            "capstone_project": 0.3,
+            "midterm_diagnostic": 0.2,
+            "participation": 0.1,
+            "weekly_assignments": 0.4
+        },
+        "industrial_modalities": [
+            "vibration (accelerometers)",
+            "temperature (thermocouples and RTDs)",
+            "optical (photodiodes and photoresistors)",
+            "acoustic/ultrasonic (microphones)",
+            "current/voltage sensing (Hall sensors, shunt resistors)"
+        ],
+        "math_ceiling_policy": "Derivations and proofs are out of scope. Only the operational formulas needed to implement methods are presented, and deeper mathematical theory is explicitly excluded from lectures and assessments.",
+        "pacing_notes": "The course begins with foundational topics such as sampling, FFTs and filtering (Weeks 1–5). It then introduces time‑frequency and multi‑resolution analysis (Weeks 6–7), multichannel methods and feature extraction (Weeks 8–10) and finishes with industrial constraints and integrated case studies (Weeks 11–14). Recap sessions are embedded at the start of Weeks 6 and 11 to consolidate knowledge before moving into more complex material.",
+        "target_audience": "Upper-level undergraduate Industrial Physics majors who are proficient in Python and have basic calculus and linear algebra knowledge.",
+        "toolchain": {
+            "disallowed": [
+                "specialised DSP libraries beyond SciPy"
+            ],
+            "optional": {
+                "weeks_12_to_14": [
+                    "scikit-learn"
+                ]
+            },
+            "required": [
+                "numpy",
+                "scipy",
+                "matplotlib"
+            ]
+        }
+    },
+    "qa_summary": {
+        "failed_tests": [
+        ],
+        "fix_actions_taken": "All acceptance tests passed. Weeks were reviewed to ensure that learning outcomes are specific, demos include parameter tuning and evaluation metrics, industrial constraints are present, and the math ceiling is respected. Adjustments were made to emphasise session timing and eliminate any incidental Python‑intro content.",
+        "overall_status": "pass"
+    },
+    "topic_scout_report": {
+        "candidate_topics": [
+            {
+                "difficulty_level": 2,
+                "industrial_why": "Industrial sensors produce continuous signals that must be sampled without aliasing. Understanding sampling and the Nyquist criterion ensures that vibration and current measurements are digitised faithfully and that anti‑aliasing filters are correctly specified.",
+                "prerequisites_notes": "Requires familiarity with frequency and time domains; no prior DSP experience required.",
+                "python_demo_idea": "Generate multi‑tone sine waves, sample at various rates, and visualise aliasing using NumPy and matplotlib.",
+                "sensor_modality": "vibration, current/voltage",
+                "topic_name": "Sampling Theory and Nyquist Criteria"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "Before analog‑to‑digital conversion, low‑pass filters limit high‑frequency content so that sampling satisfies the Nyquist criterion; practical filters have transition bands and must be chosen based on the highest frequency of interest. In industrial DAQ systems, proper anti‑aliasing prevents spurious frequency components in vibration and acoustic measurements.",
+                "prerequisites_notes": "Should follow sampling theory; introduces filter basics.",
+                "python_demo_idea": "Design analog‑style low‑pass filters using SciPy’s digital approximations, simulate pre‑sampling filtering, and compare spectra with and without filtering.",
+                "sensor_modality": "vibration, acoustic",
+                "topic_name": "Anti‑Aliasing Filters and Analog Front‑Ends"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "Digitising signals introduces quantization error: the difference between the analog value and the nearest digital code. The error is bounded by ± half the least significant bit and its RMS decreases with higher resolution. Understanding quantization helps engineers choose appropriate ADCs for precise temperature and voltage measurement.",
+                "prerequisites_notes": "Requires sampling theory; basic probability concepts helpful.",
+                "python_demo_idea": "Quantise a sine wave with different bit depths, compute quantization error and RMS, and visualise how resolution affects noise floor.",
+                "sensor_modality": "temperature, current/voltage",
+                "topic_name": "Quantization and ADC Resolution"
+            },
+            {
+                "difficulty_level": 2,
+                "industrial_why": "Fourier transforms convert time‑domain sensor data into frequency‑domain information for fault diagnosis and spectral analysis. FFT algorithms make the computation efficient enough for real‑time monitoring, enabling rapid detection of machinery faults.",
+                "prerequisites_notes": "Requires understanding of sinusoids and basic complex numbers.",
+                "python_demo_idea": "Use numpy.fft and scipy.fft to compute spectra of synthetic signals and compare execution times; visualise magnitude and phase spectra.",
+                "sensor_modality": "vibration, acoustic, optical",
+                "topic_name": "Discrete Fourier Transform and FFT Implementation"
+            },
+            {
+                "difficulty_level": 2,
+                "industrial_why": "Finite‑length signals rarely contain an integer number of periods, leading to discontinuities and spectral leakage. Windowing reduces leakage by tapering edges; the Hanning window provides a good balance of frequency resolution and leakage reduction.",
+                "prerequisites_notes": "Requires knowledge of FFT; pairs well with DFT topic.",
+                "python_demo_idea": "Compare the spectra of a non‑integer‑period sine wave using rectangular and Hanning windows; quantify leakage and discuss trade‑offs.",
+                "sensor_modality": "vibration, acoustic",
+                "topic_name": "Windowing and Spectral Leakage"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "Finite impulse response (FIR) filters provide stable, linear‑phase filtering and are used in smoothing and band‑pass applications. They can preserve waveform shapes in vibration analysis but require higher order and more computation.",
+                "prerequisites_notes": "Requires FFT/windowing knowledge; introduces filter design.",
+                "python_demo_idea": "Design low‑pass and band‑pass FIR filters using scipy.signal.firwin, apply them to noisy data, and observe waveform preservation and computational cost.",
+                "sensor_modality": "vibration, optical",
+                "topic_name": "FIR Filter Design and Linear Phase"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "Infinite impulse response (IIR) filters achieve sharp transitions with lower order and computational cost but may introduce phase distortion and stability concerns. IIR filters are common in resource‑constrained embedded systems for temperature and current sensing.",
+                "prerequisites_notes": "Requires FIR filter topic; emphasises trade‑offs.",
+                "python_demo_idea": "Design Butterworth and Chebyshev filters with scipy.signal.butter/cheby1, apply them to data, and analyse phase distortion and stability.",
+                "sensor_modality": "temperature, current/voltage",
+                "topic_name": "IIR Filter Design, Stability and Phase Distortion"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "The power spectral density (PSD) quantifies how a signal’s power is distributed over frequency. Welch’s method reduces variance by segmenting and averaging periodograms, allowing reliable fault detection at the cost of lower resolution.",
+                "prerequisites_notes": "Requires FFT and windowing knowledge.",
+                "python_demo_idea": "Compute periodogram and Welch PSD estimates using scipy.signal.periodogram and scipy.signal.welch on noisy data and compare variance and resolution.",
+                "sensor_modality": "vibration, acoustic",
+                "topic_name": "Power Spectral Density and Welch’s Method"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "Non‑stationary signals such as machinery start‑ups require time‑frequency analysis. The STFT divides the signal into windows and computes a Fourier transform for each segment, producing a spectrogram that reveals frequency changes over time.",
+                "prerequisites_notes": "Requires FFT and windowing knowledge.",
+                "python_demo_idea": "Use scipy.signal.stft to compute spectrograms of chirp signals; vary window length and overlap to observe trade‑offs in time and frequency resolution.",
+                "sensor_modality": "vibration, acoustic",
+                "topic_name": "Short‑Time Fourier Transform and Spectrogram"
+            },
+            {
+                "difficulty_level": 4,
+                "industrial_why": "Wavelets provide localized, multiscale analysis useful for detecting transient events in bearings and electrical arcs. Wavelet bases start and end at zero and allow simultaneous time and frequency localization.",
+                "prerequisites_notes": "Requires STFT topic; introduces continuous/discrete wavelets.",
+                "python_demo_idea": "Use scipy.signal.cwt with Morlet or Ricker wavelets to analyse impulsive signals and visualise scalograms across scales.",
+                "sensor_modality": "vibration, electrical",
+                "topic_name": "Wavelet Transform and Multiresolution Analysis"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "Cross‑correlation measures similarity between two signals as a function of lag and is used for time‑delay estimation and identifying repeating patterns in machinery. Autocorrelation detects periodicity and estimates signal energy.",
+                "prerequisites_notes": "Requires basic statistics; pairs with coherence topic.",
+                "python_demo_idea": "Compute cross‑correlation between sensor signals to estimate time delays and detect misalignment; use numpy.correlate and scipy.signal.correlation_lags.",
+                "sensor_modality": "vibration, acoustic",
+                "topic_name": "Cross‑Correlation and Autocorrelation"
+            },
+            {
+                "difficulty_level": 4,
+                "industrial_why": "Coherence quantifies the linear relationship between two signals at each frequency; values near 1 indicate strong linear coupling and values near 0 suggest noise or non‑linearities. It is used to identify which frequencies transfer between sensors, such as input and output of a mechanical system.",
+                "prerequisites_notes": "Requires PSD and cross‑correlation topics.",
+                "python_demo_idea": "Use scipy.signal.coherence and cross_spectrum to evaluate coherence between force and response signals; interpret peaks and dips.",
+                "sensor_modality": "vibration, acoustic",
+                "topic_name": "Coherence and Cross‑Spectral Analysis"
+            },
+            {
+                "difficulty_level": 2,
+                "industrial_why": "Root mean square (RMS) measures the energy of vibration signals and is robust to sampling rate; it correlates with vibration energy and is widely used for health monitoring. Peak and crest factor quantify amplitude extremes and are useful for shock detection.",
+                "prerequisites_notes": "Requires basic statistics; pairs with kurtosis topic.",
+                "python_demo_idea": "Calculate RMS, peak, and crest factor for normal and faulty signals; compare sensitivity to impulsive events.",
+                "sensor_modality": "vibration, acoustic",
+                "topic_name": "RMS, Peak and Crest Factor Feature Extraction"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "Kurtosis measures impulsiveness—signals with rare high‑amplitude peaks have higher kurtosis than Gaussian noise. Skewness indicates asymmetry and directional bias. These shape‑based metrics detect early bearing faults before RMS changes.",
+                "prerequisites_notes": "Requires RMS knowledge; introduces higher‑order statistics.",
+                "python_demo_idea": "Compute kurtosis and skewness on healthy and faulty bearing signals; observe changes as fault develops.",
+                "sensor_modality": "vibration",
+                "topic_name": "Kurtosis and Skewness Feature Extraction"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "Bandpower integrates the power spectral density over a frequency band to quantify vibration energy in specific bands (e.g., bearing fault frequencies). Bandpower is used for condition monitoring and design of band‑pass filters.",
+                "prerequisites_notes": "Requires PSD knowledge; pairs with envelope analysis.",
+                "python_demo_idea": "Compute PSD and integrate bandpower using scipy.signal.welch and custom integration; compare bandpower in different frequency bands.",
+                "sensor_modality": "vibration, acoustic",
+                "topic_name": "Bandpower and Spectral Metrics"
+            },
+            {
+                "difficulty_level": 4,
+                "industrial_why": "Envelope analysis isolates high‑frequency stress waves generated by bearing faults by band‑pass filtering, rectifying, low‑pass filtering and performing an FFT on the envelope. Peaks in the envelope spectrum correspond to characteristic fault frequencies.",
+                "prerequisites_notes": "Requires filtering and PSD knowledge; introduces demodulation techniques.",
+                "python_demo_idea": "Implement envelope detection: band‑pass filter simulated bearing signal, rectify and low‑pass filter to obtain envelope, and compute FFT of the envelope to identify fault frequencies.",
+                "sensor_modality": "vibration (bearings)",
+                "topic_name": "Envelope Analysis and Demodulation"
+            },
+            {
+                "difficulty_level": 4,
+                "industrial_why": "Many DSP applications must operate under strict latency constraints. Real‑time DSP faces challenges such as limited processing power, memory, and the need for low latency; techniques like fixed‑point arithmetic and efficient algorithms (e.g., FFT, polyphase filters) mitigate these constraints.",
+                "prerequisites_notes": "Requires all previous topics; emphasises hardware considerations.",
+                "python_demo_idea": "Implement block‑based processing of streaming data and measure latency; compare floating‑point vs integer arithmetic to demonstrate trade‑offs.",
+                "sensor_modality": "all (embedded systems)",
+                "topic_name": "Real‑Time Processing and Resource Constraints"
+            },
+            {
+                "difficulty_level": 3,
+                "industrial_why": "Industrial measurements are affected by quantization error, sensor drift, electromagnetic interference (EMI) and missing data. Quantization error arises from finite ADC resolution; EMI from external sources can corrupt signals and increase error rates. Understanding these noise sources allows selection of appropriate hardware and filtering techniques.",
+                "prerequisites_notes": "Requires basic filtering and spectral analysis.",
+                "python_demo_idea": "Simulate signals with added drift, quantization noise and EMI‑like noise; design filters to mitigate interference and perform baseline correction.",
+                "sensor_modality": "all",
+                "topic_name": "Noise Sources and Industrial Interference"
+            },
+            {
+                "difficulty_level": 5,
+                "industrial_why": "Combining sampling, filtering, spectral analysis, feature extraction and classification yields an end‑to‑end pipeline for detecting rotating machinery faults. Such integrated approaches are needed in predictive maintenance programmes and align with industrial physics applications.",
+                "prerequisites_notes": "Requires topics up to envelope analysis; introduces machine learning.",
+                "python_demo_idea": "Generate synthetic bearing data with faults; apply band‑pass filtering, PSD, envelope analysis, extract features (RMS, kurtosis, bandpower) and use scikit‑learn to train a simple classifier to distinguish healthy vs faulty signals.",
+                "sensor_modality": "vibration (rotating machinery)",
+                "topic_name": "Condition Monitoring Pipeline Case Study"
+            },
+            {
+                "difficulty_level": 5,
+                "industrial_why": "Monitoring acoustic emissions helps detect leaks and cracks in pipes and structures. High‑frequency ultrasonic sensors can detect early damage; time‑frequency and wavelet analysis highlight crack signatures amidst noise.",
+                "prerequisites_notes": "Requires STFT and wavelet topics; emphasises transient detection.",
+                "python_demo_idea": "Simulate leak signals with bursts of ultrasonic waves; use STFT and wavelet analysis to locate transient events; extract features and apply simple classification.",
+                "sensor_modality": "acoustic/ultrasonic",
+                "topic_name": "Acoustic and Ultrasonic Fault Detection Case Study"
+            },
+            {
+                "difficulty_level": 4,
+                "industrial_why": "Simple classifiers (e.g., logistic regression, support vector machines) can automatically distinguish between healthy and faulty signals when provided with extracted features; this is key for automated condition monitoring.",
+                "prerequisites_notes": "Requires feature extraction topics; introduces basic machine learning.",
+                "python_demo_idea": "Use scikit‑learn to train a classifier on feature vectors (RMS, kurtosis, bandpower) from synthetic data; evaluate accuracy and cross‑validate.",
+                "sensor_modality": "vibration, acoustic",
+                "topic_name": "Machine Learning for Signal Classification"
+            },
+            {
+                "difficulty_level": 4,
+                "industrial_why": "Continuous monitoring generates large data streams that cannot be processed as a single array. Streaming and block processing techniques manage memory and enable incremental analysis in resource‑constrained embedded systems.",
+                "prerequisites_notes": "Requires real‑time processing topic.",
+                "python_demo_idea": "Implement a sliding‑window RMS and PSD estimation on streaming data using generator functions; evaluate memory usage and latency.",
+                "sensor_modality": "all",
+                "topic_name": "Streaming Data Processing and Memory Management"
+            },
+            {
+                "difficulty_level": 5,
+                "industrial_why": "Industrial systems often involve multiple sensors (vibration, temperature, current) whose data must be integrated for robust diagnosis. Data fusion combines information to improve decision quality and reduce false alarms.",
+                "prerequisites_notes": "Requires all previous topics; emphasises integration.",
+                "python_demo_idea": "Fuse features from multiple synthetic sensors; explore correlation and feature selection; design a simple rule‑based or machine‑learning decision logic.",
+                "sensor_modality": "vibration, temperature, current",
+                "topic_name": "Multi‑Sensor Integration and Data Fusion (Capstone)"
+            }
+        ],
+        "coverage_map": {
+            "feature_extraction_rms_kurtosis_envelope_bandpower": [
+                "Statistical Features: RMS, Crest Factor, Kurtosis and Skewness",
+                "Spectral Features: Bandpower and Envelope Analysis"
+            ],
+            "fft_windowing_leakage": [
+                "FFT, Windowing and Spectral Leakage"
+            ],
+            "filtering_fir_iir_phase": [
+                "FIR Filter Design",
+                "IIR Filter Design and Stability"
+            ],
+            "integrated_case_studies": [
+                "Condition Monitoring Pipeline Case Study",
+                "Acoustic/Ultrasonic Fault Detection Case Study",
+                "Capstone: Multi‑Sensor Integration and Data Fusion"
+            ],
+            "multichannel_cross_correlation_coherence": [
+                "Cross‑Correlation and Coherence"
+            ],
+            "real_time_processing_constraints": [
+                "Noise Sources, Quantization and Real‑Time Constraints"
+            ],
+            "sampling_aliasing_anti_aliasing": [
+                "Sampling and Anti‑Aliasing"
+            ],
+            "spectral_estimation_psd_welch": [
+                "Power Spectral Density and Welch’s Method"
+            ],
+            "time_frequency_stft": [
+                "Short‑Time Fourier Transform and Spectrogram"
+            ],
+            "wavelets": [
+                "Wavelet Transform and Multiresolution Analysis"
+            ]
+        },
+        "gaps_and_mitigations": "All required areas are covered. To ensure adequate coverage of machine‑learning basics, simple classification is introduced within the case study weeks but kept optional. If learners struggle with statistics for kurtosis and skewness, supplementary resources are provided. Wavelet implementations use SciPy’s CWT function to avoid reliance on external libraries.",
+        "selected_topics_top14": [
+            {
+                "rationale": "Fundamental to all digital signal processing; introduces Nyquist criterion, sampling hardware, and anti‑aliasing filters, setting the foundation for the entire course.",
+                "topic": "Sampling and Anti‑Aliasing"
+            },
+            {
+                "rationale": "Teaches students how to transform signals to frequency domain and manage leakage; critical for spectral analysis used throughout the course.",
+                "topic": "FFT, Windowing and Spectral Leakage"
+            },
+            {
+                "rationale": "Introduces stable, linear‑phase digital filters and lays groundwork for more complex filtering and denoising tasks.",
+                "topic": "FIR Filter Design"
+            },
+            {
+                "rationale": "Provides contrast with FIR filters, discussing computational efficiency and phase distortion; necessary for designing resource‑constrained embedded filters.",
+                "topic": "IIR Filter Design and Stability"
+            },
+            {
+                "rationale": "Shows how to estimate power distribution with reduced variance and sets the stage for later spectral features like bandpower.",
+                "topic": "Power Spectral Density and Welch’s Method"
+            },
+            {
+                "rationale": "Addresses non‑stationary signals and teaches parameter tuning for time‑frequency resolution trade‑offs.",
+                "topic": "Short‑Time Fourier Transform and Spectrogram"
+            },
+            {
+                "rationale": "Provides an alternative multiscale view of transient events and complements STFT in analysing impulsive faults.",
+                "topic": "Wavelet Transform and Multiresolution Analysis"
+            },
+            {
+                "rationale": "Covers multichannel analysis necessary for phase and delay estimation between sensors and sets up later data fusion.",
+                "topic": "Cross‑Correlation and Coherence"
+            },
+            {
+                "rationale": "Teaches students to extract time‑domain features for condition monitoring and introduces early‑fault indicators.",
+                "topic": "Statistical Features: RMS, Crest Factor, Kurtosis and Skewness"
+            },
+            {
+                "rationale": "Focuses on extracting frequency‑domain features including demodulation; essential for detecting bearing faults and resonances.",
+                "topic": "Spectral Features: Bandpower and Envelope Analysis"
+            },
+            {
+                "rationale": "Explores industrial noise sources, quantization error, EMI, drift and the challenges of real‑time processing, preparing students for deployment considerations.",
+                "topic": "Noise Sources, Quantization and Real‑Time Constraints"
+            },
+            {
+                "rationale": "Integrates previous topics into a coherent pipeline for rotating machinery fault detection; introduces optional machine learning.",
+                "topic": "Condition Monitoring Pipeline Case Study"
+            },
+            {
+                "rationale": "Demonstrates application of time–frequency and wavelet analysis to acoustic emissions and leak detection, emphasising transient events.",
+                "topic": "Acoustic/Ultrasonic Fault Detection Case Study"
+            },
+            {
+                "rationale": "Culminates the course with a comprehensive design integrating multiple sensors, features and decision logic, reflecting real industrial diagnostic systems.",
+                "topic": "Capstone: Multi‑Sensor Integration and Data Fusion"
+            }
+        ],
+        "sequencing_rationale": "The sequence begins with fundamental sampling and spectral transformation topics (Weeks 1–2) to provide students with the basic tools for DSP. Filtering is introduced next (Weeks 3–4) to equip learners with methods for noise removal and band selection. Spectral estimation (Week 5), time‑frequency analysis (Week 6) and wavelets (Week 7) build progressively more advanced analysis capabilities. Week 8 transitions to multichannel analysis through cross‑correlation and coherence. Weeks 9–10 focus on extracting time‑domain and frequency‑domain features used in condition monitoring. Week 11 addresses industrial noise sources and real‑time constraints, preparing learners for deployment. Weeks 12–14 are reserved for integrated case studies culminating in a multi‑sensor capstone."
+    },
+    "weekly_modules": [
+        {
+            "agent_instructions": "Adopt a practical tone; avoid proofs; encourage learners to experiment with sampling rates and filter parameters. Use Socratic questioning to guide discovery of aliasing effects; provide immediate feedback during the mini‑quiz.",
+            "assessments": {
+                "formative_quiz": "Multiple‑choice questions on aliasing scenarios and quantization range.",
+                "weekly_task": "Write a Python script that samples a synthetic vibration signal at various rates, applies a digital approximation of an anti‑aliasing filter, and compares spectra before and after filtering."
+            },
+            "completion_criteria": "Successful completion requires submitting the Python script, achieving at least 70% on the quiz, and demonstrating correct identification and mitigation of aliasing and quantization.",
+            "dsp_topic": {
+                "primary": "Sampling theory and anti‑aliasing",
+                "subtopics": [
+                    "Nyquist criterion",
+                    "Analog front‑end filtering",
+                    "ADC basics"
+                ]
+            },
+            "glossary": {
+                "Anti‑aliasing filter": "An analog low‑pass filter applied before the ADC to limit input bandwidth and prevent aliasing.",
+                "Nyquist frequency": "Half the sampling rate, the highest frequency that can be uniquely represented without aliasing.",
+                "Quantization": "The discretisation of analog values into finite digital codes, introducing quantization error."
+            },
+            "industrial_justification": "Accelerometer data in rotating machinery must be sampled above twice the highest vibration frequency; anti‑aliasing filters suppress higher‑frequency noise before digitisation. Selecting an appropriate ADC resolution ensures that vibration amplitudes are captured accurately.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Explain the Nyquist criterion and its application to industrial sensors.",
+                    "success_criteria": "Learners correctly calculate Nyquist frequency for given maximum signal frequencies and propose appropriate sampling rates with anti‑aliasing filters."
+                },
+                {
+                    "outcome": "Recognise aliasing in sampled signals and design simple anti‑aliasing filters.",
+                    "success_criteria": "In demonstrations, learners adjust sampling rate and pre‑filtering to eliminate aliased components and justify filter cut‑offs."
+                },
+                {
+                    "outcome": "Discuss quantization effects and choose suitable ADC resolution.",
+                    "success_criteria": "Learners compute quantization error bounds and select ADC bit depths to meet specified precision requirements."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Introduce continuous vs. discrete signals, motivate sampling in industrial sensors, explain the Nyquist criterion and demonstrate aliasing with animations.",
+                "S2 (60 min)": "Derive operational sampling conditions, discuss anti‑aliasing filters and transition bands, and design simple RC low‑pass filters.",
+                "S3 (45 min)": "Explore quantization; calculate LSB size, illustrate quantization error with histograms, and discuss how increased bit depth reduces error.",
+                "S4 (30 min)": "Case study: sample an accelerometer signal from rotating machinery; choose sampling rate, design analog filter, quantize data; mini‑quiz on aliasing scenarios."
+            },
+            "pitfalls_and_limits": [
+                "Confusing sampling rate with Nyquist frequency; emphasise that sampling rate must exceed twice the highest signal frequency.",
+                "Under‑estimating the effect of quantization error on low‑amplitude signals; discuss using higher‑resolution ADCs."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "What is the highest frequency component in a 50 Hz sine wave?",
+                    "If you sample a 1 kHz signal at 1.5 kHz, what occurs?"
+                ],
+                "required_knowledge": [
+                    "Basic calculus and familiarity with sine waves"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "SNR",
+                        "aliasing_level"
+                    ],
+                    "what_good_looks_like": "SNR remains high (>20 dB) and aliased frequencies are suppressed below −40 dB."
+                },
+                "methods_used": [
+                    "numpy",
+                    "scipy.signal.resample",
+                    "scipy.signal.butter"
+                ],
+                "parameters_to_tune": [
+                    "sampling_rate",
+                    "filter_cutoff"
+                ],
+                "sensor_modality": "vibration (accelerometer)",
+                "synthetic_data_spec": {
+                    "duration_s": 1.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "quantization",
+                        "drift"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise"
+                    ],
+                    "sampling_rate_hz": 2000,
+                    "signal_components": [
+                        "50 Hz sine",
+                        "200 Hz sine"
+                    ]
+                },
+                "visualizations": [
+                    "time_plot",
+                    "spectrum"
+                ]
+            },
+            "resources": [
+                "NI article on anti‑aliasing filters and sampling requirements",
+                "Liquid Instruments page on Nyquist–Shannon sampling",
+                "All About Circuits article on quantization error"
+            ],
+            "scope": {
+                "in_scope": [
+                    "sampling theorem",
+                    "anti‑aliasing filter design",
+                    "quantization"
+                ],
+                "out_of_scope": [
+                    "derivations of Fourier series",
+                    "detailed analog circuit design"
+                ]
+            },
+            "title": "Sampling and Anti‑Aliasing",
+            "week_id": "week_01"
+        },
+        {
+            "agent_instructions": "Emphasise black‑box use of the FFT; avoid mathematical derivations; encourage experimentation with different windows; reference industrial vibration diagnostics.",
+            "assessments": {
+                "formative_quiz": "Short problems on frequency resolution, leakage and window selection.",
+                "weekly_task": "Implement an FFT analysis script that tests multiple window functions on a synthetic multi‑tone signal and reports leakage ratios."
+            },
+            "completion_criteria": "To complete the week, learners must submit the FFT analysis script, achieve a minimum score on the quiz and demonstrate understanding of window choices.",
+            "dsp_topic": {
+                "primary": "Frequency analysis using FFT",
+                "subtopics": [
+                    "Discrete Fourier Transform",
+                    "Fast Fourier Transform",
+                    "Window functions",
+                    "Spectral leakage"
+                ]
+            },
+            "glossary": {
+                "FFT": "Fast algorithm to compute the discrete Fourier transform efficiently.",
+                "Spectral leakage": "Energy spreading into adjacent frequency bins due to finite observation window.",
+                "Window function": "Weighting function applied to a signal segment to reduce edge discontinuities."
+            },
+            "industrial_justification": "FFT analysis is the workhorse of condition monitoring: engineers monitor machine vibration spectra to identify imbalance and misalignment. Choosing appropriate window functions reduces leakage and improves diagnostic precision.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Compute the FFT of sampled sensor data and interpret magnitude and phase spectra.",
+                    "success_criteria": "Learners correctly implement FFT using NumPy/SciPy and identify dominant frequency components in synthetic and real sensor signals."
+                },
+                {
+                    "outcome": "Explain the cause of spectral leakage and choose appropriate window functions.",
+                    "success_criteria": "Learners compare rectangular and Hanning windows, demonstrate reduced leakage with Hanning, and articulate trade‑offs in resolution."
+                },
+                {
+                    "outcome": "Determine frequency resolution given sampling rate and number of points.",
+                    "success_criteria": "Learners calculate frequency bin spacing and design experiments accordingly."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Review sampling fundamentals; derive operational definition of the DFT and demonstrate computing spectra with NumPy.",
+                "S2 (60 min)": "Introduce FFT algorithms and complexity; perform live coding to compute FFT of accelerometer data; discuss magnitude vs. phase spectra.",
+                "S3 (45 min)": "Explain spectral leakage; compare rectangular and Hanning windows; demonstrate how window choice affects leakage and resolution.",
+                "S4 (30 min)": "Mini‑case: detect dominant frequencies in a motor vibration signal; tune window length and examine leakage; short quiz."
+            },
+            "pitfalls_and_limits": [
+                "Using a rectangular window on non‑integer‑period signals leads to spectral leakage; highlight the need for tapering windows.",
+                "Misinterpreting phase information; emphasise that magnitude is typically used in vibration diagnostics while phase is important for system identification."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "What happens when a signal’s frequency does not match an FFT bin?",
+                    "Why might a Hanning window reduce spectral leakage?"
+                ],
+                "required_knowledge": [
+                    "Week 1 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "SNR",
+                        "leakage_ratio"
+                    ],
+                    "what_good_looks_like": "Dominant frequencies appear as sharp peaks with minimal leakage; leakage ratio < 10%."
+                },
+                "methods_used": [
+                    "numpy.fft.rfft",
+                    "scipy.signal.get_window"
+                ],
+                "parameters_to_tune": [
+                    "window_type",
+                    "window_length"
+                ],
+                "sensor_modality": "vibration (accelerometer)",
+                "synthetic_data_spec": {
+                    "duration_s": 0.5,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "non_stationarity"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise"
+                    ],
+                    "sampling_rate_hz": 5000,
+                    "signal_components": [
+                        "120 Hz sine",
+                        "300 Hz sine"
+                    ]
+                },
+                "visualizations": [
+                    "time_plot",
+                    "spectrum",
+                    "spectrogram"
+                ]
+            },
+            "resources": [
+                "NI article on windowing and spectral leakage",
+                "SciPy FFT and signal.window documentation"
+            ],
+            "scope": {
+                "in_scope": [
+                    "FFT computation",
+                    "windowing techniques",
+                    "spectral interpretation"
+                ],
+                "out_of_scope": [
+                    "Deep derivations of DFT",
+                    "wavelet transforms"
+                ]
+            },
+            "title": "FFT, Windowing and Spectral Leakage",
+            "week_id": "week_02"
+        },
+        {
+            "agent_instructions": "Encourage students to experiment with different orders and window types; emphasise operational design using SciPy rather than manual coefficient derivation.",
+            "assessments": {
+                "formative_quiz": "Questions on filter order, transition band and ripple specifications.",
+                "weekly_task": "Design and implement an FIR filter to isolate a specific band in synthetic photodiode data; document parameter choices and evaluate results."
+            },
+            "completion_criteria": "Learners complete the week by submitting the filter design script, passing the quiz and demonstrating understanding of linear phase and filter order effects.",
+            "dsp_topic": {
+                "primary": "Finite impulse response filters",
+                "subtopics": [
+                    "Impulse response",
+                    "Frequency response",
+                    "Linear phase",
+                    "Filter order"
+                ]
+            },
+            "glossary": {
+                "FIR filter": "A digital filter with finite impulse response length, offering inherent stability and possible linear phase.",
+                "Group delay": "The derivative of phase with respect to frequency; constant for linear‑phase filters.",
+                "Transition band": "Frequency range between passband and stopband where the filter response transitions."
+            },
+            "industrial_justification": "FIR filters are widely used in optical and vibration instrumentation to remove high‑frequency noise without distorting waveform shape. Selecting the right filter order balances transition‑band sharpness with computational cost on embedded devices.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Design low‑pass and band‑pass FIR filters using window and Parks–McClellan methods.",
+                    "success_criteria": "Learners implement filters with scipy.signal.firwin/firwin2; verify magnitude response meets specifications."
+                },
+                {
+                    "outcome": "Explain linear‑phase property and its importance for waveform shape preservation.",
+                    "success_criteria": "Learners compare phase responses of FIR filters and interpret time‑domain distortions."
+                },
+                {
+                    "outcome": "Evaluate computational cost vs. filter order.",
+                    "success_criteria": "Learners measure execution time for different filter lengths and discuss trade‑offs between sharpness and computation."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Introduce impulse and frequency response; derive operational concept of convolution; discuss why FIR filters can achieve exact linear phase.",
+                "S2 (60 min)": "Design low‑pass FIR filters using the window method; implement in SciPy; adjust filter length to meet specifications and evaluate frequency response.",
+                "S3 (45 min)": "Design band‑pass filters using Parks–McClellan algorithm; interpret passband and stopband ripple; compare to window method.",
+                "S4 (30 min)": "Industrial case: denoise optical photodiode measurements using an FIR filter; quick quiz on filter order selection."
+            },
+            "pitfalls_and_limits": [
+                "Selecting an order that is too low leads to insufficient attenuation; highlight trade‑offs.",
+                "Ignoring group delay; emphasise linear phase ensures constant group delay but still introduces time shift."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "Why might a high‑order filter be required to achieve a narrow transition band?",
+                    "What is linear phase and why is it desirable?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–2 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "SNR",
+                        "RMSE"
+                    ],
+                    "what_good_looks_like": "Filtered signal exhibits improved SNR (>15 dB) and RMSE reduction relative to noisy input."
+                },
+                "methods_used": [
+                    "scipy.signal.firwin",
+                    "scipy.signal.lfilter"
+                ],
+                "parameters_to_tune": [
+                    "filter_order",
+                    "cutoff_frequencies"
+                ],
+                "sensor_modality": "optical (photodiode)",
+                "synthetic_data_spec": {
+                    "duration_s": 1.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "compute_limit",
+                        "quantization"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise"
+                    ],
+                    "sampling_rate_hz": 10000,
+                    "signal_components": [
+                        "500 Hz sine",
+                        "2000 Hz sine"
+                    ]
+                },
+                "visualizations": [
+                    "time_plot",
+                    "filter_response",
+                    "residuals"
+                ]
+            },
+            "resources": [
+                "GeeksforGeeks discussion on FIR filter properties",
+                "SciPy documentation on firwin and Parks–McClellan"
+            ],
+            "scope": {
+                "in_scope": [
+                    "FIR filter synthesis",
+                    "frequency response analysis",
+                    "implementation in Python"
+                ],
+                "out_of_scope": [
+                    "IIR filter derivations",
+                    "filter design proofs"
+                ]
+            },
+            "title": "FIR Filter Design and Linear Phase",
+            "week_id": "week_03"
+        },
+        {
+            "agent_instructions": "Highlight the trade‑off between sharpness and phase distortion; remind learners to inspect pole‑zero plots and avoid high orders on resource‑constrained hardware.",
+            "assessments": {
+                "formative_quiz": "Quiz on IIR filter stability conditions and ripple parameters.",
+                "weekly_task": "Design a Chebyshev band‑pass filter to isolate a 5 Hz oscillation in synthetic thermocouple data; evaluate stability and phase distortion."
+            },
+            "completion_criteria": "Completion requires submission of the filter design script, passing the quiz and demonstrating an understanding of stability and phase effects.",
+            "dsp_topic": {
+                "primary": "Infinite impulse response filters",
+                "subtopics": [
+                    "Feedback and recursion",
+                    "Butterworth/Chebyshev design",
+                    "Stability",
+                    "Phase distortion"
+                ]
+            },
+            "glossary": {
+                "Butterworth filter": "Maximally flat response in the passband with monotonic attenuation in the stopband.",
+                "Chebyshev filter": "Filter with passband or stopband ripple and steeper roll‑off than Butterworth.",
+                "IIR filter": "A digital filter with feedback (infinite impulse response), efficient but prone to phase distortion and potential instability."
+            },
+            "industrial_justification": "IIR filters enable steep transitions with fewer coefficients than FIR filters, making them attractive for embedded thermocouple and current sensors. However, they may introduce phase distortion and must be checked for stability.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Design basic low‑pass, high‑pass and band‑pass IIR filters using Butterworth and Chebyshev approximations.",
+                    "success_criteria": "Learners implement IIR filters with scipy.signal.butter and cheby1; plot magnitude response and meet specified passband/stopband requirements."
+                },
+                {
+                    "outcome": "Assess stability and phase distortion of IIR filters.",
+                    "success_criteria": "Learners compute pole locations, verify stability (poles inside unit circle) and discuss how phase non‑linearity affects waveform shape."
+                },
+                {
+                    "outcome": "Compare computational efficiency of IIR and FIR designs.",
+                    "success_criteria": "Learners benchmark filter implementations and justify choice for resource‑constrained applications."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Introduce recursion and feedback; contrast IIR with FIR; discuss pros and cons including computational efficiency and potential instability.",
+                "S2 (60 min)": "Design Butterworth filters using scipy.signal.butter; specify passband ripple and stopband attenuation; implement low‑pass and band‑pass filters.",
+                "S3 (45 min)": "Design Chebyshev filters; examine ripple characteristics; assess pole‑zero plots for stability and phase behaviour; compare to Butterworth.",
+                "S4 (30 min)": "Industrial case: filter thermocouple signals in a heating process; emphasise low computational overhead; short quiz on stability and phase."
+            },
+            "pitfalls_and_limits": [
+                "Neglecting to check poles for stability; emphasise that poles must lie inside the unit circle.",
+                "Assuming phase linearity; highlight that IIR filters are generally non‑linear phase.",
+                "Excessive reliance on high order IIR filters causing numerical instability; encourage moderate orders."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "Why might an IIR filter achieve a narrower transition band with fewer coefficients?",
+                    "What conditions ensure an IIR filter is stable?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–3 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "SNR",
+                        "bandpower"
+                    ],
+                    "what_good_looks_like": "Filtered temperature signal has minimal ripple and preserves slow drift while attenuating 60 Hz EMI."
+                },
+                "methods_used": [
+                    "scipy.signal.butter",
+                    "scipy.signal.cheby1",
+                    "scipy.signal.lfilter"
+                ],
+                "parameters_to_tune": [
+                    "filter_order",
+                    "ripple",
+                    "cutoff_frequencies"
+                ],
+                "sensor_modality": "temperature (thermocouple)",
+                "synthetic_data_spec": {
+                    "duration_s": 10.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "compute_limit",
+                        "EMI"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise",
+                        "60 Hz interference"
+                    ],
+                    "sampling_rate_hz": 100,
+                    "signal_components": [
+                        "0.5 Hz drift",
+                        "5 Hz oscillation"
+                    ]
+                },
+                "visualizations": [
+                    "time_plot",
+                    "filter_response",
+                    "phase_response"
+                ]
+            },
+            "resources": [
+                "GeeksforGeeks discussion on IIR filter properties",
+                "Analog Devices application notes on filter design"
+            ],
+            "scope": {
+                "in_scope": [
+                    "Butterworth/Chebyshev filter synthesis",
+                    "stability analysis",
+                    "phase interpretation"
+                ],
+                "out_of_scope": [
+                    "FIR filter derivations",
+                    "Laplace transform theory"
+                ]
+            },
+            "title": "IIR Filter Design and Stability",
+            "week_id": "week_04"
+        },
+        {
+            "agent_instructions": "Encourage exploration of different segment lengths and overlaps; emphasise that there is no one‑size‑fits‑all solution; link parameter choices to industrial signal characteristics.",
+            "assessments": {
+                "formative_quiz": "Questions on selecting Welch parameters and computing bandpower.",
+                "weekly_task": "Implement PSD estimation on synthetic gearbox data; tune Welch parameters to highlight known fault frequencies and compute bandpower in specific bands."
+            },
+            "completion_criteria": "Learners complete the week by submitting PSD and bandpower analyses, passing the quiz and demonstrating appropriate parameter tuning.",
+            "dsp_topic": {
+                "primary": "Spectral estimation",
+                "subtopics": [
+                    "Periodogram",
+                    "Welch’s method",
+                    "Variance vs. resolution",
+                    "Confidence intervals"
+                ]
+            },
+            "glossary": {
+                "Bandpower": "The integrated PSD over a specific frequency band, representing average power in that band.",
+                "Periodogram": "An estimate of the PSD obtained by taking the squared magnitude of the FFT of a signal segment.",
+                "PSD": "Power spectral density, the distribution of signal power over frequency."
+            },
+            "industrial_justification": "Welch’s method provides robust spectral estimates for noisy industrial signals by averaging periodograms with overlapping windows. Bandpower extracted from PSD quantifies energy within specific frequency bands and supports fault detection.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Compute power spectral density using periodogram and Welch’s method.",
+                    "success_criteria": "Learners implement both methods in SciPy, interpret PSD units and compare spectra for noisy signals."
+                },
+                {
+                    "outcome": "Explain the variance–resolution trade‑off in spectral estimation.",
+                    "success_criteria": "Learners adjust segment length and overlap in Welch’s method to balance variance reduction and frequency resolution, justifying choices."
+                },
+                {
+                    "outcome": "Estimate bandpower from PSD for specific frequency intervals.",
+                    "success_criteria": "Learners integrate PSD over fault frequencies and interpret increases as indicators of defects."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Review FFT and windowing; introduce PSD and units; derive periodogram algorithm operationally.",
+                "S2 (60 min)": "Implement periodogram and Welch PSD using scipy.signal.periodogram and scipy.signal.welch; examine the effect of segment length, overlap and window function on variance and resolution.",
+                "S3 (45 min)": "Compute bandpower by integrating PSD over specified bands; discuss how bandpower relates to vibration energy.",
+                "S4 (30 min)": "Industrial case: use Welch PSD to monitor a gearbox with repeating faults; mini‑quiz on parameter tuning."
+            },
+            "pitfalls_and_limits": [
+                "Using long segments decreases variance but reduces frequency resolution; emphasise trade‑offs.",
+                "Forgetting to normalise PSD and misinterpreting units (e.g., power vs. amplitude squared)."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "What is the effect of averaging periodograms on variance?",
+                    "How does window length affect frequency resolution?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–4 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "variance_of_psd",
+                        "bandpower"
+                    ],
+                    "what_good_looks_like": "PSD variance decreases with segment averaging without obscuring relevant peaks; bandpower in defect bands increases when faults are present."
+                },
+                "methods_used": [
+                    "scipy.signal.periodogram",
+                    "scipy.signal.welch",
+                    "numpy.trapz"
+                ],
+                "parameters_to_tune": [
+                    "segment_length",
+                    "overlap",
+                    "window_type"
+                ],
+                "sensor_modality": "vibration (gearbox)",
+                "synthetic_data_spec": {
+                    "duration_s": 2.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "non_stationarity",
+                        "missing_data"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise"
+                    ],
+                    "sampling_rate_hz": 8000,
+                    "signal_components": [
+                        "60 Hz sine",
+                        "150 Hz sine",
+                        "250 Hz sine"
+                    ]
+                },
+                "visualizations": [
+                    "spectrum",
+                    "bandpower"
+                ]
+            },
+            "resources": [
+                "Wikipedia on Welch’s method",
+                "Matlab bandpower function description"
+            ],
+            "scope": {
+                "in_scope": [
+                    "PSD estimation",
+                    "Welch parameters",
+                    "bandpower calculation"
+                ],
+                "out_of_scope": [
+                    "Derivation of the Wiener–Khinchin theorem",
+                    "higher‑order spectral estimation"
+                ]
+            },
+            "title": "Power Spectral Density and Welch’s Method",
+            "week_id": "week_05"
+        },
+        {
+            "agent_instructions": "Encourage students to interactively adjust window size and overlap; avoid deriving STFT formulas; focus on interpreting spectrograms and relating them to physical events.",
+            "assessments": {
+                "formative_quiz": "Multiple‑choice questions on STFT parameters and interpretations.",
+                "weekly_task": "Analyse a synthetic chirp and a non‑stationary vibration signal using STFT; adjust parameters to clearly reveal changing frequencies and transient events."
+            },
+            "completion_criteria": "Learners must submit the STFT analysis, pass the quiz and demonstrate parameter tuning skills to complete the week.",
+            "dsp_topic": {
+                "primary": "Short‑Time Fourier Transform",
+                "subtopics": [
+                    "Time–frequency trade‑off",
+                    "Spectrogram",
+                    "Window length and overlap",
+                    "Non‑stationary signals"
+                ]
+            },
+            "glossary": {
+                "Spectrogram": "Magnitude (or power) of the STFT displayed as a function of time and frequency.",
+                "STFT": "Short‑Time Fourier Transform; a sequence of FFTs on windowed signal segments, producing a time–frequency representation.",
+                "Time–frequency trade‑off": "Short windows provide good time resolution but poor frequency resolution and vice versa."
+            },
+            "industrial_justification": "STFT enables engineers to examine how frequency content evolves over time, which is crucial for detecting transient faults such as bearing impacts or leak events.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Compute STFT and visualise spectrograms for non‑stationary signals.",
+                    "success_criteria": "Learners implement scipy.signal.stft on chirps and machinery run‑ups and correctly interpret spectrogram plots."
+                },
+                {
+                    "outcome": "Select appropriate window lengths and overlaps for STFT.",
+                    "success_criteria": "Learners vary STFT parameters and justify selections based on time vs. frequency resolution trade‑offs."
+                },
+                {
+                    "outcome": "Identify transient events and their frequency content.",
+                    "success_criteria": "Learners locate bursts or fault events in spectrograms and relate them to physical processes."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Introduce the need for time–frequency analysis; derive operational STFT; explain window segmentation.",
+                "S2 (60 min)": "Compute spectrograms for chirp signals using scipy.signal.stft; adjust window lengths and overlaps; discuss time–frequency resolution.",
+                "S3 (45 min)": "Apply STFT to non‑stationary vibration data (machine start‑up); interpret how frequency content evolves; identify transient events.",
+                "S4 (30 min)": "Industrial mini‑case: acoustic emissions during leak detection; use spectrogram to identify leak onset; quick quiz on parameter effects."
+            },
+            "pitfalls_and_limits": [
+                "Using too wide a window blurs transient events in time; emphasise exploring multiple window sizes.",
+                "Confusing amplitude in the spectrogram with energy density; clarify scaling and colormap interpretation."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "How does changing the window length affect the time and frequency resolution in an STFT?",
+                    "What is the difference between a periodogram and a spectrogram?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–5 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "time_resolution",
+                        "frequency_resolution"
+                    ],
+                    "what_good_looks_like": "Transient events are localised in time and frequency; resolution is sufficient to distinguish neighbouring components."
+                },
+                "methods_used": [
+                    "scipy.signal.stft"
+                ],
+                "parameters_to_tune": [
+                    "window_length",
+                    "overlap"
+                ],
+                "sensor_modality": "acoustic (microphone)",
+                "synthetic_data_spec": {
+                    "duration_s": 2.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "non_stationarity",
+                        "missing_data"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise"
+                    ],
+                    "sampling_rate_hz": 4000,
+                    "signal_components": [
+                        "linear chirp from 100 Hz to 1000 Hz"
+                    ]
+                },
+                "visualizations": [
+                    "spectrogram",
+                    "time_plot"
+                ]
+            },
+            "resources": [
+                "Wikipedia on STFT",
+                "SciPy STFT documentation"
+            ],
+            "scope": {
+                "in_scope": [
+                    "STFT computation",
+                    "spectrogram interpretation",
+                    "parameter tuning"
+                ],
+                "out_of_scope": [
+                    "Wavelet transforms",
+                    "Hilbert–Huang transform"
+                ]
+            },
+            "title": "Time–Frequency Analysis with STFT",
+            "week_id": "week_06"
+        },
+        {
+            "agent_instructions": "Encourage use of SciPy’s wavelet functions; avoid mathematical derivations; focus on interpretation of scalograms and comparison to STFT.",
+            "assessments": {
+                "formative_quiz": "Quiz on wavelet concepts, scale selection and interpretation.",
+                "weekly_task": "Implement CWT on synthetic impulse data; compare Morlet and Ricker wavelets; evaluate detection of transient events."
+            },
+            "completion_criteria": "Learners must submit a CWT analysis, achieve a passing score on the quiz and demonstrate appropriate scale selection to complete the week.",
+            "dsp_topic": {
+                "primary": "Wavelet analysis",
+                "subtopics": [
+                    "Continuous and discrete wavelets",
+                    "Scalograms",
+                    "Morlet and Ricker",
+                    "Multi‑resolution"
+                ]
+            },
+            "glossary": {
+                "Scale": "Parameter that dilates or compresses the wavelet to analyse different frequency components.",
+                "Scalogram": "The squared magnitude of the wavelet coefficients displayed as a function of time and scale (or frequency).",
+                "Wavelet": "A waveform of effectively limited duration that has an average value of zero, used as a basis function in wavelet transforms."
+            },
+            "industrial_justification": "Wavelet transforms provide a multi‑resolution view of signals, allowing detection of short impulses and transient faults that may be smeared in spectrograms.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Explain the concept of wavelets and how they differ from sinusoids.",
+                    "success_criteria": "Learners describe wavelets as localized oscillations that start and end at zero and articulate why they are suitable for transient detection."
+                },
+                {
+                    "outcome": "Compute continuous wavelet transforms (CWT) using SciPy and interpret scalograms.",
+                    "success_criteria": "Learners apply scipy.signal.cwt to impulsive signals using Morlet/Ricker wavelets and identify energy concentrations at different scales."
+                },
+                {
+                    "outcome": "Compare wavelet analysis with STFT and discuss advantages for non‑stationary, transient signals.",
+                    "success_criteria": "Learners summarise differences and justify wavelet choice for impulsive fault detection."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Introduce wavelets conceptually; contrast with sinusoids and STFT; discuss localisation in time and frequency.",
+                "S2 (60 min)": "Compute continuous wavelet transforms using scipy.signal.cwt; explore Morlet and Ricker wavelets; visualise scalograms for synthetic impulsive signals.",
+                "S3 (45 min)": "Analyse real vibration data with transient impacts; compare STFT and CWT outputs; discuss multi‑resolution representation.",
+                "S4 (30 min)": "Industrial case: detect arcs in electrical signals using wavelets; mini‑quiz on scale vs. frequency mapping."
+            },
+            "pitfalls_and_limits": [
+                "Interpreting scales as exact frequencies without caution; emphasise approximate mapping.",
+                "Using too many scales leading to over‑smooth or noisy scalograms; encourage selecting relevant scales."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "Why might the STFT fail to detect very short impulses?",
+                    "What is a mother wavelet?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–6 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "impulse_detection_rate",
+                        "false_alarm_rate"
+                    ],
+                    "what_good_looks_like": "True impulses produce strong localized energy on the scalogram with few false positives."
+                },
+                "methods_used": [
+                    "scipy.signal.cwt",
+                    "scipy.signal.ricker",
+                    "scipy.signal.morlet2"
+                ],
+                "parameters_to_tune": [
+                    "wavelet_scale",
+                    "wavelet_type"
+                ],
+                "sensor_modality": "electrical (current sensing)",
+                "synthetic_data_spec": {
+                    "duration_s": 1.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "non_stationarity",
+                        "EMI"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise"
+                    ],
+                    "sampling_rate_hz": 5000,
+                    "signal_components": [
+                        "Random impulsive events",
+                        "Low‑frequency baseline"
+                    ]
+                },
+                "visualizations": [
+                    "scalogram",
+                    "time_plot"
+                ]
+            },
+            "resources": [
+                "Wikipedia on wavelets",
+                "SciPy continuous wavelet transform documentation"
+            ],
+            "scope": {
+                "in_scope": [
+                    "Continuous wavelet transform",
+                    "scalogram interpretation",
+                    "mother and daughter wavelets"
+                ],
+                "out_of_scope": [
+                    "Wavelet packet decomposition",
+                    "mathematical derivations of wavelet orthogonality"
+                ]
+            },
+            "title": "Wavelet Transform and Multiresolution Analysis",
+            "week_id": "week_07"
+        },
+        {
+            "agent_instructions": "Encourage students to interpret correlation and coherence plots critically; avoid over‑interpreting correlation as causation; link results to physical time delays and coupling.",
+            "assessments": {
+                "formative_quiz": "Questions on cross‑correlation interpretation and coherence values.",
+                "weekly_task": "Analyse synthetic dual‑sensor data; compute cross‑correlation, cross‑spectral density and coherence; interpret coupling and delays."
+            },
+            "completion_criteria": "To complete the week, learners must submit the multichannel analysis, pass the quiz and demonstrate correct interpretation of cross‑correlation and coherence.",
+            "dsp_topic": {
+                "primary": "Multichannel analysis",
+                "subtopics": [
+                    "Cross‑correlation",
+                    "Autocorrelation",
+                    "Coherence",
+                    "Cross‑spectral density"
+                ]
+            },
+            "glossary": {
+                "Coherence": "A statistic expressing the degree of linear relationship between two signals at each frequency, ranging from 0 (no relation) to 1 (perfectly linear).",
+                "Cross‑correlation": "A measure of similarity between two signals as a function of lag.",
+                "Cross‑spectral density": "The Fourier transform of the cross‑correlation function, representing the shared power between two signals at each frequency."
+            },
+            "industrial_justification": "Multichannel analysis allows engineers to identify phase relationships and coupling between sensors. Cross‑correlation estimates time delays and repeating patterns, while coherence quantifies frequency‑specific relationships.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Compute cross‑correlation between two sensor signals and estimate time delays.",
+                    "success_criteria": "Learners implement numpy.correlate and scipy.signal.correlation_lags to find the lag at which cross‑correlation peaks and interpret physical delays."
+                },
+                {
+                    "outcome": "Explain coherence and its interpretation.",
+                    "success_criteria": "Learners compute magnitude‑squared coherence using scipy.signal.coherence, identify frequency ranges with strong coupling and relate low coherence to noise or non‑linearities."
+                },
+                {
+                    "outcome": "Calculate cross‑spectral density and phase relationships.",
+                    "success_criteria": "Learners use scipy.signal.csd to obtain cross‑spectral density and determine phase shift between channels."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Define cross‑correlation and autocorrelation; derive operational computation; discuss similarity detection.",
+                "S2 (60 min)": "Compute cross‑correlation for synthetic dual‑sensor data; estimate time delays and align signals.",
+                "S3 (45 min)": "Introduce magnitude‑squared coherence; compute coherence and cross‑spectral density using SciPy; interpret values from 0 to 1.",
+                "S4 (30 min)": "Industrial case: analyse coherence between motor current and vibration signals to assess mechanical coupling; quick quiz on interpreting coherence plots."
+            },
+            "pitfalls_and_limits": [
+                "Interpreting high correlation as causation; emphasise that correlation indicates similarity but not necessarily causality.",
+                "Ignoring window and overlap parameters in coherence estimation; emphasise consistent parameter selection to avoid bias."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "What is the difference between correlation and convolution?",
+                    "Why might coherence be low at certain frequencies?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–7 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "peak_lag",
+                        "coherence_max"
+                    ],
+                    "what_good_looks_like": "Cross‑correlation peak occurs at the correct time lag; coherence >0.8 in shared frequency bands; low coherence outside."
+                },
+                "methods_used": [
+                    "numpy.correlate",
+                    "scipy.signal.csd",
+                    "scipy.signal.coherence"
+                ],
+                "parameters_to_tune": [
+                    "window_length",
+                    "overlap"
+                ],
+                "sensor_modality": "vibration and current",
+                "synthetic_data_spec": {
+                    "duration_s": 1.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "missing_data",
+                        "non_stationarity"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise"
+                    ],
+                    "sampling_rate_hz": 5000,
+                    "signal_components": [
+                        "100 Hz sine shared",
+                        "150 Hz sine in channel 1",
+                        "200 Hz sine in channel 2"
+                    ]
+                },
+                "visualizations": [
+                    "time_plot",
+                    "cross_correlation",
+                    "coherence"
+                ]
+            },
+            "resources": [
+                "Wikipedia on cross‑correlation",
+                "Wikipedia on coherence (signal processing)",
+                "Sigview manual on cross‑spectral analysis"
+            ],
+            "scope": {
+                "in_scope": [
+                    "Cross‑correlation computation",
+                    "coherence estimation",
+                    "cross‑spectral analysis"
+                ],
+                "out_of_scope": [
+                    "Mutual information",
+                    "bispectrum analysis"
+                ]
+            },
+            "title": "Cross‑Correlation and Coherence",
+            "week_id": "week_08"
+        },
+        {
+            "agent_instructions": "Encourage comparison of healthy vs. faulty signals; emphasise time‑domain features as complementary to spectral features; avoid in‑depth statistical derivations.",
+            "assessments": {
+                "formative_quiz": "Quiz on feature definitions and interpretations.",
+                "weekly_task": "Compute RMS, peak, crest factor, kurtosis and skewness on simulated vibration data; plot trends and identify when faults emerge."
+            },
+            "completion_criteria": "Learners must submit feature extraction analysis, pass the quiz and demonstrate interpretation of feature trends to complete the week.",
+            "dsp_topic": {
+                "primary": "Time‑domain feature extraction",
+                "subtopics": [
+                    "RMS and energy",
+                    "Peak and crest factor",
+                    "Kurtosis",
+                    "Skewness"
+                ]
+            },
+            "glossary": {
+                "Crest factor": "Ratio of peak amplitude to RMS, indicating impulsiveness.",
+                "Kurtosis": "Measure of tail heaviness; higher values indicate impulsive or heavy‑tailed distributions.",
+                "RMS": "Root mean square value, representing the square root of the mean of squared signal values.",
+                "Skewness": "Measure of asymmetry; positive values indicate right‑tailed distributions, negative values left‑tailed."
+            },
+            "industrial_justification": "Time‑domain features such as RMS, crest factor, kurtosis and skewness quantify energy and impulsiveness of vibration signals. Monitoring these features over time helps detect mechanical degradation early.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Compute RMS, peak, and crest factor for vibration signals and interpret their physical meaning.",
+                    "success_criteria": "Learners implement RMS and crest factor calculations and explain how they relate to vibration energy and impulsiveness."
+                },
+                {
+                    "outcome": "Compute kurtosis and skewness to detect impulsive faults.",
+                    "success_criteria": "Learners calculate kurtosis and skewness for healthy and faulty signals; higher kurtosis indicates impulsive anomalies; skewness reveals directional bias."
+                },
+                {
+                    "outcome": "Interpret feature trends for condition monitoring.",
+                    "success_criteria": "Learners create trend plots of features over time and identify changes indicating degradation."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Review energy concepts; derive operational formulas for RMS and peak/crest factor; compute on synthetic signals.",
+                "S2 (60 min)": "Introduce kurtosis and skewness; explain how they capture distribution shape; compute on healthy vs. faulty data; discuss early fault detection.",
+                "S3 (45 min)": "Plot features over time for a simulated bearing degradation scenario; interpret trends and set thresholds.",
+                "S4 (30 min)": "Industrial case: monitor RMS and kurtosis of a turbine shaft; quick quiz on interpreting feature changes."
+            },
+            "pitfalls_and_limits": [
+                "Over‑reliance on peak measurements; emphasise RMS as a more robust measure of energy.",
+                "Interpreting kurtosis without considering amplitude scaling; normalise signals before computing shape metrics."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "What does RMS measure?",
+                    "How does kurtosis differ from variance?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–8 content",
+                    "basic statistics"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "RMS",
+                        "kurtosis",
+                        "skewness"
+                    ],
+                    "what_good_looks_like": "Feature trends show stable RMS and low kurtosis for healthy operation; increases indicate faults."
+                },
+                "methods_used": [
+                    "numpy",
+                    "scipy.stats"
+                ],
+                "parameters_to_tune": [
+                    "window_length",
+                    "threshold"
+                ],
+                "sensor_modality": "vibration (accelerometer)",
+                "synthetic_data_spec": {
+                    "duration_s": 5.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "non_stationarity",
+                        "drift"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise"
+                    ],
+                    "sampling_rate_hz": 2000,
+                    "signal_components": [
+                        "100 Hz sine",
+                        "impulsive noise events"
+                    ]
+                },
+                "visualizations": [
+                    "time_plot",
+                    "feature_trend"
+                ]
+            },
+            "resources": [
+                "Endaq blog on RMS and vibration metrics",
+                "Dynamox blog on kurtosis and skewness"
+            ],
+            "scope": {
+                "in_scope": [
+                    "RMS and peak calculations",
+                    "kurtosis and skewness",
+                    "feature trend analysis"
+                ],
+                "out_of_scope": [
+                    "Advanced statistical inference",
+                    "machine learning algorithms (covered later)"
+                ]
+            },
+            "title": "Statistical Feature Extraction: RMS, Crest Factor, Kurtosis and Skewness",
+            "week_id": "week_09"
+        },
+        {
+            "agent_instructions": "Encourage meticulous stepwise implementation of envelope detection; remind learners to verify filter settings; emphasise that spectral features complement time‑domain metrics.",
+            "assessments": {
+                "formative_quiz": "Questions on bandpower computation and steps of envelope analysis.",
+                "weekly_task": "Compute bandpower and perform envelope analysis on synthetic bearing data; identify defect frequencies and evaluate parameter choices."
+            },
+            "completion_criteria": "To complete the week, learners must submit a bandpower and envelope analysis report, pass the quiz and justify parameter choices.",
+            "dsp_topic": {
+                "primary": "Frequency‑domain feature extraction",
+                "subtopics": [
+                    "Bandpower",
+                    "Envelope detection",
+                    "Demodulation",
+                    "Spectral metrics"
+                ]
+            },
+            "glossary": {
+                "Bandpower": "Average power of a signal within a specified frequency band, computed by integrating the PSD over that band.",
+                "Envelope": "Smooth curve outlining the extremes of a signal; in demodulation, extracted by rectifying and low‑pass filtering a band‑pass filtered signal.",
+                "Spectral centroid": "Frequency at which the spectrum’s centre of mass is located, indicating brightness or balance of a signal.",
+                "Spectral kurtosis": "A measure of how peaked or flat the spectrum is relative to a Gaussian distribution."
+            },
+            "industrial_justification": "Bandpower quantifies energy in specific frequency bands and supports targeted fault detection. Envelope analysis demodulates high‑frequency vibration signals to reveal repetitive impacts generated by bearing defects.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Compute bandpower over designated frequency bands.",
+                    "success_criteria": "Learners integrate PSD using numerical integration and interpret increases in bandpower as possible faults."
+                },
+                {
+                    "outcome": "Perform envelope analysis to detect bearing faults.",
+                    "success_criteria": "Learners implement band‑pass filtering, rectification and low‑pass filtering to compute the envelope; FFT of the envelope reveals characteristic fault frequencies."
+                },
+                {
+                    "outcome": "Compare spectral metrics (centroid, spectral kurtosis) and discuss their uses.",
+                    "success_criteria": "Learners compute spectral centroid and spectral kurtosis and articulate scenarios where each metric is informative."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Review PSD; define bandpower and demonstrate integration over frequency bands.",
+                "S2 (60 min)": "Introduce envelope detection and demodulation; implement band‑pass filtering, rectification and low‑pass filtering.",
+                "S3 (45 min)": "Compute FFT of the envelope to extract bearing fault frequencies; discuss spectral centroid and spectral kurtosis.",
+                "S4 (30 min)": "Industrial case: apply envelope analysis to a simulated bearing signal with known defect frequencies; short quiz on bandpower and envelope steps."
+            },
+            "pitfalls_and_limits": [
+                "Using bandpower without considering windowing; emphasise consistent Welch parameters.",
+                "Confusing envelope detection with simple rectification; emphasise necessary low‑pass filtering to remove carrier frequency."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "How is bandpower computed from PSD?",
+                    "What does the envelope of a signal represent?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–9 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "bandpower",
+                        "fault_frequency_amplitude"
+                    ],
+                    "what_good_looks_like": "Bandpower in fault bands increases significantly when defects are present; envelope spectrum shows peaks at known defect frequencies."
+                },
+                "methods_used": [
+                    "scipy.signal.welch",
+                    "scipy.signal.butter",
+                    "numpy.abs",
+                    "scipy.fftpack.fft"
+                ],
+                "parameters_to_tune": [
+                    "bandpass_cutoff",
+                    "lowpass_cutoff",
+                    "segment_length"
+                ],
+                "sensor_modality": "vibration (bearing)",
+                "synthetic_data_spec": {
+                    "duration_s": 1.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "EMI",
+                        "non_stationarity"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise",
+                        "EMI"
+                    ],
+                    "sampling_rate_hz": 16000,
+                    "signal_components": [
+                        "Bearing outer race fault impacts",
+                        "Rotational frequency"
+                    ]
+                },
+                "visualizations": [
+                    "spectrum",
+                    "envelope",
+                    "filter_response"
+                ]
+            },
+            "resources": [
+                "Matlab bandpower documentation",
+                "Vibromera article on envelope analysis"
+            ],
+            "scope": {
+                "in_scope": [
+                    "Bandpower calculation",
+                    "envelope detection",
+                    "spectral metrics"
+                ],
+                "out_of_scope": [
+                    "Complex demodulation theory",
+                    "bispectrum and higher‑order spectra"
+                ]
+            },
+            "title": "Spectral Feature Extraction: Bandpower and Envelope Analysis",
+            "week_id": "week_10"
+        },
+        {
+            "agent_instructions": "Encourage students to measure latency and memory usage; provide guidelines for selecting bit depths; emphasise the importance of shielding and grounding in hardware design.",
+            "assessments": {
+                "formative_quiz": "Questions on quantization error computation, EMI sources and latency definitions.",
+                "weekly_task": "Simulate quantization and EMI on streaming current data; implement block processing to filter the signal in real time; compare fixed‑point and floating‑point performance."
+            },
+            "completion_criteria": "Completion requires submission of streaming processing scripts, passing the quiz, and demonstrating quantization and EMI mitigation techniques under real‑time constraints.",
+            "dsp_topic": {
+                "primary": "Industrial constraints and real‑time processing",
+                "subtopics": [
+                    "Quantization error",
+                    "EMI and drift",
+                    "Fixed‑point vs floating‑point",
+                    "Streaming processing"
+                ]
+            },
+            "glossary": {
+                "EMI": "Electromagnetic interference from external sources (motors, radios, lightning) that can induce unwanted currents and voltages in measurement circuits.",
+                "Fixed‑point": "Numerical representation where numbers are stored with a fixed scaling, offering faster computation and lower memory usage than floating point but reduced dynamic range.",
+                "Latency": "Delay between acquiring data and producing processed results, critical for real‑time systems.",
+                "Quantization error": "The difference between the analog input and its nearest digital code, bounded by ±0.5 LSB; its RMS depends on bit depth."
+            },
+            "industrial_justification": "Industrial environments expose measurements to quantization noise, sensor drift and EMI. Real‑time processing requires efficient algorithms and awareness of fixed‑point vs floating‑point trade‑offs to meet latency constraints.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Identify and model quantization error in ADCs.",
+                    "success_criteria": "Learners quantify RMS quantization error for different bit depths and assess its impact on measurement accuracy."
+                },
+                {
+                    "outcome": "Describe sources of electromagnetic interference (EMI) and sensor drift in industrial environments.",
+                    "success_criteria": "Learners list common EMI sources (e.g., motors, radios), explain coupling mechanisms and propose filtering and shielding strategies."
+                },
+                {
+                    "outcome": "Implement simple real‑time processing using block‑based techniques and compare fixed‑point and floating‑point arithmetic.",
+                    "success_criteria": "Learners process streaming data in blocks, measure latency and memory usage, and discuss trade‑offs between fixed and floating point implementations."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Review quantization noise; compute error bounds and RMS value for different ADC bit depths; discuss dithering.",
+                "S2 (60 min)": "Explore sources of EMI (motors, radios, lightning) and their effect on measurement accuracy; discuss shielding, twisted pairs and filtering solutions; address sensor drift and calibration.",
+                "S3 (45 min)": "Introduce real‑time constraints; implement block‑based FIR filtering; compare fixed‑point vs floating‑point operations using numpy.int16 vs float32.",
+                "S4 (30 min)": "Industrial mini‑case: process streaming current sensor data on a resource‑constrained microcontroller; mini‑quiz on quantization and EMI mitigation strategies."
+            },
+            "pitfalls_and_limits": [
+                "Ignoring drift and baseline drift compensation; emphasise periodic calibration.",
+                "Assuming that floating‑point operations always suffice; highlight memory and speed advantages of fixed‑point on embedded hardware.",
+                "Implementing block processing without considering overlap, leading to artefacts; encourage overlapping blocks where needed."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "What is the quantization step size for a 12‑bit ADC with ±2 V range?",
+                    "Give an example of an EMI source in industrial settings."
+                ],
+                "required_knowledge": [
+                    "Weeks 1–10 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "latency_ms",
+                        "quantization_error_rms"
+                    ],
+                    "what_good_looks_like": "Latency meets real‑time requirement (<10 ms); quantization error remains within specified tolerance; EMI spikes are attenuated."
+                },
+                "methods_used": [
+                    "numpy",
+                    "scipy.signal.lfilter"
+                ],
+                "parameters_to_tune": [
+                    "block_size",
+                    "bit_depth"
+                ],
+                "sensor_modality": "current sensing",
+                "synthetic_data_spec": {
+                    "duration_s": 10.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "quantization",
+                        "EMI",
+                        "latency",
+                        "compute_limit"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise",
+                        "EMI spikes",
+                        "drift"
+                    ],
+                    "sampling_rate_hz": 1000,
+                    "signal_components": [
+                        "DC current with step changes"
+                    ]
+                },
+                "visualizations": [
+                    "time_plot",
+                    "error_histogram"
+                ]
+            },
+            "resources": [
+                "All About Circuits on quantization error",
+                "Wikipedia on electromagnetic interference",
+                "Analog Devices EMI filtering notes",
+                "Simple English Wikipedia on real‑time DSP"
+            ],
+            "scope": {
+                "in_scope": [
+                    "Quantization modelling",
+                    "EMI mitigation",
+                    "Real‑time block processing"
+                ],
+                "out_of_scope": [
+                    "Detailed hardware design",
+                    "DSP chip programming"
+                ]
+            },
+            "title": "Noise Sources, Quantization and Real‑Time Constraints",
+            "week_id": "week_11"
+        },
+        {
+            "agent_instructions": "Encourage iterative tuning and discussion of trade‑offs; emphasise interpretability of features; scikit‑learn use is optional but supported for this case study.",
+            "assessments": {
+                "formative_quiz": "Questions on pipeline components and parameter tuning.",
+                "weekly_task": "Build a complete vibration monitoring pipeline; perform parameter sweeps; report classification performance and discuss failure modes."
+            },
+            "completion_criteria": "Learners must submit the full pipeline implementation, classification performance metrics and a report discussing parameter choices and industrial considerations to complete the week.",
+            "dsp_topic": {
+                "primary": "Integrated signal processing pipeline",
+                "subtopics": [
+                    "Pre‑processing",
+                    "Filtering and PSD",
+                    "Feature extraction",
+                    "Simple classification"
+                ]
+            },
+            "glossary": {
+                "Condition monitoring": "Continuous assessment of machinery health using sensor data to detect faults before failure.",
+                "False alarm rate": "Proportion of healthy cases incorrectly classified as faulty.",
+                "Feature vector": "A set of numerical descriptors extracted from the signal used as input to a classifier."
+            },
+            "industrial_justification": "Condition monitoring pipelines integrate multiple DSP tools to detect rotating machinery faults. Features like RMS, kurtosis and bandpower are used as inputs to a simple classifier to flag anomalies; tuning pipeline parameters and understanding industrial constraints are essential for reliable deployment.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Implement an end‑to‑end DSP pipeline for rotating machinery fault detection.",
+                    "success_criteria": "Learners preprocess, filter, compute PSD, extract RMS/kurtosis/bandpower features and use a simple classifier to distinguish healthy vs faulty signals."
+                },
+                {
+                    "outcome": "Tune pipeline parameters based on performance metrics.",
+                    "success_criteria": "Learners perform parameter sweeps (e.g., filter order, bandpower bands) and evaluate metrics such as classification accuracy and false alarm rate."
+                },
+                {
+                    "outcome": "Discuss limitations and deployment considerations.",
+                    "success_criteria": "Learners identify potential failure modes (e.g., non‑stationarity, sensor drift) and propose mitigation strategies."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Describe the components of a condition monitoring pipeline: sampling, filtering, spectral estimation, feature extraction and decision rules.",
+                "S2 (60 min)": "Guide learners through coding a pipeline: filter vibration data, compute PSD, extract RMS, kurtosis and bandpower features and visualise their distributions.",
+                "S3 (45 min)": "Introduce a simple logistic regression classifier (optional scikit‑learn); train on extracted features; evaluate accuracy and false alarm rate.",
+                "S4 (30 min)": "Industrial case: evaluate the pipeline on synthetic and real bearing data; discuss deployment considerations (drift, non‑stationarity, latency)."
+            },
+            "pitfalls_and_limits": [
+                "Overfitting the classifier on synthetic data; emphasise cross‑validation and realistic noise.",
+                "Ignoring latency in pipeline execution; ensure computational load meets real‑time requirements."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "What features would you extract to detect a bearing fault?",
+                    "How does bandpower help differentiate healthy and faulty states?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–11 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "accuracy",
+                        "false_alarm_rate",
+                        "bandpower_ratio"
+                    ],
+                    "what_good_looks_like": "Classification accuracy >90%, false alarm rate <5%, and features clearly separate healthy and faulty classes."
+                },
+                "methods_used": [
+                    "scipy.signal.firwin",
+                    "scipy.signal.welch",
+                    "numpy",
+                    "scipy.stats",
+                    "scikit-learn.linear_model.LogisticRegression"
+                ],
+                "parameters_to_tune": [
+                    "filter_cutoff",
+                    "bandpower_band",
+                    "classification_threshold"
+                ],
+                "sensor_modality": "vibration (bearing)",
+                "synthetic_data_spec": {
+                    "duration_s": 2.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "EMI",
+                        "latency",
+                        "non_stationarity"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise",
+                        "EMI"
+                    ],
+                    "sampling_rate_hz": 12000,
+                    "signal_components": [
+                        "Healthy bearing vibrations",
+                        "Outer race fault impacts"
+                    ]
+                },
+                "visualizations": [
+                    "time_plot",
+                    "spectrum",
+                    "feature_histogram",
+                    "ROC_curve"
+                ]
+            },
+            "resources": [
+                "Course notes from previous weeks",
+                "Scikit‑learn documentation on logistic regression"
+            ],
+            "scope": {
+                "in_scope": [
+                    "Integrated pipeline design",
+                    "parameter tuning",
+                    "basic classification"
+                ],
+                "out_of_scope": [
+                    "Deep learning models",
+                    "advanced feature selection"
+                ]
+            },
+            "title": "Case Study: Vibration Condition Monitoring Pipeline",
+            "week_id": "week_12"
+        },
+        {
+            "agent_instructions": "Encourage careful parameter tuning; emphasise balancing detection sensitivity with false alarm rate; highlight the difference between STFT and CWT for transient detection.",
+            "assessments": {
+                "formative_quiz": "Questions on time‑frequency parameter choices and detection metrics.",
+                "weekly_task": "Build an acoustic fault detection pipeline on synthetic data; optimise parameters; report detection metrics and discuss false positives."
+            },
+            "completion_criteria": "Learners must submit a leak detection pipeline, achieve specified detection metrics and pass the quiz to complete the week.",
+            "dsp_topic": {
+                "primary": "Transient fault detection using acoustic signals",
+                "subtopics": [
+                    "Pre‑processing and filtering",
+                    "STFT and CWT",
+                    "Envelope and bandpower",
+                    "Classification"
+                ]
+            },
+            "glossary": {
+                "Acoustic emission": "Transient elastic waves generated by the rapid release of energy from localised sources, such as crack initiation.",
+                "Precision": "The ratio of true positives to all positive detections (TP/(TP+FP)), measuring false positive rate.",
+                "Recall": "The ratio of true positives to all actual positives (TP/(TP+FN)), measuring false negative rate."
+            },
+            "industrial_justification": "Acoustic and ultrasonic sensors capture high‑frequency emissions from leaks and cracks. Time–frequency and wavelet analysis reveal these transient events; envelope and bandpower features feed simple classifiers to detect anomalies.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Design a signal processing pipeline for detecting leaks or cracks using acoustic/ultrasonic sensors.",
+                    "success_criteria": "Learners preprocess acoustic signals, perform STFT and CWT, extract envelope and bandpower features and classify transient events."
+                },
+                {
+                    "outcome": "Optimise time–frequency and wavelet parameters for transient detection.",
+                    "success_criteria": "Learners vary window lengths and wavelet scales; evaluate detection rates and select optimal parameters."
+                },
+                {
+                    "outcome": "Assess performance using detection metrics (true positive rate, false positive rate).",
+                    "success_criteria": "Learners compute detection metrics and compare algorithm performance across parameter choices."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Describe the physical phenomena of leaks/cracks and acoustic emissions; outline pipeline components.",
+                "S2 (60 min)": "Implement STFT and CWT on simulated acoustic emission data; adjust parameters to capture short bursts; compute envelope and bandpower features.",
+                "S3 (45 min)": "Train a simple classifier or threshold rule on extracted features; evaluate detection performance (precision, recall).",
+                "S4 (30 min)": "Industrial case: detect pipeline leaks using piezoelectric sensors; discuss sensor placement and environmental noise; short quiz."
+            },
+            "pitfalls_and_limits": [
+                "Choosing excessively long windows that smear transient events; emphasise using shorter windows and appropriate wavelet scales.",
+                "Neglecting background noise; emphasise robust feature extraction that distinguishes faults from normal operational noise."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "Why are wavelets useful for ultrasonic crack detection?",
+                    "What metrics would you use to evaluate leak detection?"
+                ],
+                "required_knowledge": [
+                    "Weeks 1–12 content"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "true_positive_rate",
+                        "false_positive_rate",
+                        "precision",
+                        "recall"
+                    ],
+                    "what_good_looks_like": "Leak and crack events are detected with precision and recall above 85% while maintaining low false positives."
+                },
+                "methods_used": [
+                    "scipy.signal.stft",
+                    "scipy.signal.cwt",
+                    "scipy.signal.butter",
+                    "scikit-learn.svm.SVC"
+                ],
+                "parameters_to_tune": [
+                    "window_length",
+                    "wavelet_scale",
+                    "classifier_kernel"
+                ],
+                "sensor_modality": "acoustic/ultrasonic",
+                "synthetic_data_spec": {
+                    "duration_s": 2.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "EMI",
+                        "latency",
+                        "non_stationarity"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise",
+                        "background machinery noise"
+                    ],
+                    "sampling_rate_hz": 20000,
+                    "signal_components": [
+                        "Leak burst at 0.5 s",
+                        "Crack impulse at 1.5 s"
+                    ]
+                },
+                "visualizations": [
+                    "spectrogram",
+                    "scalogram",
+                    "time_plot",
+                    "ROC_curve"
+                ]
+            },
+            "resources": [
+                "Previous course resources",
+                "Case study papers on acoustic emission monitoring"
+            ],
+            "scope": {
+                "in_scope": [
+                    "Acoustic pre‑processing",
+                    "time–frequency and wavelet analysis",
+                    "transient detection",
+                    "classification"
+                ],
+                "out_of_scope": [
+                    "Advanced machine learning models",
+                    "mechanical wave propagation theory"
+                ]
+            },
+            "title": "Case Study: Acoustic and Ultrasonic Fault Detection",
+            "week_id": "week_13"
+        },
+        {
+            "agent_instructions": "Encourage creative integration strategies; emphasise interpretability and practicality; discuss real‑world deployment challenges such as sensor failures and calibration.",
+            "assessments": {
+                "formative_quiz": "Questions on data fusion challenges and decision logic.",
+                "weekly_task": "Design a multi‑sensor diagnostic system using synthetic data; perform feature fusion and classification; evaluate performance and discuss limitations."
+            },
+            "completion_criteria": "Learners must submit a multi‑sensor fusion project, achieve target performance metrics and pass the quiz to complete the course.",
+            "dsp_topic": {
+                "primary": "Integrated multi‑sensor diagnostics",
+                "subtopics": [
+                    "Data alignment",
+                    "Feature fusion",
+                    "Decision logic",
+                    "Performance evaluation"
+                ]
+            },
+            "glossary": {
+                "Confusion matrix": "A table used to describe the performance of a classification model by comparing predicted and actual classes.",
+                "Data fusion": "Combining data or features from multiple sensors to produce more consistent, accurate or useful information.",
+                "Synchronisation": "The process of aligning data streams in time so that measurements correspond to the same events."
+            },
+            "industrial_justification": "Industrial diagnostic systems often rely on multiple sensors; integrating vibration, temperature and current data increases robustness and reduces false alarms. Data fusion combines complementary features to improve detection accuracy, but it requires careful synchronisation and consideration of sensor‐specific constraints.",
+            "learning_outcomes": [
+                {
+                    "outcome": "Integrate signals from multiple sensors (vibration, temperature, current) into a unified diagnostic framework.",
+                    "success_criteria": "Learners synchronise multi‑sensor data, extract features across modalities and build a fused feature vector for classification."
+                },
+                {
+                    "outcome": "Implement data fusion and simple decision logic for condition assessment.",
+                    "success_criteria": "Learners develop a rule‑based or machine‑learning classifier that combines multi‑sensor features and evaluate its performance."
+                },
+                {
+                    "outcome": "Critically evaluate pipeline limitations and propose improvements.",
+                    "success_criteria": "Learners identify sources of error (sensor misalignment, timing jitter, cross‑talk) and suggest mitigation strategies."
+                }
+            ],
+            "module_plan": {
+                "S1 (45 min)": "Discuss challenges in aligning data from multiple sensors with different sampling rates; introduce interpolation and resampling techniques.",
+                "S2 (60 min)": "Extract features from vibration, temperature and current signals (RMS, kurtosis, bandpower, drift) and concatenate into a fused feature vector.",
+                "S3 (45 min)": "Develop decision logic: simple threshold rules, majority voting or logistic regression to classify system health; evaluate using cross‑validation.",
+                "S4 (30 min)": "Capstone demonstration: integrate multi‑sensor data from a simulated production line, report performance metrics; reflective discussion on limitations and future work."
+            },
+            "pitfalls_and_limits": [
+                "Misaligning time stamps leading to inaccurate feature fusion; emphasise resampling and alignment.",
+                "Over‑weighting one modality; encourage balancing features and evaluating importance."
+            ],
+            "prerequisites": {
+                "diagnostic_questions": [
+                    "Why is synchronisation important in multi‑sensor systems?",
+                    "How might features from different sensors complement each other?"
+                ],
+                "required_knowledge": [
+                    "All previous weeks"
+                ]
+            },
+            "python_demonstration": {
+                "evaluation": {
+                    "metrics": [
+                        "accuracy",
+                        "precision",
+                        "recall",
+                        "F1_score"
+                    ],
+                    "what_good_looks_like": "Fused model outperforms single‑sensor models with F1 score >0.9 and balanced precision/recall."
+                },
+                "methods_used": [
+                    "numpy",
+                    "scipy.signal",
+                    "scikit-learn.LogisticRegression"
+                ],
+                "parameters_to_tune": [
+                    "resampling_rate",
+                    "feature_weights",
+                    "classification_threshold"
+                ],
+                "sensor_modality": "vibration, temperature, current",
+                "synthetic_data_spec": {
+                    "duration_s": 3.0,
+                    "ground_truth_available": true,
+                    "industrial_constraints": [
+                        "synchronisation",
+                        "latency",
+                        "missing_data"
+                    ],
+                    "noise_sources": [
+                        "Gaussian noise",
+                        "drift",
+                        "EMI"
+                    ],
+                    "sampling_rate_hz": 5000,
+                    "signal_components": [
+                        "Healthy signals",
+                        "Combined fault events"
+                    ]
+                },
+                "visualizations": [
+                    "time_plot",
+                    "feature_correlation_matrix",
+                    "confusion_matrix"
+                ]
+            },
+            "resources": [
+                "Course notes and all prior resources",
+                "Articles on data fusion in condition monitoring"
+            ],
+            "scope": {
+                "in_scope": [
+                    "Data synchronisation",
+                    "feature fusion",
+                    "decision rules",
+                    "performance metrics"
+                ],
+                "out_of_scope": [
+                    "Advanced sensor fusion algorithms (e.g., Kalman filters)",
+                    "deep neural networks"
+                ]
+            },
+            "title": "Capstone: Multi‑Sensor Integration and Data Fusion",
+            "week_id": "week_14"
+        }
+    ]
+}

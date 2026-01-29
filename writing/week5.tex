@@ -1,0 +1,82 @@
+\chapter{IIR Filter Design, Stability and Phase Characteristics}
+
+\section{Learning objectives}
+
+Upon completing this chapter you will be able to:
+\begin{itemize}
+  \item Describe the properties of infinite impulse response (IIR) filters and compare them with FIR filters.
+  \item Design common IIR filters (Butterworth, Chebyshev) given passband and stopband specifications.
+  \item Evaluate filter stability by examining pole locations and compute the SNR improvement achieved by filtering.
+  \item Identify failure modes such as instability or excessive phase distortion and implement remedies.
+\end{itemize}
+
+\section{Industrial context}
+
+IIR filters are attractive when sharp transitions or low computational cost are required.  In embedded systems with limited resources, a well‑designed IIR filter can achieve comparable performance to a longer FIR filter.  However, IIR filters can be unstable if poles lie outside the unit circle.  Their phase response is nonlinear, which may distort waveforms and complicate time‑domain diagnostics.
+
+\section{Core concepts}
+
+\subsection{Difference equations}
+
+An IIR filter is described by a linear constant‑coefficient difference equation:
+\[
+\sum_{k=0}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k],
+\]
+where $a_0=1$ for normalisation.  The filter’s impulse response extends infinitely.  The poles of the transfer function $H(z) = \frac{\sum b_k z^{-k}}{\sum a_k z^{-k}}$ determine stability; all poles must lie inside the unit circle for a stable discrete‑time filter.
+
+\subsection{Butterworth and Chebyshev filters}
+
+Butterworth filters maximise passband flatness.  The magnitude response is monotonic in both passband and stopband.  Chebyshev filters allow controlled ripple in the passband (Type I) or stopband (Type II) to achieve a steeper transition.  They are specified by passband edge $\omega_p$, stopband edge $\omega_s$, passband ripple $\delta_p$ and stopband attenuation $A_s$.
+
+\section{Operational formulas}
+
+\paragraph{Filter order.}  The minimum order $n$ of a Butterworth filter with passband edge $\omega_p$ and stopband edge $\omega_s$ and desired attenuation $A_s$ can be estimated using
+\[
+n \approx \frac{\log_{10}\bigl(10^{A_s/10}-1\bigr)}{2\log_{10}(\omega_s/\omega_p)}.
+\]
+For Chebyshev filters the formula includes passband ripple; design tools such as SciPy’s \texttt{butter()} and \texttt{cheby1()} compute exact coefficients.
+
+\paragraph{Stability check.}  After designing an IIR filter, compute its poles $p_i$.  Stability requires $|p_i| < 1$ for all poles.  In practice you can use \texttt{scipy.signal.tf2zpk()} to obtain poles and zeros.
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Filter type & Butterworth & Transition too wide & Use Chebyshev or elliptic filter \\
+    Order $n$ & Minimal satisfying specs & Ringing or instability & Reduce order or add damping \\
+    Passband ripple & 1 dB & Waveform distortion & Decrease ripple at the cost of higher order \\
+    Implementation form & Direct form II & Numerical errors & Use second‑order sections (SOS) for stability \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for IIR filter design.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Instability.}  Numerical rounding or high filter order can move poles outside the unit circle.  Implement filters using second‑order sections and verify pole radii.
+  \item \textbf{Nonlinear phase.}  IIR filters introduce frequency‑dependent delays.  This may distort transients.  If phase matters, prefer FIR filters or use phase equalisation.
+  \item \textbf{Magnitude overshoot.}  Chebyshev filters exhibit passband ripple.  Adjust ripple specifications or use Butterworth filters when a monotonic response is desired.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,5 demonstration designs a band‑pass IIR filter using SciPy’s filter design functions.  It computes the SNR before and after filtering a thermocouple‑like signal and prints the pole locations to confirm stability.  The script also includes an unstable variant (excessively high order or high ripple) as a failure demonstration.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Design a low‑pass Butterworth filter with 3 dB passband ripple at 100 Hz and 40 dB stopband attenuation at 200 Hz for a 1 kHz sampling rate.  Plot its magnitude response and verify the specifications.
+  \item Implement the filter using second‑order sections and confirm that the poles lie inside the unit circle.
+  \item Modify the demonstration to use a Chebyshev Type I filter and observe how the passband ripple affects the time‑domain waveform.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Formula for estimating IIR filter order derived from standard filter design textbooks (e.g., Oppenheim and Schafer).  See SciPy’s documentation for details.
+\end{itemize}

@@ -1,0 +1,232 @@
+{
+  "week_id": "week_13",
+  "title": "Unsupervised Data Driven Signal Analysis and Anomaly Detection",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W13-S01",
+      "type": "title",
+      "title": "Unsupervised Anomaly Detection for Sensor Streams",
+      "objective": "Introduce unsupervised and one‑class methods to detect anomalies when labels are scarce.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Detect the unusual without labels"},
+          {"label": "bullets", "content": ["Healthy baseline modelling", "Anomaly scores and thresholds", "Handling regimes and drift"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Anomaly score time series with threshold", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Define false‑alarm budget before selecting a threshold"},
+          {"label": "sanity_check", "content": "Train on clean data only and validate across regimes"}
+        ]
+      },
+      "talking_points": [
+        "Explain why supervised classification may not be feasible when failures are rare and labels scarce.",
+        "Introduce unsupervised anomaly detection: build a model of ‘normal’ and flag deviations.",
+        "Highlight the need to account for false‑alarm costs and regime changes."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_13/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Anomaly score plots and false_alarm_rate"]
+      }
+    },
+    {
+      "slide_id": "W13-S02",
+      "type": "context",
+      "title": "Industrial Motivation for Anomaly Detection",
+      "objective": "Explain scenarios where anomaly detection on sensor streams is critical, such as conveyor motors and RTDs with sparse fault labels.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why unsupervised?"},
+          {"label": "bullets", "content": ["Detect early anomalies in conveyor motors where faults are rare", "Monitor temperature sensors for drifts and spikes", "Operate under multiple regimes with limited labelled faults"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Sensor stream with regime changes and anomalies", "data_source": "synthetic demo"},
+          {"visual_type": "plot", "description": "Anomaly score showing drift and faults", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Select features robust to missing data and noise"},
+          {"label": "sanity_check", "content": "Distinguish drift from anomalies by detrending and regime awareness"}
+        ]
+      },
+      "talking_points": [
+        "Describe real‑world contexts where labelled fault data is unavailable or expensive to obtain.",
+        "Highlight the challenge of distinguishing anomalies from drift, EMI spikes and regime changes.",
+        "Emphasise the need for robust features and regime handling."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_13/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Anomaly detection plots across regimes"]
+      }
+    },
+    {
+      "slide_id": "W13-S03",
+      "type": "method",
+      "title": "Black‑Box Anomaly Detection Workflow",
+      "objective": "Describe inputs, knobs, outputs and failure modes for unsupervised anomaly detection using PCA distance, Isolation Forest and One‑Class SVM.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: feature table of healthy-only training windows", "Knobs: model hyperparameters (n_components for PCA, contamination for IsolationForest/OneClassSVM), segment_length, feature robustness (median/IQR vs mean/std)", "Outputs: anomaly scores per window, threshold to flag anomalies, false_alarm_rate", "Failure: drift mistaken as anomaly, EMI spikes, regime dependence"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Workflow: extract features → robust scaling → fit one-class model → compute scores → set threshold", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use robust statistics (median/IQR) to handle outliers"},
+          {"label": "sanity_check", "content": "Set threshold based on validation false‑alarm target"}
+        ]
+      },
+      "talking_points": [
+        "Explain how to build a healthy baseline: segment healthy data, extract features and robustly normalise them.",
+        "Describe model options: PCA distance, Isolation Forest, One‑Class SVM; mention their hyperparameters.",
+        "Discuss outputs: anomaly score timeline; choose threshold to meet false‑alarm budget.",
+        "Identify failure modes: drift causing score increase; EMI spikes; regime dependence requiring per‑regime baselines."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_13/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Anomaly scores, false_alarm_rate and detection plots"]
+      }
+    },
+    {
+      "slide_id": "W13-S04",
+      "type": "demo",
+      "title": "Demo: PCA Distance and Isolation Forest",
+      "objective": "Demonstrate building a healthy baseline model, computing anomaly scores and tuning thresholds for unsupervised detection.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Build and tune an anomaly detector"},
+          {"label": "bullets", "content": ["Generate synthetic data with healthy segments and fault anomalies", "Extract robust features (median and IQR) from sliding windows", "Fit PCA distance and Isolation Forest models on healthy training data", "Sweep hyperparameters (e.g., n_components, contamination) and compute scores on validation set", "Choose threshold to meet false_alarm_rate target", "Demonstrate per‑regime baseline or regime feature for stability"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Anomaly score timeline with threshold and true fault periods", "data_source": "synthetic demo"},
+          {"visual_type": "plot", "description": "Effect of regime awareness on anomaly score stability", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Verify false_alarm_rate stays below target on validation set"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the demo: constructing healthy and faulty data streams, extracting robust features and training models.",
+        "Show how to tune hyperparameters and choose a threshold based on a false‑alarm budget.",
+        "Illustrate the benefit of regime‑aware baselines or adding regime features for score stability across speed/load changes.",
+        "Encourage learners to modify contamination/nu and observe how false_alarm_rate changes." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_13/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Anomaly scores, false_alarm_rate and regime-aware plots"]
+      }
+    },
+    {
+      "slide_id": "W13-S05",
+      "type": "failure",
+      "title": "Failure Modes: Drift, EMI and Regime Dependence",
+      "objective": "Identify common pitfalls in anomaly detection and how to mitigate them.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Pitfalls in unsupervised detection"},
+          {"label": "bullets", "content": ["Drift mistaken as anomaly – baseline shifts due to sensor ageing or temperature", "EMI spikes and missing data causing false alarms – need robust preprocessing and imputation", "Single global threshold fails across regimes – require per‑regime thresholds or features", "Model staleness – need to monitor score distributions and retrain periodically"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Anomaly score rising due to drift vs real faults", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Detrend signals and track baseline shifts separately"},
+          {"label": "sanity_check", "content": "Segment data by regimes (e.g., speed bins) and train separate models"}
+        ]
+      },
+      "talking_points": [
+        "Show examples where drift or EMI spikes cause the anomaly score to rise and explain why they are not faults.",
+        "Discuss robust preprocessing: median filtering, IQR‑based features and simple imputation for missing data.",
+        "Explain why a single threshold may not work across operating regimes and propose per‑regime models or regime features.",
+        "Highlight the need to monitor score distributions and retrain models as the machine wears or sensors drift." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_13/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Experiment with drift and EMI in demo",
+        "expected_output": ["Anomaly scores illustrating failure modes and mitigations"]
+      }
+    },
+    {
+      "slide_id": "W13-S06",
+      "type": "exercise",
+      "title": "Exercise: Implement Your Anomaly Detector",
+      "objective": "Allow learners to build an anomaly detector on synthetic streaming data, tune parameters and test regime‑aware strategies.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on anomaly detection"},
+          {"label": "bullets", "content": ["Generate a synthetic stream with healthy segments, regime changes and fault anomalies", "Extract robust features and segment by regime", "Fit PCA and Isolation Forest models on healthy data", "Sweep hyperparameters and set threshold to meet false_alarm_rate target", "Implement a regime‑aware strategy: either per‑regime models or add regime features", "Fill in a table summarising hyperparameters, thresholds and performance (false_alarm_rate, detection rate, latency)", "Write short notes on two deployment risks (drift, missing data) and mitigations"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template recording model, hyperparameters, threshold, false_alarm_rate and detection_rate", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Validate anomaly detectors on a separate healthy period before setting thresholds"},
+          {"label": "sanity_check", "content": "Monitor anomaly score distribution over time for drift"}
+        ]
+      },
+      "talking_points": [
+        "Describe the exercise tasks and encourage exploration of model types and regime handling.",
+        "Guide learners through hyperparameter tuning, threshold selection and evaluation.",
+        "Discuss the results summarised in the table and highlight the effects of regime awareness.",
+        "Encourage students to write about deployment risks such as drift, EMI spikes and missing data, and propose mitigations." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_13/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify model parameters, feature robustness and regime handling in demo",
+        "expected_output": ["Completed table, anomaly score plots and write‑up"]
+      }
+    },
+    {
+      "slide_id": "W13-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce unsupervised anomaly detection concepts and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 13 wrap‑up"},
+          {"label": "bullets", "content": ["Build healthy baselines using robust features and unsupervised models", "Set thresholds based on false‑alarm budgets and validate across regimes", "Mitigate drift, EMI and missing data using preprocessing and regime‑aware strategies", "Monitor score distribution and retrain models periodically"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of unsupervised detection workflow and failure mitigations", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. Why might a healthy machine appear anomalous after a sensor remount?\n2. How does contamination parameter in Isolation Forest affect false_alarm_rate?\n3. What is one way to handle different operating regimes in anomaly detection?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the key lessons on unsupervised anomaly detection and regime handling.",
+        "Pose quiz questions and discuss answers.",
+        "Preview the capstone week on deep learning for time‑frequency representations."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_13/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

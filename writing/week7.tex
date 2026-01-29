@@ -1,0 +1,76 @@
+\chapter{Time–Frequency Analysis with the Short‑Time Fourier Transform}
+
+\section{Learning objectives}
+
+At the end of this chapter you will be able to:
+\begin{itemize}
+  \item Explain the motivation for time–frequency analysis and the limitations of the standard FFT for non‑stationary signals.
+  \item Compute the short‑time Fourier transform (STFT) and interpret spectrograms.
+  \item Tune window length, overlap and window type to balance time and frequency resolution.
+  \item Identify transient events and chirps in a spectrogram and quantify time and frequency localisation.
+\end{itemize}
+
+\section{Industrial context}
+
+Many real‑world signals, such as machine accelerations or acoustic emissions, exhibit time‑varying frequency content.  Stationary Fourier analysis cannot capture transient events or chirps.  The STFT provides a sliding‑window spectrum and is widely used in speech processing, radar and fault detection.  Understanding the inherent trade‑off between time and frequency resolution allows engineers to choose appropriate window lengths for their applications.
+
+\section{Core concepts}
+
+\subsection{Definition of STFT}
+
+For a continuous‑time signal $x(t)$ and a window function $w(t)$, the STFT is defined as
+\[
+X(t,f) = \int_{-\infty}^{\infty} x(\tau) w(\tau - t) e^{-j 2\pi f \tau}\,\mathrm{d}\tau.
+\]
+In the discrete‑time case, we slide a window of length $N$ across the signal and compute an FFT at each position.
+
+\subsection{Resolution trade‑off}
+
+The width of the window determines the resolution in time and frequency: a wide window yields good frequency resolution but poor time resolution, whereas a narrow window yields good time resolution but poor frequency resolution.  A wide window means the main lobe in the frequency domain is narrow, so closely spaced frequencies can be separated; a narrow window leads to a broad main lobe and more leakage but localises events in time.  This trade‑off is inherent to the STFT and is related to the uncertainty principle.  The Wikipedia article on the STFT notes that a wide window gives better frequency resolution but poor time resolution, whereas a narrow window gives good time resolution but poor frequency resolution【969562052482079†L368-L374】.
+
+\section{Operational formulas}
+
+\paragraph{Window shift.}  Let the hop size be $H$ samples.  The spectrogram time resolution is $H/f_s$ seconds, and the frequency resolution is $f_s/N$ hertz, where $N$ is the window length.  Increasing $N$ improves frequency resolution but increases the computational cost and reduces time localisation.
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Window length $N$ & 256 & Time resolution too coarse & Decrease $N$ (narrower window) \\
+    Hop size $H$ & $N/4$ & Spectrogram appears noisy & Increase overlap (reduce $H$) to average more windows \\
+    Window type & Hann & Leakage present & Use longer windows or consider multi‑taper methods \\
+    Sampling rate $f_s$ & Application‑specific & Time–frequency features not resolved & Increase $f_s$ if possible \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for STFT analysis.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Poor frequency resolution.}  When the window is too short, closely spaced frequencies blur together.  Increase $N$ and accept lower time resolution.
+  \item \textbf{Poor time resolution.}  With a long window, transient events smear over many time bins.  Decrease $N$ to localise events.
+  \item \textbf{Edge effects.}  If the window extends beyond the signal boundaries, zero‑padding is implicitly applied.  Ensure that the window is fully contained or treat boundary effects carefully.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,7 demonstration computes spectrograms of a chirp signal using STFT.  It explores different window lengths and hop sizes.  The script prints approximate time and frequency resolutions computed from the chosen parameters and plots spectrograms.  The accompanying checks examine how changing the window length affects the time–frequency trade‑off.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Create a synthetic signal composed of two chirps: one ascending, one descending.  Use the STFT to produce a spectrogram and annotate the trajectories.  Experiment with window lengths of 64, 256 and 1024 samples to observe the trade‑off.
+  \item Derive the relationship between the window length and the Rayleigh frequency $1/T$.  Use this to explain why frequency resolution improves as $N$ increases.
+  \item Investigate multi‑taper spectral estimation as an alternative to single‑window STFT.  How does it affect time and frequency localisation?
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Discussion of the STFT resolution trade‑off 【969562052482079†L368-L374】.
+\end{itemize}

@@ -1,0 +1,231 @@
+{
+  "week_id": "week_12",
+  "title": "Supervised Data Driven Signal Analysis and Pattern Recognition",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W12-S01",
+      "type": "title",
+      "title": "Supervised Classification for Fault Recognition",
+      "objective": "Introduce supervised learning as a black‑box workflow for classifying sensor signals into fault types.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Teach machines to recognise faults"},
+          {"label": "bullets", "content": ["Labelled datasets from sensor streams", "Feature engineering and model selection", "Metrics and decision rules"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Pipeline: raw data → features → model → decision rule", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Start with simple models and interpretable features"},
+          {"label": "sanity_check", "content": "Avoid data leakage by proper train/test splits"}
+        ]
+      },
+      "talking_points": [
+        "Explain the need for supervised models to classify different fault types based on sensor data.",
+        "Introduce the concept of labelled datasets constructed from windowed sensor streams.",
+        "Highlight that we focus on black‑box usage: choose inputs, models and evaluate performance without deriving underlying statistics."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_12/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Confusion matrix and false_alarm_rate"]
+      }
+    },
+    {
+      "slide_id": "W12-S02",
+      "type": "context",
+      "title": "Industrial Fault Classification Use‑Cases",
+      "objective": "Motivate supervised learning with scenarios where classification of fault types informs maintenance decisions.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why classify faults?"},
+          {"label": "bullets", "content": ["Identify imbalance vs misalignment vs bearing faults from vibration and current data", "Support targeted maintenance actions (e.g., replace bearing vs rebalance rotor)", "Minimise downtime by early detection of specific fault types"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Feature scatter plot showing clusters corresponding to different faults", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use interpretable features for easier diagnosis"},
+          {"label": "sanity_check", "content": "Ensure data covers all operating regimes to avoid domain shift"}
+        ]
+      },
+      "talking_points": [
+        "Describe real industrial scenarios where classification of fault types improves decision‑making.",
+        "Emphasise that different faults manifest differently in features such as RMS, bandpower and kurtosis.",
+        "Highlight the need for labelled data capturing various regimes and fault conditions."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_12/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Feature scatter plots for different fault classes"]
+      }
+    },
+    {
+      "slide_id": "W12-S03",
+      "type": "method",
+      "title": "Black‑Box Supervised Classification Workflow",
+      "objective": "Describe inputs, knobs, outputs and failure modes of supervised classification for signals.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: labelled feature table with segments and fault labels", "Knobs: feature_set_choice (time vs spectral), classifier_hyperparameters (e.g., C, gamma, depth)", "Outputs: trained model, decision threshold, metrics (accuracy, false_alarm_rate, confusion matrix)", "Failure: data leakage, class imbalance, domain shift"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Workflow: segment & label → extract features → scale → split → train & tune → evaluate", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use simple models (e.g., logistic regression, SVM, random forest) as baselines"},
+          {"label": "sanity_check", "content": "Perform time‑based splits to avoid leakage when segmenting streams"}
+        ]
+      },
+      "talking_points": [
+        "Explain how to construct a labelled dataset: segment the signal, assign labels based on known fault classes, avoid overlapping segments between train and test.",
+        "Discuss feature engineering: time‑domain (RMS, kurtosis), spectral (bandpower, peak frequency), or combined.",
+        "Describe model selection: compare linear models, SVMs and tree ensembles; tune hyperparameters with small sweeps.",
+        "Identify failure modes: leakage across train/test splits, class imbalance causing misleading accuracy, domain shift due to different regimes."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_12/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Feature table shape, model hyperparameters and metrics"]
+      }
+    },
+    {
+      "slide_id": "W12-S04",
+      "type": "demo",
+      "title": "Demo: Build and Evaluate a Fault Classifier",
+      "objective": "Show how to construct a labelled dataset, train classifiers and evaluate performance using scikit‑learn.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Train and test a classifier"},
+          {"label": "bullets", "content": ["Generate synthetic sensor data for multiple fault classes (healthy, imbalance, misalignment, bearing fault)", "Segment data, extract features (RMS, kurtosis, bandpower)", "Split into training and test sets without leakage", "Train logistic regression and random forest classifiers with a small hyperparameter sweep", "Compute confusion matrix, accuracy and false_alarm_rate"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Confusion matrix for the best classifier", "data_source": "synthetic demo"},
+          {"visual_type": "plot", "description": "ROC‑like plot of false_alarm_rate vs threshold", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Look for false alarms and misclassifications; adjust threshold accordingly"}
+        ]
+      },
+      "talking_points": [
+        "Guide learners through the process of dataset construction and feature extraction.",
+        "Describe how to perform a small hyperparameter sweep and select a model.",
+        "Interpret the confusion matrix: note which classes are confused and compute false_alarm_rate for the positive class.",
+        "Encourage learners to adjust the decision threshold to meet a false‑alarm budget."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_12/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Confusion matrix and false_alarm_rate"]
+      }
+    },
+    {
+      "slide_id": "W12-S05",
+      "type": "failure",
+      "title": "Failure Modes: Leakage, Imbalance and Domain Shift",
+      "objective": "Discuss common pitfalls in supervised classification and how to mitigate them.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Pitfalls in supervised learning"},
+          {"label": "bullets", "content": ["Data leakage from overlapping windows or random splits across runs", "Class imbalance causing misleading accuracy – examine per‑class metrics", "Domain shift when models are deployed to machines or regimes not represented in training", "Over‑tuning to synthetic data without considering physics plausibility"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Effect of domain shift on model performance across regimes", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use grouped or time‑based splits to avoid leakage"},
+          {"label": "sanity_check", "content": "Inspect per‑class precision and recall, not just overall accuracy"}
+        ]
+      },
+      "talking_points": [
+        "Explain how overlapping windows or random splitting can leak information from future samples into training and inflate performance.",
+        "Discuss how class imbalance can mask poor detection of minority faults; use class weights or per‑class metrics.",
+        "Highlight domain shift: models trained on one speed/load regime may fail on another; include regime features or per‑regime models.",
+        "Warn against over‑tuning models to synthetic data without considering real‑world variability."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_12/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Experiment with splitting strategies and class weights",
+        "expected_output": ["Examples of leakage and imbalance impact"]
+      }
+    },
+    {
+      "slide_id": "W12-S06",
+      "type": "exercise",
+      "title": "Exercise: Build Your Fault Classifier",
+      "objective": "Allow learners to build a supervised classifier on synthetic multi‑class sensor data, tune parameters and discuss deployment considerations.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on classification"},
+          {"label": "bullets", "content": ["Generate multi‑class synthetic data with operating regimes", "Extract features (time and spectral) and build a labelled dataset", "Split data by run or regime to avoid leakage", "Train at least two models (e.g., logistic regression and random forest) with a hyperparameter sweep", "Compute confusion matrix, accuracy and false_alarm_rate", "Set a decision threshold or class weights to meet a false‑alarm constraint", "Write a short note on two failure modes and proposed mitigations"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template for recording model type, hyperparameters and metrics", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use simple models first; complexity should be justified by performance gains"},
+          {"label": "sanity_check", "content": "Ensure your test set includes data from each regime"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise tasks and encourage careful dataset splitting and feature engineering.",
+        "Guide learners through model training, hyperparameter tuning and metrics computation.",
+        "Discuss decision thresholds and class weights to meet false‑alarm budgets.",
+        "Encourage the write‑up of deployment failure modes and mitigations (e.g., domain shift, label noise)." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_12/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify feature_set_choice, classifier_hyperparameters and decision_threshold in demo",
+        "expected_output": ["Completed table, confusion matrix and write‑up"]
+      }
+    },
+    {
+      "slide_id": "W12-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce supervised classification concepts and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 12 wrap‑up"},
+          {"label": "bullets", "content": ["Build labelled datasets with careful segmentation and splitting", "Choose features and simple models; tune hyperparameters", "Evaluate using confusion matrix and false_alarm_rate; consider class imbalance", "Avoid leakage and domain shift; adjust thresholds for deployment"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of supervised classification pipeline", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. What causes data leakage in signal classification?\n2. How can you handle class imbalance when training a classifier?\n3. When might you choose a simple logistic regression over a complex model?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the key points on supervised classification for sensor signals.",
+        "Pose quiz questions and discuss answers.",
+        "Preview next week on unsupervised anomaly detection when labels are scarce."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_12/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "week_id": "week_02",
+  "title": "Sampling and Anti‑Aliasing",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W02-S01",
+      "type": "title",
+      "title": "Sampling and Anti‑Aliasing",
+      "objective": "Introduce Nyquist sampling and the need for analog filtering before digitisation.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Nyquist in practice"},
+          {"label": "bullets", "content": ["Continuous vs discrete signals", "Why anti‑aliasing filters matter"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Graphical depiction of sampling a sine wave above and below the Nyquist rate", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Sample at >2× highest frequency component"},
+          {"label": "sanity_check", "content": "Don’t forget the analog low‑pass filter"}
+        ]
+      },
+      "talking_points": [
+        "Contrast continuous and sampled signals using simple sketches.",
+        "Define the Nyquist frequency and why it sets a lower bound on fs.",
+        "Preview the role of anti‑aliasing filters."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_02/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["SNR and aliasing level for two sampling rates"]
+      }
+    },
+    {
+      "slide_id": "W02-S02",
+      "type": "context",
+      "title": "Industrial Sampling Scenarios",
+      "objective": "Explain how sampling choices affect vibration measurements.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why sample correctly?"},
+          {"label": "bullets", "content": ["Rotating machinery: accelerometers require fs > 2×f_max", "Ultrasonic detection: anti‑alias filter protects against high‑frequency noise", "ADC resolution ensures small vibrations are captured"]}
+        ],
+        "visuals": [
+          {"visual_type": "pipeline", "description": "Sensor → anti‑alias filter → ADC", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Place anti‑alias filters as close to the sensor as possible"},
+          {"label": "sanity_check", "content": "Check filter bandwidth vs. sensor bandwidth"}
+        ]
+      },
+      "talking_points": [
+        "Describe typical accelerometer and ultrasonic sampling scenarios.",
+        "Emphasise the importance of the analog front‑end before the ADC.",
+        "Highlight how resolution and dynamic range influence quantisation."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_02/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Aliasing metric demonstrating effect of fs"]
+      }
+    },
+    {
+      "slide_id": "W02-S03",
+      "type": "method",
+      "title": "Nyquist Criterion and Anti‑Aliasing",
+      "objective": "Provide the black‑box inputs, knobs and outputs for sampling and filtering.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Sampling and filtering"},
+          {"label": "bullets", "content": ["Inputs: analog signal up to f_max", "Knobs: sampling rate fs, anti‑alias filter cutoff", "Outputs: sampled signal free from aliasing", "Failure: aliasing when fs too low or filter inadequate"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Block diagram showing analog low‑pass filter followed by sampling", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "f_{Nyq} = \tfrac{fs}{2}", "how_to_use": "Set the anti‑alias cutoff below f_{Nyq}", "symbol_defs_inline": ["fs=\text{sampling rate}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Design filters with stopband attenuation 40 dB below signal"},
+          {"label": "sanity_check", "content": "Verify that quantisation noise is smaller than sensor noise"}
+        ]
+      },
+      "talking_points": [
+        "Present the Nyquist criterion in operational terms.",
+        "Discuss how the anti‑alias filter cutoff should be chosen relative to fs.",
+        "Summarise what happens when aliasing occurs."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_02/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["SNR drop when fs is reduced"]
+      }
+    },
+    {
+      "slide_id": "W02-S04",
+      "type": "demo",
+      "title": "Demo: Sampling and Filtering",
+      "objective": "Observe aliasing and the benefit of filtering when downsampling.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Compare high vs low fs"},
+          {"label": "bullets", "content": ["Sample a vibration signal at fs_high and fs_low", "Downsample using a digital anti‑alias filter", "Compute SNR before and after filtering"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Spectra of high‑rate and low‑rate samples", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "If aliasing appears, your filter cutoff may be too high"}
+        ]
+      },
+      "talking_points": [
+        "Explain how the demo generates and resamples the signal.",
+        "Interpret the SNR and aliasing level metrics from the code output.",
+        "Encourage learners to modify fs_low and observe when aliasing becomes intolerable." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_02/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Printed aliasing level and SNR values"]
+      }
+    },
+    {
+      "slide_id": "W02-S05",
+      "type": "failure",
+      "title": "Failure Modes: Undersampling and Poor Filtering",
+      "objective": "Identify common mistakes and their consequences when sampling.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Pitfalls to avoid"},
+          {"label": "bullets", "content": ["Sampling below Nyquist: mirror images and spurious tones", "Using a filter with too‑shallow roll‑off", "Neglecting quantisation range for low‑amplitude signals"]}
+        ],
+        "visuals": [
+          {"visual_type": "before_after", "description": "Spectrogram showing aliasing before and after proper filtering", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Always design anti‑aliasing filters at least one octave below f_Nyq"},
+          {"label": "sanity_check", "content": "Check filter ripple and transition band"}
+        ]
+      },
+      "talking_points": [
+        "Show examples of aliasing artefacts in the frequency domain.",
+        "Discuss the trade‑off between filter order and allowable transition band.",
+        "Warn against confusing Nyquist frequency with the maximum signal frequency." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_02/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Experiment with different fs_low values",
+        "expected_output": ["Aliased spectrum vs filtered spectrum"]
+      }
+    },
+    {
+      "slide_id": "W02-S06",
+      "type": "exercise",
+      "title": "Exercise: Design Your Anti‑Aliasing Filter",
+      "objective": "Have learners simulate sampling and filtering a vibration signal and justify parameter choices.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Try it yourself"},
+          {"label": "bullets", "content": ["Sample a synthetic vibration signal at fs=2 kHz and fs=800 Hz", "Design a digital pre‑filter with your choice of cutoff", "Compare spectra and compute SNR and aliasing level"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template for learners to record fs, filter cutoff, SNR and aliasing", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Lower cutoff reduces aliasing but may attenuate signal"},
+          {"label": "sanity_check", "content": "Ensure filter order is not too low for the transition band"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise requirements and encourage experimentation.",
+        "Remind students to report SNR and aliasing metrics.",
+        "Suggest discussing trade‑offs among groups." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_02/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify FS_HIGH/FS_LOW and recompute aliasing",
+        "expected_output": ["Filled‑in parameter table", "Plots comparing spectra"]
+      }
+    },
+    {
+      "slide_id": "W02-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Consolidate sampling theory and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 2 wrap‑up"},
+          {"label": "bullets", "content": ["Nyquist criterion defines the minimum fs", "Anti‑aliasing filters protect against out‑of‑band noise", "Quantisation and dynamic range still matter"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of sampling and filtering blocks", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. What is the Nyquist frequency for a 1 kHz signal?\n2. Why do we need an anti‑aliasing filter?\n3. How can we mitigate quantisation error?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the operational view of sampling and anti‑aliasing.",
+        "Pose quiz questions and discuss answers.",
+        "Preview next week’s topic on FFT and windowing."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_02/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz questions",
+        "expected_output": ["Quiz responses"]
+      }
+    }
+  ]
+}

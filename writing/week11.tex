@@ -1,0 +1,76 @@
+\chapter{Frequency‑Domain Features: Bandpower and Envelope Detection}
+
+\section{Learning objectives}
+
+At the conclusion of this chapter you will be able to:
+\begin{itemize}
+  \item Compute bandpower features by integrating the PSD over specified frequency bands and interpret these features for condition monitoring.
+  \item Apply envelope detection (demodulation) using the Hilbert transform to extract amplitude modulation components.
+  \item Identify characteristic defect frequencies in a bearing signal and detect fault signatures in the demodulated spectrum.
+  \item Diagnose issues such as band selection errors and residual noise.
+\end{itemize}
+
+\section{Industrial context}
+
+Spectral features complement time‑domain statistics by focusing on specific frequency bands associated with machine components.  For example, bearing faults modulate a high‑frequency carrier, producing sidebands at defect frequencies.  Envelope analysis demodulates these sidebands to reveal the fault frequencies.  Bandpower measures energy in a band and can be used for trending.
+
+\section{Core concepts}
+
+\subsection{Bandpower}
+
+Given the PSD $S_{xx}(f)$ estimated via Welch’s method, the bandpower in a frequency band $[f_1,f_2]$ is
+\[
+P_{[f_1,f_2]} = \int_{f_1}^{f_2} S_{xx}(f)\,\mathrm{d}f.
+\]
+In discrete implementation, integrate the PSD bins that fall within the band; when only one bin falls in the band, approximate $P_{[f_1,f_2]} \approx S_{xx}(f_k) \Delta f$, where $\Delta f$ is the frequency resolution.
+
+\subsection{Envelope detection}
+
+Demodulation extracts the amplitude envelope of a band‑limited signal.  One convenient method uses the analytic signal: the Hilbert transform $\mathcal{H}\{x[n]\}$ produces a quadrature component; the magnitude of the analytic signal $x_a[n] = x[n] + j\,\mathcal{H}\{x[n]\}$ gives the envelope $|x_a[n]|$.  Taking the FFT of the envelope highlights modulation frequencies corresponding to defects.
+
+\section{Operational formulas}
+
+\paragraph{Demodulation.}  Filter the signal around a high‑frequency carrier to isolate vibration energy excited by defects.  Compute the analytic signal via the Hilbert transform and take its magnitude to obtain the envelope.  Then compute the PSD of the envelope and identify peaks at characteristic frequencies (e.g., ball‑pass frequency of outer race).
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Band limits $[f_1,f_2]$ & Based on component & Bandpower returns zero & Widen band or choose correct region of interest \\
+    Hilbert filter band & Envelope extraction & Defect peaks missing & Adjust band to include carrier frequency \\
+    PSD window length & 1024 & Demodulated spectrum too noisy & Increase segment length or average more segments \\
+    Threshold for fault detection & Empirical & False positives & Increase threshold or use baseline normalization \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for bandpower and envelope detection.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Incorrect band selection.}  Choosing wrong frequency bands can result in zero or irrelevant bandpower.  Prior knowledge of machine component frequencies is essential.
+  \item \textbf{Carrier leakage.}  Envelope detection requires isolating the carrier band.  Inadequate filtering allows multiple carriers and corrupts the demodulated spectrum.  Use narrow band‑pass filters before demodulation.
+  \item \textbf{Aliasing in envelope PSD.}  The envelope signal has a lower effective bandwidth.  Down‑sample appropriately or ensure the sampling rate is sufficient.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,11 demonstration computes bandpower in several bands for a synthetic bearing signal and performs envelope detection by band‑pass filtering around a carrier and computing the Hilbert transform.  It then computes the FFT of the envelope and identifies peaks at known defect frequencies.  A failure demonstration shows that selecting the wrong carrier band leads to low bandpower and missing peaks.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item For a given bearing geometry and shaft speed, compute the characteristic defect frequencies (ball pass frequency, outer race, inner race).  Verify these peaks in the demodulated spectrum.
+  \item Design a band‑pass filter for envelope detection and experiment with different bandwidths.  Assess the impact on the demodulated spectrum and false alarm rate.
+  \item Compare the envelope detection method with squared demodulation (rectification).  Which approach provides a better signal‑to‑noise ratio for detecting impulses?
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Formula for magnitude‑squared coherence 【296435890113586†L67-L72】, used in related frequency domain analysis.
+\end{itemize}

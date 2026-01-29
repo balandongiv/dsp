@@ -1,0 +1,229 @@
+{
+  "week_id": "week_04",
+  "title": "FIR Filter Design and Linear Phase",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W04-S01",
+      "type": "title",
+      "title": "FIR Filter Design and Linear Phase",
+      "objective": "Introduce finite impulse response filters as a black‑box tool for noise removal and band selection.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "FIR filters: stable and linear phase"},
+          {"label": "bullets", "content": ["Window method vs Parks–McClellan", "Controlling transition bands with order"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Example low‑pass FIR frequency response with passband and stopband", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Linear phase filters preserve waveform shape but introduce delay"},
+          {"label": "sanity_check", "content": "Check if the stopband attenuation meets requirements"}
+        ]
+      },
+      "talking_points": [
+        "Explain why FIR filters are popular in embedded instrumentation: inherent stability and linear phase.",
+        "Introduce the two common design approaches: window method and Parks–McClellan algorithm.",
+        "Preview how filter order and window choice affect transition band and ripple."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_04/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["SNR and RMSE before and after filtering"]
+      }
+    },
+    {
+      "slide_id": "W04-S02",
+      "type": "context",
+      "title": "Filtering Optical and Vibration Signals",
+      "objective": "Motivate FIR filters with industrial photodiode and accelerometer data.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "When and why to filter"},
+          {"label": "bullets", "content": ["Remove high‑frequency noise from photodiode measurements", "Isolate fault bands in vibration signals", "Trade off sharpness vs compute cost on embedded devices"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Photodiode signal before and after FIR low‑pass filtering", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use FIR filters when phase linearity matters"},
+          {"label": "sanity_check", "content": "Ensure sampling rate is high enough relative to cutoff"}
+        ]
+      },
+      "talking_points": [
+        "Describe typical noise sources in optical and vibration instrumentation.",
+        "Explain why preserving waveform shape is important for time‑domain analysis.",
+        "Highlight the need to balance filter sharpness with computational constraints."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_04/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Filter response plots"]
+      }
+    },
+    {
+      "slide_id": "W04-S03",
+      "type": "method",
+      "title": "Black‑Box FIR Filter Design",
+      "objective": "Define inputs, knobs, outputs and failure modes for FIR filter design.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: discrete signal x[n], desired passband/stopband", "Knobs: filter_order N, cutoff_frequencies, window_type", "Outputs: filtered signal y[n] with attenuated bands", "Failure: insufficient attenuation or too much ripple"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Design pipeline: specification → firwin/firwin2 → lfilter", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "\text{Group delay} = \frac{N-1}{2}\!/fs", "how_to_use": "Delay introduced by linear‑phase FIR filter", "symbol_defs_inline": ["N=\text{filter order}", "fs=\text{sampling rate}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Transition width ≈ 4π/(N+1) for the window method"},
+          {"label": "sanity_check", "content": "Check that group delay does not violate latency budgets"}
+        ]
+      },
+      "talking_points": [
+        "Explain how to translate passband/stopband requirements into cutoff frequencies.",
+        "Discuss how filter order controls transition width and ripple.",
+        "Interpret the group delay formula and its effect on time alignment.",
+        "Identify failure modes: too low order yields poor attenuation; too high order increases compute cost." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_04/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["SNR improvement and RMSE reduction"]
+      }
+    },
+    {
+      "slide_id": "W04-S04",
+      "type": "demo",
+      "title": "Demo: Designing a Low‑Pass FIR Filter",
+      "objective": "Observe how filter order and cutoff affect noise reduction and waveform shape.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Filter a noisy photodiode signal"},
+          {"label": "bullets", "content": ["Generate a signal with low‑ and high‑frequency components", "Design low‑pass FIR filters of different orders using firwin", "Apply filters and compute SNR and RMSE"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Time and frequency plots of signals before and after filtering", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Notice how higher order improves attenuation but adds delay"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the demo: constructing the signal, designing the filter, applying it.",
+        "Compare SNR and RMSE metrics for different filter orders.",
+        "Encourage students to adjust cutoff frequencies and observe trade‑offs." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_04/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Plots and metrics showing filter performance"]
+      }
+    },
+    {
+      "slide_id": "W04-S05",
+      "type": "failure",
+      "title": "Failure Modes: Choosing the Wrong Order",
+      "objective": "Discuss pitfalls such as under‑ or over‑designing FIR filters.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Watch out for these"},
+          {"label": "bullets", "content": ["Order too low → inadequate stopband attenuation", "Order too high → excessive delay and compute cost", "Neglecting group delay in real‑time systems"]}
+        ],
+        "visuals": [
+          {"visual_type": "before_after", "description": "Frequency responses of low and high order filters highlighting ripple and attenuation", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Start with order ~4×fs/(transition_band) and adjust as needed"},
+          {"label": "sanity_check", "content": "Always inspect both magnitude and phase responses"}
+        ]
+      },
+      "talking_points": [
+        "Illustrate a filter with insufficient order and the resulting residual noise.",
+        "Show how a very high order filter can distort timing due to large group delay.",
+        "Advise on choosing a moderate order based on specifications and hardware limitations."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_04/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Experiment with filter_order in demo",
+        "expected_output": ["Plots showing under‑ and over‑filtered signals"]
+      }
+    },
+    {
+      "slide_id": "W04-S06",
+      "type": "exercise",
+      "title": "Exercise: Design Your FIR Band‑Pass Filter",
+      "objective": "Let learners design a band‑pass FIR filter to isolate a frequency band and evaluate performance.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on filter design"},
+          {"label": "bullets", "content": ["Generate a synthetic signal with two tones (e.g., 500 Hz and 2000 Hz)", "Design a band‑pass FIR filter around the 500 Hz tone", "Vary filter_order and cutoff_frequencies to achieve desired attenuation", "Compute SNR and RMSE for each configuration"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template to record order, cutoffs, SNR and RMSE", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use symmetrical cutoffs around the desired band"},
+          {"label": "sanity_check", "content": "Check that passband ripple is acceptable"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise and encourage parameter exploration.",
+        "Suggest using firwin2 or Parks–McClellan for sharper designs.",
+        "Discuss results: how different orders and cutoffs affect metrics." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_04/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify filter parameters in demo",
+        "expected_output": ["Completed table and plots"]
+      }
+    },
+    {
+      "slide_id": "W04-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce FIR filter concepts and test comprehension.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 4 wrap‑up"},
+          {"label": "bullets", "content": ["FIR filters offer linear phase and stability", "Order and window control transition width and ripple", "Group delay must be considered in real‑time systems"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of FIR design workflow", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. What is the group delay of a 101‑tap FIR filter at fs=10 kHz?\n2. Why might you prefer the Parks–McClellan method over a simple window method?\n3. What happens to waveform shape when phase is non‑linear?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the key points on FIR design.",
+        "Pose quiz questions and encourage discussion.",
+        "Preview the next topic: IIR filter design and stability."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_04/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

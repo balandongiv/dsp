@@ -1,0 +1,97 @@
+\chapter{Sampling, Quantisation and Information Budgets}
+
+\section{Learning objectives}
+
+After studying this chapter you will be able to:
+\begin{itemize}
+  \item Explain why digital signal processing begins with a careful allocation of the information budget: what physical quantities you measure, how often you sample them and with what precision.
+  \item State the Nyquist--Shannon sampling theorem and compute the minimum sampling rate required to avoid aliasing for a given signal bandwidth.
+  \item Define signal-to-noise ratio (SNR) and quantisation noise, compute SNR in decibels, and interpret high and low SNR values in industrial contexts.
+  \item Identify common pitfalls such as clipping and under‑sampling and outline simple diagnostics and remedies.
+\end{itemize}
+
+\section{Industrial context}
+
+In industrial instrumentation we convert analogue sensor signals---currents, voltages, vibrations or optical intensities---into digital data using analogue‑to‑digital converters (ADCs).  The choice of sampling frequency and bit depth determines how much information we retain and how much noise or distortion we introduce.  For example, monitoring a motor drive current for fault detection requires a bandwidth of only a few kilohertz, whereas high‑speed vibration monitoring may require tens of kilohertz.  Engineers must balance data rate, computational cost and information content.
+
+\section{Core concepts}
+
+\subsection{Nyquist sampling theorem}
+
+The Nyquist--Shannon sampling theorem states that a band‑limited signal of bandwidth $B$ can be perfectly reconstructed from its samples if the sampling frequency $f_s$ exceeds twice the signal bandwidth: $f_s > 2B$ 【874713969011553†L160-L166】.  The frequency $f_s/2$ is called the \emph{Nyquist frequency}.
+
+\subsection{Signal-to-noise ratio}
+
+The signal-to-noise ratio is defined as the ratio of signal power $P_\text{signal}$ to noise power $P_\text{noise}$, often expressed in decibels as
+\[
+\text{SNR}_{\mathrm{dB}} = 10\log_{10}\left(\frac{P_\text{signal}}{P_\text{noise}}\right).
+\]
+High SNR indicates the signal dominates the noise; low SNR indicates the noise is comparable to or larger than the signal 【157373209521284†L175-L238】.  In a quantised system the noise power arises partly from quantisation error, which for a $b$‑bit ADC has variance $\sigma_q^2 = \Delta^2/12$, where $\Delta$ is the quantisation step.
+
+\subsection{Bit depth and dynamic range}
+
+An $b$‑bit ADC can represent $2^b$ discrete levels across a full‑scale range.  The theoretical maximum SNR due to quantisation is approximately $6.02\,b+1.76$ dB.  Increasing bit depth increases dynamic range but also increases data rate and cost.
+
+\section{Operational formulas}
+
+\paragraph{Determining sampling rate.}  For a signal with maximum frequency component $f_\text{max}$, choose the sampling rate $f_s$ as
+\[
+f_s \ge 2f_\text{max}\quad (\text{practical rule}).
+\]
+If additional margin is required for filter roll‑off or aliasing, choose $f_s$ between $2.2f_\text{max}$ and $3f_\text{max}$.
+
+\paragraph{SNR calculation.}  Given discrete signal samples $x[n]$ and noisy observations $y[n]$, compute mean powers $P_x = \frac{1}{N}\sum_{n=0}^{N-1} x[n]^2$ and $P_e = \frac{1}{N}\sum (x[n]-y[n])^2$.  Then
+\[
+\text{SNR}_{\mathrm{dB}} = 10\log_{10}\left(\frac{P_x}{P_e}\right).
+\]
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Sampling rate $f_s$ & $2\,f_\text{max}$ & Aliasing in spectrum & Increase $f_s$ or insert low‑pass filter \\
+    Bit depth $b$ & 12 bits & Quantisation noise too high & Increase $b$ or use oversampling \\
+    Anti‑alias filter cut‑off & $0.45f_s$ & Distortion near Nyquist & Reduce cut‑off or use higher‑order filter \\
+    Full‑scale range & Matches expected signal & Frequent clipping & Increase range or use attenuator \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for data acquisition.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Undersampling.}  Sampling below twice the signal bandwidth causes aliasing: high‑frequency content folds into lower frequencies.  Diagnose by inspecting the spectrum or by repeating the measurement at a higher sampling rate.  Remedy by increasing $f_s$ or applying a stronger anti‑alias filter.
+  \item \textbf{Quantisation noise.}  Too few bits produce coarse quantisation and degrade SNR.  Increase bit depth or employ oversampling and dithering.
+  \item \textbf{Clipping.}  When the signal amplitude exceeds the ADC full‑scale range, samples saturate and waveform is distorted.  Use input attenuation or increase full‑scale range.
+  \item \textbf{Inadequate anti‑alias filtering.}  Sharp transitions in the analogue signal introduce high‑frequency components.  Use a low‑pass filter with sufficient roll‑off before sampling.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The demonstration in \texttt{lessons/lesson\_01/demo.py} synthesises a multi‑tone test signal with a transient event.  It sweeps the sampling rate and reports the SNR between the clean signal and its noisy, sampled version.  Key steps include:
+\begin{enumerate}
+  \item Generate the clean signal using \texttt{generate\_week\_data()} from the support library.
+  \item Add white Gaussian noise and adjust the sampling rate parameter \texttt{fs}.
+  \item Compute SNR using the function \texttt{snr\_db()} in \texttt{dsp\_utils.metrics}.
+  \item Plot or print SNR values for different sampling rates.  A higher sampling rate beyond the Nyquist limit does not significantly change the SNR if noise is white.
+\end{enumerate}
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item For a vibration signal with significant energy up to 800 Hz, determine an appropriate sampling rate and bit depth.  Justify your choices.
+  \item Derive the quantisation noise variance for a mid‑tread uniform quantiser and verify the $6.02\,b+1.76$ dB rule empirically by simulating different bit depths.
+  \item Modify the demonstration script to include an anti‑alias filter implemented via a simple moving average.  Measure the SNR improvement when sampling a signal containing high‑frequency noise.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Nyquist sampling theorem and requirement of at least twice the bandwidth 【874713969011553†L160-L166】.
+  \item Definition of signal-to-noise ratio and its interpretation 【157373209521284†L175-L238】.
+\end{itemize}

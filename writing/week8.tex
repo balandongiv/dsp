@@ -1,0 +1,82 @@
+\chapter{Wavelet Transform and Multiresolution Analysis}
+
+\section{Learning objectives}
+
+After this chapter you will be able to:
+\begin{itemize}
+  \item Describe the motivation for wavelet transforms as an alternative to the STFT for analysing transient, non‑stationary signals.
+  \item Compute the continuous wavelet transform (CWT) using common wavelets (Morlet, Ricker) and interpret scalograms.
+  \item Tune the scale or width parameter of wavelets to detect events of different durations.
+  \item Identify impulsive events and quantify detection rates using wavelet coefficients.
+\end{itemize}
+
+\section{Industrial context}
+
+Wavelets provide a time–scale representation that adapts the resolution according to frequency: good time resolution at high frequencies and good frequency resolution at low frequencies.  This is particularly useful in fault diagnosis where impulsive events are superimposed on broadband noise.  Unlike the STFT, wavelets can detect transient features without a fixed window size.
+
+\section{Core concepts}
+
+\subsection{Continuous wavelet transform}
+
+Given a mother wavelet $\psi(t)$, the continuous wavelet transform of a signal $x(t)$ is defined as
+\[
+W_x(a,b) = \frac{1}{\sqrt{|a|}} \int_{-\infty}^{\infty} x(t)\, \overline{\psi\left(\frac{t-b}{a}\right)}\,\mathrm{d}t,
+\]
+where $a$ is the scale parameter (related to frequency) and $b$ is the time translation.  The scalogram $|W_x(a,b)|^2$ visualises the energy distribution across time and scale.
+
+\subsection{Wavelet families}
+
+\begin{itemize}
+  \item \textbf{Morlet wavelet.}  A complex exponential modulated by a Gaussian.  Suitable for detecting narrowband oscillatory components.
+  \item \textbf{Ricker (Mexican hat) wavelet.}  The second derivative of a Gaussian.  Useful for detecting impulses and edges.
+  \item \textbf{Daubechies and discrete wavelets.}  Orthogonal wavelets used in discrete wavelet transforms (not covered here) for multi‑resolution decomposition.
+\end{itemize}
+
+\section{Operational formulas}
+
+\paragraph{Scale–frequency relationship.}  For a wavelet with centre frequency $f_0$, the scale $a$ roughly corresponds to a pseudo‑frequency $f_p = f_s \frac{f_0}{a}$, where $f_s$ is the sampling rate.  Smaller scales capture high‑frequency components.
+
+\paragraph{Event detection.}  Impulses manifest as large wavelet coefficients at specific scales.  Thresholding the scalogram can provide a simple impulse detector.  Detection performance depends on the chosen wavelet and scale range.
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Wavelet type & Ricker & Impulses poorly detected & Use Morlet or higher‑order derivative wavelet \\
+    Scale range & [1, 10] & Missed narrow impulses & Include smaller scales (higher frequencies) \\
+    Threshold & 5 \times median & High false alarm rate & Increase threshold to reduce false positives \\
+    Sampling rate $f_s$ & Application‑dependent & Scalogram lacks resolution & Increase $f_s$ to capture high‑frequency content \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for wavelet analysis.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Scale selection.}  Too narrow a scale range may miss events; too wide may incorporate noise.  Inspect scalograms at multiple scales to choose a meaningful range.
+  \item \textbf{Wavelet mismatch.}  The mother wavelet should resemble the expected signal shape.  For oscillatory features, choose complex wavelets; for sharp spikes, choose real derivatives of Gaussians.
+  \item \textbf{Edge effects.}  Wavelet transforms suffer from boundary artefacts near the signal edges.  Interpret these regions cautiously.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,8 demonstration applies the continuous wavelet transform to a signal containing random impulses.  It uses Ricker and Morlet wavelets to detect impulses and reports the detection rate and false alarm rate.  The checks experiment with different wavelet widths to illustrate the effect on detection performance.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Use the continuous wavelet transform with a Morlet wavelet to analyse a signal containing oscillatory bursts at 200 Hz.  Relate the scales to the pseudo‑frequencies and interpret the scalogram.
+  \item Evaluate the detection rate of impulsive events for different thresholds.  Plot the receiver operating characteristic (ROC) curve and choose an operating point.
+  \item Investigate the discrete wavelet transform (DWT) for de‑noising.  Apply a threshold to wavelet coefficients and reconstruct the signal.  Compare the SNR with the original noisy signal.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Resolution trade‑off of STFT motivating the need for wavelet analysis 【969562052482079†L368-L374】.
+\end{itemize}

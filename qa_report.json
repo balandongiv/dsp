@@ -1,0 +1,19 @@
+{
+  "qa_summary": "All weeks were evaluated for slide completeness, code execution and alignment between slide specs and code demos. The checks confirmed that each week satisfies the acceptance criteria (S‑W1–S‑W6 for slides and C‑W1–C‑W5 for code).",
+  "weeks": [
+    {"week_id": "week_01", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_02", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_03", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_04", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_05", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_06", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_07", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_08", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_09", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_10", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_11", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_12", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_13", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"},
+    {"week_id": "week_14", "slides_status": "PASS", "code_status": "PASS", "alignment_status": "PASS"}
+  ]
+}

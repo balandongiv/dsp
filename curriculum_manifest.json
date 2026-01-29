@@ -1,0 +1,186 @@
+{
+  "weeks": [
+    {
+      "week_id": "week_01",
+      "title": "Introduction to Digital Signal Processing",
+      "slug": "week_01",
+      "slide_spec_path": "slides_spec/week_01.json",
+      "lesson_folder_path": "lessons/lesson_01",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_01"
+      ],
+      "completion_checks": [
+        "lessons/lesson_01/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_02",
+      "title": "Sampling and Anti‑Aliasing",
+      "slug": "week_02",
+      "slide_spec_path": "slides_spec/week_02.json",
+      "lesson_folder_path": "lessons/lesson_02",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_02"
+      ],
+      "completion_checks": [
+        "lessons/lesson_02/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_03",
+      "title": "FFT, Windowing and Spectral Leakage",
+      "slug": "week_03",
+      "slide_spec_path": "slides_spec/week_03.json",
+      "lesson_folder_path": "lessons/lesson_03",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_03"
+      ],
+      "completion_checks": [
+        "lessons/lesson_03/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_04",
+      "title": "FIR Filter Design and Linear Phase",
+      "slug": "week_04",
+      "slide_spec_path": "slides_spec/week_04.json",
+      "lesson_folder_path": "lessons/lesson_04",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_04"
+      ],
+      "completion_checks": [
+        "lessons/lesson_04/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_05",
+      "title": "IIR Filter Design and Stability",
+      "slug": "week_05",
+      "slide_spec_path": "slides_spec/week_05.json",
+      "lesson_folder_path": "lessons/lesson_05",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_05"
+      ],
+      "completion_checks": [
+        "lessons/lesson_05/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_06",
+      "title": "Power Spectral Density and Welch’s Method",
+      "slug": "week_06",
+      "slide_spec_path": "slides_spec/week_06.json",
+      "lesson_folder_path": "lessons/lesson_06",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_06"
+      ],
+      "completion_checks": [
+        "lessons/lesson_06/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_07",
+      "title": "Time–Frequency Analysis with STFT",
+      "slug": "week_07",
+      "slide_spec_path": "slides_spec/week_07.json",
+      "lesson_folder_path": "lessons/lesson_07",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_07"
+      ],
+      "completion_checks": [
+        "lessons/lesson_07/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_08",
+      "title": "Wavelet Transform and Multiresolution Analysis",
+      "slug": "week_08",
+      "slide_spec_path": "slides_spec/week_08.json",
+      "lesson_folder_path": "lessons/lesson_08",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_08"
+      ],
+      "completion_checks": [
+        "lessons/lesson_08/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_09",
+      "title": "Cross‑Correlation and Coherence",
+      "slug": "week_09",
+      "slide_spec_path": "slides_spec/week_09.json",
+      "lesson_folder_path": "lessons/lesson_09",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_09"
+      ],
+      "completion_checks": [
+        "lessons/lesson_09/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_10",
+      "title": "Statistical Features From Time Domain",
+      "slug": "week_10",
+      "slide_spec_path": "slides_spec/week_10.json",
+      "lesson_folder_path": "lessons/lesson_10",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_10"
+      ],
+      "completion_checks": [
+        "lessons/lesson_10/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_11",
+      "title": "Spectral Feature from Frequency Domain",
+      "slug": "week_11",
+      "slide_spec_path": "slides_spec/week_11.json",
+      "lesson_folder_path": "lessons/lesson_11",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_11"
+      ],
+      "completion_checks": [
+        "lessons/lesson_11/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_12",
+      "title": "Supervised Data Driven Signal Analysis and Pattern Recognition",
+      "slug": "week_12",
+      "slide_spec_path": "slides_spec/week_12.json",
+      "lesson_folder_path": "lessons/lesson_12",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_12"
+      ],
+      "completion_checks": [
+        "lessons/lesson_12/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_13",
+      "title": "Unsupervised Data Driven Signal Analysis and Anomaly Detection",
+      "slug": "week_13",
+      "slide_spec_path": "slides_spec/week_13.json",
+      "lesson_folder_path": "lessons/lesson_13",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_13"
+      ],
+      "completion_checks": [
+        "lessons/lesson_13/checks.py"
+      ]
+    },
+    {
+      "week_id": "week_14",
+      "title": "Deep Learning for Time Frequency Signal Representations",
+      "slug": "week_14",
+      "slide_spec_path": "slides_spec/week_14.json",
+      "lesson_folder_path": "lessons/lesson_14",
+      "dataset_sources": [
+        "Synthetic data generated using dsp_utils.generate_week_data for week_14"
+      ],
+      "completion_checks": [
+        "lessons/lesson_14/checks.py"
+      ]
+    }
+  ]
+}

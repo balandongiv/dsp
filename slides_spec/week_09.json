@@ -1,0 +1,232 @@
+{
+  "week_id": "week_09",
+  "title": "Cross‑Correlation and Coherence",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W09-S01",
+      "type": "title",
+      "title": "Cross‑Correlation and Coherence",
+      "objective": "Introduce multichannel analysis techniques to detect coupling and time delays between signals.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Multichannel signal analysis"},
+          {"label": "bullets", "content": ["Cross‑correlation for time delay estimation", "Coherence for frequency‑specific coupling", "Applications in vibration and current sensing"]}
+        ],
+        "visuals": [
+          {"visual_type": "plot", "description": "Cross‑correlation function and coherence spectrum for two signals", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use cross‑correlation to estimate time lags; coherence to assess coupling strength"},
+          {"label": "sanity_check", "content": "High correlation does not imply causation"}
+        ]
+      },
+      "talking_points": [
+        "Explain why analysing multiple sensors together reveals coupling and phase relationships.",
+        "Introduce cross‑correlation as a measure of similarity vs lag.",
+        "Introduce coherence as a frequency‑domain measure of linear relationship."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_09/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Cross‑correlation plots, coherence spectra"]
+      }
+    },
+    {
+      "slide_id": "W09-S02",
+      "type": "context",
+      "title": "Industrial Multichannel Applications",
+      "objective": "Motivate cross‑correlation and coherence with examples from vibration and current monitoring.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why multichannel?"},
+          {"label": "bullets", "content": ["Identify phase relationships between current and vibration signals", "Estimate mechanical coupling delays", "Detect common causes of vibration and electrical anomalies"]}
+        ],
+        "visuals": [
+          {"visual_type": "time_plot", "description": "Two channel signals (vibration and current) showing correlated events", "data_source": "synthetic demo"},
+          {"visual_type": "cross_correlation", "description": "Cross‑correlation function highlighting time delay", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use cross‑correlation to align signals before comparing features"},
+          {"label": "sanity_check", "content": "Check coherence to ensure signals are related at frequencies of interest"}
+        ]
+      },
+      "talking_points": [
+        "Describe scenarios where multiple sensors capture different aspects of the same process (e.g., vibration and current).",
+        "Explain how cross‑correlation can estimate mechanical delay between sensor responses.",
+        "Show how coherence quantifies the degree of coupling across frequencies."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_09/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Peak lag and coherence values"]
+      }
+    },
+    {
+      "slide_id": "W09-S03",
+      "type": "method",
+      "title": "Black‑Box Multichannel Analysis",
+      "objective": "Detail inputs, knobs, outputs and failure modes for cross‑correlation, cross‑spectral density and coherence.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: two discrete signals x[n] and y[n], sampling rate fs", "Knobs: window_length for CSD/coherence, overlap", "Outputs: cross‑correlation function, cross‑spectral density, magnitude‑squared coherence", "Failure: misinterpreting correlation as causation; ignoring low coherence caused by noise"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Pipeline: compute cross‑correlation → find peak lag; compute CSD/coherence using Welch’s method", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "r_{xy}[k] = \sum_n x[n]y[n+k]", "how_to_use": "Cross‑correlation as a function of lag k", "symbol_defs_inline": ["k=\text{lag index}"]},
+          {"formula": "\gamma_{xy}(f) = \frac{|S_{xy}(f)|^2}{S_{xx}(f)S_{yy}(f)}", "how_to_use": "Magnitude‑squared coherence", "symbol_defs_inline": ["S_{xy}=\text{cross‑spectral density}", "S_{xx},S_{yy}=\text{auto PSDs}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use sufficient averaging in coherence to reduce noise"},
+          {"label": "sanity_check", "content": "Check for high coherence at expected fault frequencies"}
+        ]
+      },
+      "talking_points": [
+        "Define cross‑correlation mathematically and operationally.",
+        "Explain how to compute cross‑spectral density and coherence using Welch’s method.",
+        "Describe what the outputs mean: cross‑correlation peak gives time delay; coherence indicates frequency‑specific coupling.",
+        "Identify failure modes: confusing correlation with causation; low coherence due to noise or non‑linear relationships."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_09/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Peak lag and coherence spectra"]
+      }
+    },
+    {
+      "slide_id": "W09-S04",
+      "type": "demo",
+      "title": "Demo: Cross‑Correlation and Coherence",
+      "objective": "Demonstrate computing cross‑correlation, cross‑spectral density and coherence for dual‑sensor signals.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Measure coupling and delay"},
+          {"label": "bullets", "content": ["Generate two synthetic signals with shared and unique frequency components", "Compute cross‑correlation and find the lag at which it peaks", "Compute cross‑spectral density and coherence using Welch parameters"]}
+        ],
+        "visuals": [
+          {"visual_type": "cross_correlation", "description": "Cross‑correlation function showing peak lag", "data_source": "synthetic demo"},
+          {"visual_type": "coherence", "description": "Coherence spectrum highlighting frequency bands with strong coupling", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Ensure coherence is low at frequencies with no common components"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the demo generating two signals: one shared tone and separate tones.",
+        "Explain how to interpret the cross‑correlation function and identify the time lag.",
+        "Discuss coherence results: high coherence where signals share components, low elsewhere." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_09/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Peak lag and coherence metrics"]
+      }
+    },
+    {
+      "slide_id": "W09-S05",
+      "type": "failure",
+      "title": "Failure Modes: Misinterpretation and Parameter Choices",
+      "objective": "Highlight pitfalls when using cross‑correlation and coherence and how to avoid them.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Pitfalls in multichannel analysis"},
+          {"label": "bullets", "content": ["High correlation does not imply causation: correlation can arise from common drivers", "Low coherence may result from noise or non‑linear relationships", "Wrong window_length or overlap can bias coherence estimates"]}
+        ],
+        "visuals": [
+          {"visual_type": "before_after", "description": "Coherence spectra with poor parameter settings vs well‑tuned settings", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use consistent window and overlap for both signals when computing coherence"},
+          {"label": "sanity_check", "content": "Check cross‑correlation symmetry and coherence symmetry"}
+        ]
+      },
+      "talking_points": [
+        "Give examples of spurious correlation and emphasise that correlation does not imply one signal causes the other.",
+        "Discuss how noise and non‑linearities can reduce coherence even if signals are related.",
+        "Explain why consistent parameter settings across channels are important to avoid biased coherence estimates."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_09/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Experiment with different window lengths and overlaps",
+        "expected_output": ["Coherence plots showing pitfalls"]
+      }
+    },
+    {
+      "slide_id": "W09-S06",
+      "type": "exercise",
+      "title": "Exercise: Analyse Dual‑Sensor Data",
+      "objective": "Have learners compute cross‑correlation and coherence for synthetic dual‑sensor data and interpret coupling.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on multichannel analysis"},
+          {"label": "bullets", "content": ["Generate two signals with shared and unique frequency components", "Compute cross‑correlation and find peak lag", "Compute cross‑spectral density and coherence with different window_length and overlap settings", "Fill in a table with peak_lag and coherence_max for each configuration"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template for recording window_length, overlap, peak_lag and coherence_max", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Ensure signals are pre‑processed (e.g., detrended) before computing correlation"},
+          {"label": "sanity_check", "content": "Use at least 8 segments for stable coherence estimates"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise tasks and encourage experimenting with parameters.",
+        "Guide learners to compute cross‑correlation and coherence and fill in the table.",
+        "Discuss how parameter choices affect delay estimation and coherence strength." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_09/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify window_length and overlap in demo",
+        "expected_output": ["Completed table and plots"]
+      }
+    },
+    {
+      "slide_id": "W09-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce multichannel analysis concepts and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 9 wrap‑up"},
+          {"label": "bullets", "content": ["Cross‑correlation identifies time delays between signals", "Coherence quantifies linear relationship at each frequency", "Interpret correlation carefully – correlation is not causation"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of cross‑correlation and coherence workflows", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. What does a peak in the cross‑correlation function indicate?\n2. How do you compute coherence?\n3. Why might coherence be low even if signals share a fault frequency?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the key points on cross‑correlation, cross‑spectral density and coherence.",
+        "Pose quiz questions and discuss answers with learners.",
+        "Preview the next topic: time‑domain statistical features such as RMS and kurtosis."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_09/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

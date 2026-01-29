@@ -1,0 +1,231 @@
+{
+  "week_id": "week_10",
+  "title": "Statistical Features From Time Domain",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W10-S01",
+      "type": "title",
+      "title": "Time‑Domain Statistical Features",
+      "objective": "Introduce simple statistical features (RMS, peak, crest factor, kurtosis, skewness) for vibration analysis.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Quantify your signal"},
+          {"label": "bullets", "content": ["RMS and energy", "Peak and crest factor", "Kurtosis and skewness"]}
+        ],
+        "visuals": [
+          {"visual_type": "feature_trend", "description": "Time trend of RMS and kurtosis for healthy vs faulty signal", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use RMS for overall energy and crest factor/kurtosis for impulsiveness"},
+          {"label": "sanity_check", "content": "Normalise signals before computing shape metrics"}
+        ]
+      },
+      "talking_points": [
+        "Explain why simple statistics can reveal changes in signal behaviour over time.",
+        "Introduce RMS as a measure of energy; peak and crest factor for impulsiveness; kurtosis and skewness for shape of distribution.",
+        "Preview how trending these features aids condition monitoring."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_10/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Feature values and trend plots"]
+      }
+    },
+    {
+      "slide_id": "W10-S02",
+      "type": "context",
+      "title": "Detecting Degradation with Time‑Domain Features",
+      "objective": "Motivate time‑domain feature extraction with industrial examples of bearing degradation and impulsive faults.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why monitor simple features?"},
+          {"label": "bullets", "content": ["RMS increases as vibration energy grows", "Crest factor and kurtosis rise when impulsive faults emerge", "Skewness indicates asymmetry in vibration due to alignment issues"]}
+        ],
+        "visuals": [
+          {"visual_type": "time_plot", "description": "Vibration signal showing increasing impulses", "data_source": "synthetic demo"},
+          {"visual_type": "feature_trend", "description": "Trend of kurtosis increasing as faults develop", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Compute features on consistent window lengths for trending"},
+          {"label": "sanity_check", "content": "Remove DC offset before computing shape metrics"}
+        ]
+      },
+      "talking_points": [
+        "Describe how RMS and kurtosis trends can reveal machine degradation before failure.",
+        "Explain why crest factor is sensitive to sharp impulses like bearing defects.",
+        "Highlight the need for normalisation and consistent windowing when computing features."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_10/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Feature trend plots"]
+      }
+    },
+    {
+      "slide_id": "W10-S03",
+      "type": "method",
+      "title": "Black‑Box Feature Extraction: Inputs, Knobs, Outputs, Failure",
+      "objective": "Define how to compute time‑domain statistical features and avoid pitfalls.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: signal window x[n] of length L", "Knobs: window_length, overlap, threshold for peaks", "Outputs: RMS, peak, crest factor, kurtosis, skewness", "Failure: features misinterpreted if signal not normalised or window size inconsistent"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Pipeline: segment → compute statistics → trend", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "\text{RMS} = \sqrt{\frac{1}{L}\sum_{n=1}^L x[n]^2}", "how_to_use": "Compute RMS over the window", "symbol_defs_inline": ["L=\text{window length}"]},
+          {"formula": "\text{Crest factor} = \frac{\max(|x[n]|)}{\text{RMS}}", "how_to_use": "Measure impulsiveness", "symbol_defs_inline": []}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use sliding windows with 50% overlap to capture trends"},
+          {"label": "sanity_check", "content": "Demean and normalise amplitude before computing kurtosis and skewness"}
+        ]
+      },
+      "talking_points": [
+        "Describe how to segment the signal into windows and compute features in each window.",
+        "Explain how crest factor, kurtosis and skewness quantify impulsiveness and distribution shape.",
+        "Identify failure modes: misinterpreting features when the signal is not pre‑processed or window sizes vary across segments." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_10/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["RMS, kurtosis, skewness values"]
+      }
+    },
+    {
+      "slide_id": "W10-S04",
+      "type": "demo",
+      "title": "Demo: Feature Extraction and Trending",
+      "objective": "Show how to compute time‑domain features on a simulated vibration signal and track changes over time.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Compute and trend features"},
+          {"label": "bullets", "content": ["Generate a vibration signal with increasing impulsiveness over time", "Compute RMS, kurtosis and skewness in sliding windows", "Plot feature trends and identify when they exceed thresholds"]}
+        ],
+        "visuals": [
+          {"visual_type": "feature_trend", "description": "Trend plots of RMS and kurtosis over time with threshold lines", "data_source": "synthetic demo"},
+          {"visual_type": "time_plot", "description": "Underlying vibration signal", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Observe feature trends rise when impulsive events start"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the demo: constructing the signal, segmenting it and computing features.",
+        "Interpret the trend plots: note when features exceed nominal thresholds indicating potential faults.",
+        "Encourage students to modify window_length and observe how trends change."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_10/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Feature trend plots and threshold flags"]
+      }
+    },
+    {
+      "slide_id": "W10-S05",
+      "type": "failure",
+      "title": "Failure Modes: Misusing Statistical Features",
+      "objective": "Discuss pitfalls such as over‑reliance on peak values and ignoring normalisation.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Feature pitfalls"},
+          {"label": "bullets", "content": ["Peak values can be misleading in noisy signals", "Kurtosis and skewness depend on amplitude scaling", "Changing window lengths across samples breaks comparability"]}
+        ],
+        "visuals": [
+          {"visual_type": "before_after", "description": "Feature trends before and after normalisation and consistent windowing", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Normalise signals (e.g., divide by RMS) before computing shape metrics"},
+          {"label": "sanity_check", "content": "Keep window lengths consistent across time to make features comparable"}
+        ]
+      },
+      "talking_points": [
+        "Explain why peak measurements may be dominated by noise and not represent fault severity.",
+        "Show how kurtosis and skewness values change if the signal amplitude is scaled.",
+        "Emphasise consistent windowing when trending features over time."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_10/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Experiment with normalisation and window length",
+        "expected_output": ["Plots illustrating feature misinterpretation"]
+      }
+    },
+    {
+      "slide_id": "W10-S06",
+      "type": "exercise",
+      "title": "Exercise: Compute and Interpret Features",
+      "objective": "Allow learners to compute time‑domain features on synthetic data and identify fault onset.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on feature extraction"},
+          {"label": "bullets", "content": ["Generate a synthetic vibration signal with increasing impulsiveness", "Compute RMS, crest factor, kurtosis and skewness on sliding windows", "Plot trends and identify when features exceed nominal thresholds", "Fill in a table with feature values and fault detection time"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template recording window_length, RMS, crest factor, kurtosis, skewness and detected fault time", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Use 50% overlap and windows of at least 0.2 s for vibration signals"},
+          {"label": "sanity_check", "content": "Ensure signals are demeaned before computing shape metrics"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise tasks and encourage using different window lengths and overlaps.",
+        "Guide learners to compute features, plot trends and fill in the table.",
+        "Discuss which features detect the fault earliest and why." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_10/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify window_length and threshold values in demo",
+        "expected_output": ["Completed table, feature trends and detection times"]
+      }
+    },
+    {
+      "slide_id": "W10-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce time‑domain feature concepts and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 10 wrap‑up"},
+          {"label": "bullets", "content": ["RMS measures energy; crest factor and kurtosis capture impulsiveness", "Skewness indicates asymmetry in vibration", "Consistent windowing and normalisation are essential for comparable features"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of time‑domain feature extraction workflow", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. What does an increasing RMS trend suggest?\n2. How is the crest factor computed?\n3. Why must you normalise signals before computing kurtosis and skewness?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the importance of simple statistical features for condition monitoring.",
+        "Ask quiz questions and discuss answers with learners.",
+        "Preview the next week on spectral features such as bandpower and envelope detection."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_10/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

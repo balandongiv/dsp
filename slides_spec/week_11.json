@@ -1,0 +1,231 @@
+{
+  "week_id": "week_11",
+  "title": "Spectral Features from Frequency Domain",
+  "deck_style_notes": {
+    "tone": "operator manual / black-box DSP",
+    "visual_style": "visual-first; minimal text",
+    "notation_policy": "≤2 operational formulas per method slide; define symbols inline"
+  },
+  "slides": [
+    {
+      "slide_id": "W11-S01",
+      "type": "title",
+      "title": "Bandpower and Envelope Detection",
+      "objective": "Introduce frequency‑domain features such as bandpower and envelope detection for vibration analysis.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Spectral features for fault detection"},
+          {"label": "bullets", "content": ["Bandpower in fault bands", "Envelope analysis for bearing faults", "Spectral centroid and kurtosis"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrum", "description": "PSD showing band of interest and corresponding bandpower", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Compute bandpower using PSD integration over the fault band"},
+          {"label": "sanity_check", "content": "Ensure anti‑alias filtering before envelope detection"}
+        ]
+      },
+      "talking_points": [
+        "Explain why frequency‑domain features complement time‑domain metrics for fault detection.",
+        "Introduce bandpower as a measure of average power within a frequency band.",
+        "Introduce envelope analysis for detecting repetitive impacts in bearing signals."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_11/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Bandpower and envelope plots"]
+      }
+    },
+    {
+      "slide_id": "W11-S02",
+      "type": "context",
+      "title": "Detecting Bearing Faults with Spectral Features",
+      "objective": "Motivate bandpower and envelope detection with real industrial cases of bearing defects.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Why spectral features?"},
+          {"label": "bullets", "content": ["Bearing defects produce characteristic frequency peaks (BPFO, BPFI)", "Bandpower increases when fault energy grows", "Envelope demodulates high‑frequency resonance to reveal repetitive impacts"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrum", "description": "PSD with bearing fault frequencies annotated", "data_source": "synthetic demo"},
+          {"visual_type": "envelope", "description": "Envelope signal highlighting repeated impacts", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Select narrow bands around known fault frequencies for bandpower"},
+          {"label": "sanity_check", "content": "Ensure the band‑pass filter used in envelope analysis isolates the resonance band"}
+        ]
+      },
+      "talking_points": [
+        "Describe typical bearing fault frequencies and how they appear in vibration spectra.",
+        "Explain that bandpower quantifies energy in these bands and increases with defect severity.",
+        "Introduce envelope detection as demodulation: rectification and low‑pass filtering reveal repetitive impacts."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_11/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Bandpower and envelope plots highlighting defects"]
+      }
+    },
+    {
+      "slide_id": "W11-S03",
+      "type": "method",
+      "title": "Black‑Box Bandpower and Envelope Analysis",
+      "objective": "Define inputs, knobs, outputs and failure modes for computing bandpower and performing envelope detection.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Inputs → Knobs → Outputs → Failure"},
+          {"label": "bullets", "content": ["Inputs: signal x[n], PSD estimate or raw signal for envelope", "Knobs: bandpass_cutoff frequencies, lowpass_cutoff, segment_length for Welch, rectification method", "Outputs: bandpower value, envelope signal, fault_frequency_amplitude", "Failure: using inappropriate bands, forgetting to remove carrier in envelope"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Pipeline: PSD estimation → integrate band → bandpower; or band‑pass → rectification → low‑pass → FFT of envelope", "data_source": "conceptual"}
+        ],
+        "formulas": [
+          {"formula": "P_{band} = \int_{f_1}^{f_2} S(f)\,df", "how_to_use": "Bandpower computed by integrating PSD over the band", "symbol_defs_inline": ["S(f)=\text{PSD}"]}
+        ],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Choose bandpass_cutoff a bit wider than the resonance to capture variation"},
+          {"label": "sanity_check", "content": "Ensure lowpass cutoff is below twice the fault frequency for envelope detection"}
+        ]
+      },
+      "talking_points": [
+        "Explain how to compute bandpower by integrating PSD over a frequency interval.",
+        "Describe the steps of envelope detection: band‑pass filter, rectification, low‑pass filtering and FFT of envelope.",
+        "Identify failure modes: selecting too wide or too narrow bands, neglecting to remove the carrier in envelope detection, mixing PSD units."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_11/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Bandpower values and envelope spectra"]
+      }
+    },
+    {
+      "slide_id": "W11-S04",
+      "type": "demo",
+      "title": "Demo: Bandpower and Envelope Analysis",
+      "objective": "Show how bandpower and envelope detection reveal bearing fault frequencies in a simulated signal.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Measure fault energy"},
+          {"label": "bullets", "content": ["Generate a vibration signal with bearing fault impacts and broad‑band noise", "Compute PSD using Welch and integrate bandpower around the fault frequency", "Apply band‑pass filter, rectify, low‑pass filter and compute FFT of envelope", "Compute fault_frequency_amplitude and compare to bandpower"]}
+        ],
+        "visuals": [
+          {"visual_type": "spectrum", "description": "PSD highlighting fault band and bandpower area", "data_source": "synthetic demo"},
+          {"visual_type": "envelope", "description": "Envelope signal and its spectrum showing fault frequency peak", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "sanity_check", "content": "Notice the amplification of fault frequency in the envelope spectrum"}
+        ]
+      },
+      "talking_points": [
+        "Walk through the demo: constructing the signal with a known fault frequency and noise.",
+        "Compute bandpower and compare it across healthy and faulty segments.",
+        "Demonstrate envelope detection and show the fault frequency emerges as a peak in the envelope spectrum.",
+        "Encourage learners to tune bandpass and lowpass cutoffs and observe their effects." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_11/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "run_demo()",
+        "expected_output": ["Bandpower and envelope plots and fault_frequency_amplitude values"]
+      }
+    },
+    {
+      "slide_id": "W11-S05",
+      "type": "failure",
+      "title": "Failure Modes: Misusing Bandpower and Envelope Analysis",
+      "objective": "Discuss pitfalls such as selecting wrong bands and misinterpreting envelope signals.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Spectral feature pitfalls"},
+          {"label": "bullets", "content": ["Choosing bands too wide or too narrow, missing sidebands or including unrelated energy", "Forgetting to remove the carrier frequency in envelope detection leading to spectral leakage", "Using inconsistent window parameters when computing PSD for bandpower"]}
+        ],
+        "visuals": [
+          {"visual_type": "before_after", "description": "Envelope spectra before and after proper band‑pass and low‑pass filtering", "data_source": "synthetic demo"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Set band‑pass cutoffs to isolate resonant band of the defect"},
+          {"label": "sanity_check", "content": "Compare bandpower across multiple bands to avoid false positives"}
+        ]
+      },
+      "talking_points": [
+        "Show examples of incorrect band selection and how it leads to false interpretation of energy increases.",
+        "Discuss common mistakes in envelope detection: not using a proper band‑pass filter, forgetting to subtract mean before rectification, etc.",
+        "Emphasise using consistent Welch parameters for PSD when comparing bandpower across different signals."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_11/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Experiment with bandpass_cutoff and lowpass_cutoff",
+        "expected_output": ["Examples of misinterpretation and corrected analysis"]
+      }
+    },
+    {
+      "slide_id": "W11-S06",
+      "type": "exercise",
+      "title": "Exercise: Bandpower and Envelope Analysis",
+      "objective": "Allow learners to compute bandpower and perform envelope analysis on synthetic bearing data and identify defect frequencies.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Hands‑on spectral features"},
+          {"label": "bullets", "content": ["Generate a synthetic signal with known bearing defect frequencies and noise", "Compute PSD and integrate bandpower for multiple bands", "Perform envelope detection (choose bandpass_cutoff and lowpass_cutoff) and compute fault_frequency_amplitude", "Fill in a table with bandpower and envelope metrics and discuss which bands or parameters reveal the defect best"]}
+        ],
+        "visuals": [
+          {"visual_type": "table", "description": "Template recording band, bandpower, envelope_cutoffs, fault_frequency_amplitude", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "rule_of_thumb", "content": "Select bandpass around resonant frequency and lowpass below twice the fault frequency"},
+          {"label": "sanity_check", "content": "Ensure consistent PSD parameters when comparing bandpower"}
+        ]
+      },
+      "talking_points": [
+        "Explain the exercise tasks and encourage experimentation with different bands and filter parameters.",
+        "Guide learners to compute bandpower and envelope metrics, fill in the table and discuss which parameters give the most pronounced fault indicators.",
+        "Discuss how combining bandpower and envelope analysis provides complementary insights." 
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_11/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Modify bandpass_cutoff and lowpass_cutoff in demo",
+        "expected_output": ["Completed table and plots"]
+      }
+    },
+    {
+      "slide_id": "W11-S07",
+      "type": "summary",
+      "title": "Summary & Quick Quiz",
+      "objective": "Reinforce frequency‑domain feature concepts and test understanding.",
+      "on_slide_elements": {
+        "text_blocks": [
+          {"label": "headline", "content": "Week 11 wrap‑up"},
+          {"label": "bullets", "content": ["Bandpower quantifies energy in specific frequency bands", "Envelope detection demodulates high‑frequency signals to reveal fault frequencies", "Proper band selection and filtering are critical to avoid misinterpretation"]}
+        ],
+        "visuals": [
+          {"visual_type": "diagram", "description": "Recap of bandpower and envelope analysis workflows", "data_source": "conceptual"}
+        ],
+        "formulas": [],
+        "callouts": [
+          {"label": "quiz", "content": "1. How do you compute bandpower from a PSD?\n2. Why is a band‑pass filter required before envelope detection?\n3. What happens if the lowpass cutoff is set too high in envelope analysis?"}
+        ]
+      },
+      "talking_points": [
+        "Summarise the key points on spectral features and envelope analysis.",
+        "Pose quiz questions and discuss answers with learners.",
+        "Preview the next week on supervised machine learning for classification."
+      ],
+      "links_to_code": {
+        "lesson_folder": "lessons/lesson_11/",
+        "notebook_or_script": "demo.py",
+        "what_to_run": "Review outputs and answer quiz",
+        "expected_output": ["Quiz answers"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+\chapter{Deep Learning for Time–Frequency Representations}
+
+\section{Learning objectives}
+
+After completing this final chapter you will be able to:
+\begin{itemize}
+  \item Convert sensor signals into time–frequency representations (spectrograms) suitable for deep learning.
+  \item Design and train a simple multi‑layer perceptron (MLP) classifier on spectrogram features.
+  \item Understand trade‑offs between model complexity, accuracy and latency for real‑time applications.
+  \item Evaluate performance using accuracy and false‑alarm rate and adjust hyperparameters accordingly.
+\end{itemize}
+
+\section{Industrial context}
+
+Deep learning models can automatically learn discriminative features from high‑dimensional representations such as spectrograms.  In predictive maintenance, convolutional or recurrent neural networks are used to classify machine states from raw data.  However, the computational cost and latency must meet deployment requirements; lightweight architectures such as MLPs may suffice for certain tasks.
+
+\section{Core concepts}
+
+\subsection{Spectrogram features}
+
+Compute the STFT of a signal and take the magnitude squared to obtain a spectrogram.  Optionally average across time or frequency bins to reduce dimensionality.  Normalise the spectrogram to zero mean and unit variance before feeding it into a neural network.
+
+\subsection{Multi‑layer perceptron}
+
+An MLP consists of fully connected layers with nonlinear activation functions.  It maps input vectors to output class probabilities.  Key hyperparameters include the number of hidden layers, number of neurons per layer, activation functions and learning rate.  Over‑fitting is mitigated by dropout or weight regularization.
+
+\subsection{Latency considerations}
+
+In real‑time monitoring, the model must process data quickly enough to meet the detection latency requirement.  Model size and input dimensionality determine inference time.  There is a trade‑off between classification accuracy and latency: larger models may achieve higher accuracy but increase processing time.
+
+\section{Operational formulas}
+
+\paragraph{Input shaping.}  Flatten or pool spectrogram matrices into one‑dimensional feature vectors.  For example, average frequency bands into 40 features or use max pooling across time segments.
+
+\paragraph{MLP forward pass.}  For an input vector $\mathbf{x}$, a hidden layer with weights $\mathbf{W}$ and biases $\mathbf{b}$ computes $\mathbf{h} = \sigma(\mathbf{W}\mathbf{x}+\mathbf{b})$, where $\sigma$ is an activation function (e.g., ReLU).  The output layer uses a softmax activation to produce class probabilities.
+
+\section{Parameter tuning playbook}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
+    \midrule
+    Hidden layers & (50,50) & Under‑fitting & Increase number of neurons or layers \\
+    Learning rate & 0.001 & Slow convergence & Increase learning rate cautiously \\
+    Epochs & 50 & Over‑fitting & Use early stopping or reduce epochs \\
+    Input dimensionality & 40 features & Latency too high & Apply more pooling or down‑sampling \\
+    \bottomrule
+  \end{tabular}
+  \caption{Parameter tuning guidelines for MLP training on spectrogram features.}
+\end{table}
+
+\section{Pitfalls, failure modes and diagnostics}
+
+\begin{itemize}
+  \item \textbf{Over‑fitting.}  Deep networks may memorise training data.  Use dropout, regularization and cross‑validation.
+  \item \textbf{Vanishing gradients.}  Very deep MLPs can suffer from vanishing gradients.  Use batch normalization or residual connections or prefer convolutional architectures.
+  \item \textbf{Latency violation.}  Large models increase inference time.  Profile the model on the target hardware and adjust hidden layer sizes accordingly.
+\end{itemize}
+
+\section{Code walkthrough}
+
+The Week\,14 demonstration computes spectrogram features using the STFT and averages them into a low‑dimensional representation.  It trains an MLP classifier with two hidden layers of 50 neurons each and reports accuracy, false‑alarm rate and latency measured per inference.  A failure demonstration uses coarser spectrogram features (fewer frequency bins), showing a drop in accuracy and an improvement in latency.
+
+\section{Exercises}
+
+\begin{enumerate}
+  \item Train an MLP with one hidden layer on raw spectrograms without pooling.  Measure the latency and accuracy and compare with the pooled representation.
+  \item Explore convolutional neural networks (CNNs) for spectrogram classification.  Implement a small CNN and compare its performance and latency to the MLP.
+  \item Investigate the effect of different activation functions (ReLU, tanh, ELU) on convergence and classification performance.
+\end{enumerate}
+
+\section{References}
+
+\begin{itemize}
+  \item Discussion of STFT trade‑off motivating spectrogram features 【969562052482079†L368-L374】.
+  \item Magnitude‑squared coherence formula 【296435890113586†L67-L72】, relevant for frequency‑domain measures used in deep models.
+\end{itemize}
