@@ -4,94 +4,258 @@
 
 After studying this chapter you will be able to:
 \begin{itemize}
-  \item Explain why digital signal processing begins with a careful allocation of the information budget: what physical quantities you measure, how often you sample them and with what precision.
-  \item State the Nyquist--Shannon sampling theorem and compute the minimum sampling rate required to avoid aliasing for a given signal bandwidth.
-  \item Define signal-to-noise ratio (SNR) and quantisation noise, compute SNR in decibels, and interpret high and low SNR values in industrial contexts.
-  \item Identify common pitfalls such as clipping and under‑sampling and outline simple diagnostics and remedies.
+  \item Explain what is signal
 \end{itemize}
 
-\section{Industrial context}
+\section{Sounds and signals}
 
-In industrial instrumentation we convert analogue sensor signals---currents, voltages, vibrations or optical intensities---into digital data using analogue‑to‑digital converters (ADCs).  The choice of sampling frequency and bit depth determines how much information we retain and how much noise or distortion we introduce.  For example, monitoring a motor drive current for fault detection requires a bandwidth of only a few kilohertz, whereas high‑speed vibration monitoring may require tens of kilohertz.  Engineers must balance data rate, computational cost and information content.
 
-\section{Core concepts}
+A signal represents a quantity that varies in time. That definition is pretty abstract, so let’s start with a concrete example: sound. Sound is variation in air pressure. A sound signal represents variations in air pressure over time.
 
-\subsection{Nyquist sampling theorem}
+A microphone is a device that measures these variations and generates an electrical signal that represents sound. A speaker is a device that takes an electrical signal and produces sound. Microphones and speakers are called transducers because they transduce, or convert, signals from one form to another.
 
-The Nyquist--Shannon sampling theorem states that a band‑limited signal of bandwidth $B$ can be perfectly reconstructed from its samples if the sampling frequency $f_s$ exceeds twice the signal bandwidth: $f_s > 2B$ 【874713969011553†L160-L166】.  The frequency $f_s/2$ is called the \emph{Nyquist frequency}.
+This book is about signal processing, which includes processes for synthesizing, transforming, and analyzing signals. I will focus on sound signals, but the same methods apply to electronic signals, mechanical vibration, and signals in many other domains.
 
-\subsection{Signal-to-noise ratio}
+They also apply to signals that vary in space rather than time, like elevation along a hiking trail. And they apply to signals in more than one dimension, like an image, which you can think of as a signal that varies in two-dimensional space. Or a movie, which is a signal that varies in two-dimensional space and time.
 
-The signal-to-noise ratio is defined as the ratio of signal power $P_\text{signal}$ to noise power $P_\text{noise}$, often expressed in decibels as
-\[
-\text{SNR}_{\mathrm{dB}} = 10\log_{10}\left(\frac{P_\text{signal}}{P_\text{noise}}\right).
-\]
-High SNR indicates the signal dominates the noise; low SNR indicates the noise is comparable to or larger than the signal 【157373209521284†L175-L238】.  In a quantised system the noise power arises partly from quantisation error, which for a $b$‑bit ADC has variance $\sigma_q^2 = \Delta^2/12$, where $\Delta$ is the quantisation step.
+But we start with simple one-dimensional sound.
+\section{What is Digital Signal Processing}
 
-\subsection{Bit depth and dynamic range}
 
-An $b$‑bit ADC can represent $2^b$ discrete levels across a full‑scale range.  The theoretical maximum SNR due to quantisation is approximately $6.02\,b+1.76$ dB.  Increasing bit depth increases dynamic range but also increases data rate and cost.
+\subsection{The Root of DSP}
 
-\section{Operational formulas}
+Digital Signal Processing is distinguished from Other areas in computer science
+by the unique type Of data it uses: signals. In most cases, these signals
+originate as sensory data from the real world: seismic vibrations, visual images,
+sound waves, etc. DSP is the mathematics, the algorithms, and the techniques
+used to manipulate these signals after they have been converted into a digital
+form. This includes a wide variety of goals, such as: enhancement of visual
+images, recognition and generation Of speech, compression Of data for storage
+and transmission, etc. Suppose we attach an analog-to-digital converter to a
+computer and use it to acquire a chunk of real world data. DSP answers the
+question: What next?
+The roots of DSP are in the 1960s and 1970s when digital computers first
+became available. Computers were expensive during this era, and DSP was
+limited to only a few critical applications. Pioneering efforts were made in four
+key areas: radar & sonar, where national security was at risk; oil exploration,
+where large amounts Of money could be made; space exploration, where the data are irreplaceable; and medical imaging, where lives could be saved.
+The personal computer revolution Of the 1980s and 1990s caused DSP to
+explode with new applications. Rather than being motivated by military and
+government needs, DSP was suddenly driven by the commercial marketplace.
+Anyone who thought they could make money in the rapidly expanding field was
+suddenly a DSP vender. DSP reached the public in such products as: mobile
+telephones, compact disc players, and electronic voice mail. Figure 1-1
+illustrates a few of these varied applications.
+This technological revolution occurred from the top-down. In the early
+1980s, DSP was taught as a graduate level course in electrical engineering.
+A decade later, DSP had become a standard part Of the undergraduate
+curriculum. Today, DSP is a basic skill needed by scientists and engineers in many fields. As an analogy, DSP can be compared to a previous
+technological revolution: electronics. While still the realm of electrical
+engineering, nearly every scientist and engineer has some background in basic
+circuit design. Without it, they would be lost in the technological world. DSP
+has the same future.
+This recent history is more than a curiosity; it has a tremendous impact on your
+ability to learn and use DSP- Suppose you encounter a DSP problem, and turn
+to textbooks or other publications to find a solution. What you will typically
+find is page after page of equations, obscure mathematical symbols, and
+unfamiliar terminology. It's a nightmare! Much Of the DSP literature is
+baffling even to those experienced in the field. It's not that there is anything
+wrong with this material, it is just intended for a very specialized audience.
+State-of-the-art researchers need this kind of detailed mathematics to
+understand the theoretical implications of the work.
+A basic premise of this book is that most practical DSP techniques can be
+learned and used without the traditional barriers of detailed mathematics and
+theory. The Scientist and Engineer 's Guide to Digital Signal Processing is
+written for those who want to use DSP as a tool, not a new career.
+The remainder of this chapter illustrates areas where DSP has produced
+revolutionary changes. As you go through each application, notice that DSP
+is very interdisciplinary, relying on the technical work in many adjacent
+fields. As Fig. 1-2 suggests, the borders between DSP and other technical
+disciplines are not sharp and well defined, but rather fuzzy and overlapping.
+If you want to specialize in DSP, these are the allied areas you will also
+need to study.
 
-\paragraph{Determining sampling rate.}  For a signal with maximum frequency component $f_\text{max}$, choose the sampling rate $f_s$ as
-\[
-f_s \ge 2f_\text{max}\quad (\text{practical rule}).
-\]
-If additional margin is required for filter roll‑off or aliasing, choose $f_s$ between $2.2f_\text{max}$ and $3f_\text{max}$.
+\section{Example of Application}
+\subsection{Telecommunications}
+Telecommunications is about transferring information from one location to
+another. This includes many forms of information: telephone conversations,
+television signals, computer files, and other types of data. To transfer the
+information, you need a channel between the two locations. This may be
+a wire pair, radio signal, optical fiber, etc. Telecommunications companies
+receive payment for transferring their customer's information, while they
+must pay to establish and maintain the channel. The financial bottom line
+is simple: the more information they can pass through a single channel, the
+more money they make. DSP has revolutionized the telecommunications
+industry in many areas: signaling tone generation and detection, frequency
+band shifting, filtering to remove power line hum, etc. Three specific
+examples from the telephone network will be discussed here: multiplexing,
+compression, and echo control.
 
-\paragraph{SNR calculation.}  Given discrete signal samples $x[n]$ and noisy observations $y[n]$, compute mean powers $P_x = \frac{1}{N}\sum_{n=0}^{N-1} x[n]^2$ and $P_e = \frac{1}{N}\sum (x[n]-y[n])^2$.  Then
-\[
-\text{SNR}_{\mathrm{dB}} = 10\log_{10}\left(\frac{P_x}{P_e}\right).
-\]
+\subsubsection{Multiplexing}
 
-\section{Parameter tuning playbook}
+There are approximately one billion telephones in the world. At the press of
+a few buttons, switching networks allow any one of these to be connected to
+any other in only a few seconds. The immensity of this task is mind boggling!
+Until the 1960s, a connection between two telephones required passing the
+analog voice signals through mechanical switches and amplifiers. One
+connection required one pair of wires. In comparison, DSP converts audio
+signals into a stream of serial digital data. Since bits can be easily
+intertwined and later separated, many telephone conversations can be
+transmitted on a single channel. For example, a telephone standard known
+as the T-carrier system can simultaneously transmit 24 voice signals. Each
+voice signal is sampled 8000 times per second using an 8 bit companded
+(logarithmic compressed) analog-to-digital conversion. This results in each
+voice signal being represented as 64,000 bits/sec, and all 24 channels being
+contained in 1.544 megabits/sec. This signal can be transmitted about 6000
+feet using ordinary telephone lines of 22 gauge copper wire, a typical
+interconnection distance. The financial advantage of digital transmission
+is enormous. Wire and analog switches are expensive; digital logic gates
+are cheap.
 
-\begin{table}[h]
-  \centering
-  \begin{tabular}{@{}llll@{}}
-    \toprule
-    \textbf{Knob} & \textbf{Default} & \textbf{Symptom} & \textbf{Adjustment} \\
-    \midrule
-    Sampling rate $f_s$ & $2\,f_\text{max}$ & Aliasing in spectrum & Increase $f_s$ or insert low‑pass filter \\
-    Bit depth $b$ & 12 bits & Quantisation noise too high & Increase $b$ or use oversampling \\
-    Anti‑alias filter cut‑off & $0.45f_s$ & Distortion near Nyquist & Reduce cut‑off or use higher‑order filter \\
-    Full‑scale range & Matches expected signal & Frequent clipping & Increase range or use attenuator \\
-    \bottomrule
-  \end{tabular}
-  \caption{Parameter tuning guidelines for data acquisition.}
-\end{table}
+\subsubsection{Compression}
 
-\section{Pitfalls, failure modes and diagnostics}
+When a voice signal is digitized at 8000 samples/sec, most of the digital
+information is redundant. That is, the information carried by any one
+sample is largely duplicated by the neighboring samples. Dozens of DSP
+algorithms have been developed to convert digitized voice signals into data
+streams that require fewer bits/sec. These are called data compression
+algorithms. Matching uncompression algorithms are used to restore the
+signal to its original form. These algorithms vary in the amount of
+compression achieved and the resulting sound quality. In general, reducing the
+data rate from 64 kilobits/sec to 32 kilobits/sec results in no loss of sound
+quality. When compressed to a data rate of 8 kilobits/sec, the sound is
+noticeably affected, but still usable for long distance telephone networks.
+The highest achievable compression is about 2 kilobits/sec, resulting in sound that is highly distorted, but usable for some applications such as military
+and undersea communications.
 
-\begin{itemize}
-  \item \textbf{Undersampling.}  Sampling below twice the signal bandwidth causes aliasing: high‑frequency content folds into lower frequencies.  Diagnose by inspecting the spectrum or by repeating the measurement at a higher sampling rate.  Remedy by increasing $f_s$ or applying a stronger anti‑alias filter.
-  \item \textbf{Quantisation noise.}  Too few bits produce coarse quantisation and degrade SNR.  Increase bit depth or employ oversampling and dithering.
-  \item \textbf{Clipping.}  When the signal amplitude exceeds the ADC full‑scale range, samples saturate and waveform is distorted.  Use input attenuation or increase full‑scale range.
-  \item \textbf{Inadequate anti‑alias filtering.}  Sharp transitions in the analogue signal introduce high‑frequency components.  Use a low‑pass filter with sufficient roll‑off before sampling.
-\end{itemize}
+\subsubsection{Echo Control}
 
-\section{Code walkthrough}
+Echoes are a serious problem in long distance telephone connections.
+When you speak into a telephone, a signal representing your voice travels
+to the connecting receiver, where a portion of it returns as an echo. If the
+connection is within a few hundred miles, the elapsed time for receiving the
+echo is only a few milliseconds. The human ear is accustomed to hearing
+echoes with these small time delays, and the connection sounds quite
+normal. As the distance becomes larger, the echo becomes increasingly
+noticeable and irritating. The delay can be several hundred milliseconds
+for intercontinental communications, and is particularity objectionable.
+Digital Signal Processing attacks this type of problem by measuring the
+returned signal and generating an appropriate antisignal to cancel the
+offending echo. This same technique allows speakerphone users to hear
+and speak at the same time without fighting audio feedback (squealing).
+It can also be used to reduce environmental noise by canceling it with
+digitally generated antinoise.
 
-The demonstration in \texttt{lessons/lesson\_01/demo.py} synthesises a multi‑tone test signal with a transient event.  It sweeps the sampling rate and reports the SNR between the clean signal and its noisy, sampled version.  Key steps include:
-\begin{enumerate}
-  \item Generate the clean signal using \texttt{generate\_week\_data()} from the support library.
-  \item Add white Gaussian noise and adjust the sampling rate parameter \texttt{fs}.
-  \item Compute SNR using the function \texttt{snr\_db()} in \texttt{dsp\_utils.metrics}.
-  \item Plot or print SNR values for different sampling rates.  A higher sampling rate beyond the Nyquist limit does not significantly change the SNR if noise is white.
-\end{enumerate}
+\section{Audio Processing}
 
-\section{Exercises}
+The two principal human senses are vision and hearing. Correspondingly,
+much Of DSP is related to image and audio processing. People listen to
+both music and speech. DSP has made revolutionary changes in both
+these areas.
+\subsubsection{Music}
+The path leading from the musician's microphone to the audiophile's speaker is
+remarkably long. Digital data representation is important to prevent the
+degradation commonly associated With analog storage and manipulation. This
+is very familiar to anyone Who has compared the musical quality Of cassette
+tapes with compact disks. In a typical scenario, a musical piece is recorded in
+a sound studio on multiple channels or tracks. In some cases, this even involves
+recording individual instruments and singers separately. This is done to give
+the sound engineer greater flexibility in creating the final product. The
+complex process of combining the individual tracks into a final product is
+called mix down. DSP can provide several important functions during mix
+down, including: filtering, signal addition and subtraction, signal editing, etc.
+One of the most interesting DSP applications in music preparation is
+artificial reverberation. If the individual channels are simply added together,
+the resulting piece sounds frail and diluted, much as if the musicians were
+playing outdoors. This is because listeners are greatly influenced by the echo
+or reverberation content Of the music, which is usually minimized in the sound
+studio. DSP allows artificial echoes and reverberation to be added during
+mix down to simulate various ideal listening environments. Echoes With
+delays Of a few hundred milliseconds give the impression Of cathedral like
+locations. Adding echoes With delays Of 10-20 milliseconds provide the
+perception of more modest size listening rooms,
 
-\begin{enumerate}
-  \item For a vibration signal with significant energy up to 800 Hz, determine an appropriate sampling rate and bit depth.  Justify your choices.
-  \item Derive the quantisation noise variance for a mid‑tread uniform quantiser and verify the $6.02\,b+1.76$ dB rule empirically by simulating different bit depths.
-  \item Modify the demonstration script to include an anti‑alias filter implemented via a simple moving average.  Measure the SNR improvement when sampling a signal containing high‑frequency noise.
-\end{enumerate}
 
-\section{References}
+\subsubsection{Speech generation}
+Speech generation and recognition are used to communicate between humans
+and machines. Rather than using your hands and eyes, you use your mouth and
+ears. This is very convenient when your hands and eyes should be doing
+something else, such as: driving a car, performing surgery, or (unfortunately)
+firing your weapons at the enemy. Two approaches are used for computer
+generated speech: digital recording and vocal tract simulation. In digital
+recording, the voice Of a human speaker is digitized and stored, usually in a
+compressed form. During playback, the stored data are uncompressed and
+converted back into an analog signal. An entire hour Of recorded speech
+requires only about three megabytes Of storage, well within the capabilities Of
+even small computer systems. This is the most common method Of digital
+speech generation used today.
+Vocal tract simulators are more complicated, trying to mimic the physical
+mechanisms by which humans create speech. The human vocal tract is an
+acoustic cavity with resonate frequencies determined by the size and shape of
+the chambers. Sound originates in the vocal tract in one of two basic ways,
+called voiced and fricative sounds. With voiced sounds, vocal cord vibration
+produces near periodic pulses of air into the vocal cavities. In comparison,
+fricative sounds originate from the noisy air turbulence at narrow constrictions,
+such as the teeth and lips. Vocal tract simulators operate by generating digital
+signals that resemble these two types of excitation. The characteristics of the
+resonate chamber are simulated by passing the excitation signal through a
+digital filter with similar resonances. This approach was used in one of the
+very early DSP success stories, the Speak & Spell, a widely sold electronic
+learning aid for children.
 
-\begin{itemize}
-  \item Nyquist sampling theorem and requirement of at least twice the bandwidth 【874713969011553†L160-L166】.
-  \item Definition of signal-to-noise ratio and its interpretation 【157373209521284†L175-L238】.
-\end{itemize}
+
+\subsubsection{Speech recognition}
+
+The automated recognition of human speech is immensely more difficult
+than speech generation. Speech recognition is a classic example Of things
+that the human brain does well, but digital computers do poorly. Digital
+computers can store and recall vast amounts Of data, perform mathematical
+calculations at blazing speeds, and do repetitive tasks without becoming
+bored or inefficient. Unfortunately, present day computers perform very
+poorly when faced With raw sensory data. Teaching a computer to send you
+a monthly electric bill is easy. Teaching the same computer to understand
+your voice is a major undertaking.
+Digital Signal Processing generally approaches the problem of voice
+recognition in two steps: feature extraction followed by feature matching.
+Each word in the incoming audio signal is isolated and then analyzed to
+identify the type of excitation and resonate frequencies. These parameters are
+then compared with previous examples of spoken words to identify the closest
+match. Often, these systems are limited to only a few hundred words; can
+only accept speech With distinct pauses between words; and must be retrained
+for each individual speaker. While this is adequate for many commercial applications, these limitations are humbling when compared to the abilities Of
+human hearing. There is a great deal of work to be done in this area, with
+tremendous financial rewards for those that produce successful commercial
+products.
+
+\section{ADC and DAC}
+
+Most of the signals directly encountered in science and engineering are continuous: light intensity
+that changes with distance; voltage that varies over time; a chemical reaction rate that depends
+on temperature, etc. Analog-to-Digital Conversion (ADC) and Digital-to-Analog Conversion
+(DAC) are the processes that allow digital computers to interact with these everyday signals.
+Digital information is different from its continuous counterpart in two important respects: it is
+sampled, and it is quantized. Both of these restrict how much information a digital signal can
+contain. This chapter is about information management: understanding What information you
+need to retain, and what information you can afford to lose. In turn, this dictates the selection
+of the sampling frequency, number of bits, and type of analog filtering needed for converting
+between the analog and digital realms.
+
+\subsection{Quantization}
+
+First, a bit Of trivia. AS you know, it is a digital computer, not a digit
+computer. The information processed is called digital data, not digit data.
+Why then, is analog-to-digital conversion generally called: dizi.Lize and
+diziLization, rather than digitalize and di italization? The answer is nothing
+you would expect. When electronics got around to inventing digital techniques,
+the preferred names had already been snatched up by the medical community
+nearly a century before. Digitalize and digitalization mean to administer the
+heart stimulant digitalis.
+Figure 3-1 shows the electronic waveforms of a typical analog-to-digital
+conversion. Figure (a) is the analog signal to be digitized. As shown by the
+labels on the graph, this signal is a voltage that varies over time. To make
+the numbers easier, we will assume that the voltage can vary from O to 4.095
+volts, corresponding to the digital numbers between O and 4095 that will be
+produced by a 12 bit digitizer. Notice that the block diagram is broken into
+two sections, the sample-and-hold (S/H), and the analog-to-digital converter
+(ADC). As you probably learned in electronics classes, the sample-and-hold
+is required to keep the voltage entering the ADC constant while the
